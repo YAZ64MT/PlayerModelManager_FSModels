@@ -12,6 +12,7 @@ include_directories("./offline_build")
 include_directories("./include/extlib")
 include_directories("./include/shared")
 include_directories("./src/extlib")
+add_compile_definitions("YAZMT_PMM_NO_API_IMPORTS")
 
 add_library(${TARGET_NAME} SHARED)
 

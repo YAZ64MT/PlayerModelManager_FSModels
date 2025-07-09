@@ -10,23 +10,28 @@
 #include "defines_z64o.h"
 #include "defines_ooto.h"
 #include "defines_mmo.h"
-
-// Keep in sync with playermodelmanager_api.h
-#define PMM_MAX_INTERNAL_NAME_LENGTH 64
-#define PMM_MAX_AUTHOR_NAME_LENGTH 64
-#define PMM_MAX_DISPLAY_NAME_LENGTH 32
+#include "playermodelmanager_api.h"
 
 namespace fs = std::filesystem;
 
 struct ModelDiskEntry {
+    PlayerModelManager_FormModelType modelType;
+    size_t fileSize;
+    char *modelData;
     std::string internalName;
     std::string displayName;
     std::string authorName;
-    size_t fileSize;
-    char *modelData;
 };
 
 static std::vector<ModelDiskEntry> sModelDiskEntries;
+
+static fs::path sPMMDir;
+
+const fs::path MODEL_DIR("models");
+
+const fs::path ASSET_DIR("assets");
+
+const fs::path OOT_ASSET_DIR(ASSET_DIR / "oot");
 
 extern "C" {
     DLLEXPORT uint32_t recomp_api_version = 1;
@@ -79,6 +84,10 @@ bool isValidStandaloneZobj(std::ifstream &f) {
     return false;
 }
 
+RECOMP_DLL_FUNC(PMMZobj_setPMMDir) {
+    sPMMDir = RECOMP_ARG_STR(0);
+}
+
 void extractEmbeddedInfo(const std::vector<char> &v, ModelDiskEntry &entry) {
     const std::array<char, sizeof("PLAYERMODELINFO")> PLAYER_MODEL_INFO_HEADER_STR("PLAYERMODELINFO");
 
@@ -121,11 +130,13 @@ void extractEmbeddedInfo(const std::vector<char> &v, ModelDiskEntry &entry) {
 }
 
 RECOMP_DLL_FUNC(PMMZobj_scanForDiskEntries) {
+    if (!fs::is_directory(sPMMDir)) {
+        RECOMP_RETURN(int, -1);
+    }
+
     sModelDiskEntries.clear();
 
-    std::string folderPath = RECOMP_ARG_STR(0);
-
-    fs::directory_entry folderEntry(folderPath);
+    fs::directory_entry folderEntry(sPMMDir / MODEL_DIR);
 
     if (!folderEntry.is_directory()) {
         RECOMP_RETURN(int, -1);
@@ -135,6 +146,7 @@ RECOMP_DLL_FUNC(PMMZobj_scanForDiskEntries) {
     // If a model is that big, it should be replaced through RT64 instead
     const size_t MAX_MODEL_SIZE = 4 * 1024 * 1024;
 
+    // TODO: This entire section needs a rewrite to support more model types
     for (const auto &dirEntry : fs::directory_iterator(folderEntry.path())) {
         if (dirEntry.file_size() < MAX_MODEL_SIZE) {
             if (dirEntry.is_regular_file() || (dirEntry.is_symlink() && fs::is_regular_file(fs::weakly_canonical(dirEntry.path())))) {
@@ -175,7 +187,25 @@ RECOMP_DLL_FUNC(PMMZobj_scanForDiskEntries) {
 
                     mde.modelData = new char[fileBuf.size()];
 
+                    // default value
+                    mde.modelType = PMM_FORM_MODEL_TYPE_CHILD;
+
                     memcpy(mde.modelData, fileBuf.data(), fileBuf.size());
+
+                    switch (mde.modelData[Z64O_FORM_BYTE]) {
+                        case OOTO_FORM_BYTE_ADULT:
+                        case MMO_FORM_BYTE_ADULT:
+                            mde.modelType = PMM_FORM_MODEL_TYPE_ADULT;
+                            break;
+
+                        case OOTO_FORM_BYTE_CHILD:
+                        case MMO_FORM_BYTE_CHILD:
+                            mde.modelType = PMM_FORM_MODEL_TYPE_CHILD;
+                            break;
+
+                        default:
+                            break;
+                    }
 
                     sModelDiskEntries.push_back(mde);
                 }
@@ -390,4 +420,14 @@ RECOMP_DLL_FUNC(PMMZobj_readEntryU32) {
         (static_cast<uint32_t>(entry->modelData[offset + 3]));
 
     RECOMP_RETURN(bool, true);
+}
+
+RECOMP_DLL_FUNC(PMMZobj_getEntryFormType) {
+    ModelDiskEntry *entry = getDiskEntry(RECOMP_ARG(int, 0));
+
+    if (!entry) {
+        RECOMP_RETURN(PlayerModelManager_FormModelType, PMM_FORM_MODEL_TYPE_NONE);
+    }
+
+    RECOMP_RETURN(PlayerModelManager_FormModelType, entry->modelType);
 }

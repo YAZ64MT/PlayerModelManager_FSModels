@@ -5,8 +5,12 @@
 #include "yazmtcorelib_api.h"
 #include "playermodelmanager_api.h"
 #include "libc/string.h"
+#include "defines_z64o.h"
+#include "defines_ooto.h"
+#include "defines_mmo.h"
 
-RECOMP_IMPORT(".", int PMMZobj_scanForDiskEntries(const char *str));
+RECOMP_IMPORT(".", int PMMZobj_setPMMDir(const char *str));
+RECOMP_IMPORT(".", int PMMZobj_scanForDiskEntries());
 RECOMP_IMPORT(".", int PMMZobj_getNumDiskEntries());
 RECOMP_IMPORT(".", int PMMZobj_entryInternalNameLength(int i));
 RECOMP_IMPORT(".", int PMMZobj_entryDisplayNameLength(int i));
@@ -18,31 +22,41 @@ RECOMP_IMPORT(".", int PMMZobj_getEntryFileSize(int i));
 RECOMP_IMPORT(".", bool PMMZobj_getEntryFileData(int i, char *buffer, int bufferSize));
 RECOMP_IMPORT(".", bool PMMZobj_createDirectory(char *path));
 RECOMP_IMPORT(".", bool PMMZobj_isDirectoryExist(char *path));
-RECOMP_IMPORT(".", bool PMMZobj_readEntryU8(int i, int offset, u8 *));
-RECOMP_IMPORT(".", bool PMMZobj_readEntryU16(int i, int offset, u16 *));
-RECOMP_IMPORT(".", bool PMMZobj_readEntryU32(int i, int offset, u32 *));
+RECOMP_IMPORT(".", bool PMMZobj_readEntryU8(int i, int offset, u8 *out));
+RECOMP_IMPORT(".", bool PMMZobj_readEntryU16(int i, int offset, u16 *out));
+RECOMP_IMPORT(".", bool PMMZobj_readEntryU32(int i, int offset, u32 *out));
+RECOMP_IMPORT(".", PlayerModelManager_FormModelType PMMZobj_getEntryFormType(int i));
 
 typedef struct {
-    Gfx displayLists[PMM_DL_MAX];
-    char *internalName;
-    char *displayName;
-    char *authorName;
     void *buffer;
-} FormModel;
+    Gfx displayLists[PMM_DL_MAX];
+} FormModelContainer;
 
-static FormModel *sFormModels;
+// clang format off
+#define DEFAULT_CONTAINER                                                                     \
+    {                                                                                         \
+        .buffer = NULL, .displayLists = { [0 ... PMM_DL_MAX - 1] = gsSPBranchList(gEmptyDL) } \
+    }
+// clang format on
+
+static FormModelContainer sFormModelContainers[PLAYER_FORM_MAX] = {[0 ... PLAYER_FORM_MAX - 1] = DEFAULT_CONTAINER};
 
 #define MAIN_DIR "playermodelmanager"
-#define MODEL_DIR MAIN_DIR "/models"
+#define MODEL_DIR MAIN_DIR "/models/"
+#define ASSET_DIR MAIN_DIR "/assets/"
+#define OOT_ASSET_DIR ASSET_DIR "/oot/"
+#define MM_ASSET_DIR ASSET_DIR "/mm/"
+#define GAMEPLAY_KEEP_FILE_NAME "gameplay_keep.zobj"
+#define OOT_GAMEPLAY_KEEP_FILE OOT_ASSET_DIR GAMEPLAY_KEEP_FILE_NAME
 
 typedef struct {
     char *str;
-    size_t length;
+    int length;
 } StringInfo;
 
 // Combine, at most, 32 path strings
 char *getCombinedPath(int count, ...) {
-    const MAX_COUNT = 32;
+    const int MAX_COUNT = 32;
 
     if (count > MAX_COUNT) {
         return NULL;
@@ -52,7 +66,7 @@ char *getCombinedPath(int count, ...) {
 
     size_t finalPathLen = 0;
 
-    StringInfo *pathStrings[count];
+    StringInfo pathStrings[count];
 
     va_list args;
     va_start(args, count);
@@ -102,9 +116,29 @@ char *getCombinedPath(int count, ...) {
     return combinedPath;
 }
 
+char *getStringFromEntry(int i, bool nameWriter(int i, char *buffer, int bufferSize), int lengthGetter(int i)) {
+    char *result = NULL;
+
+    int stringLen = lengthGetter(i) + 1;
+
+    if (stringLen > 0) {
+        int len = stringLen + 1;
+
+        result = recomp_alloc(len);
+
+        if (!nameWriter(i, result, len)) {
+            recomp_free(result);
+            result = NULL;
+        }
+    }
+
+    return result;
+}
+
 PLAYERMODELMANAGER_CALLBACK_REGISTER_MODELS void registerDiskModels() {
     char *modDir = (char *)recomp_get_mod_folder_path();
 
+    char *pmmDir = getCombinedPath(2, modDir, MAIN_DIR);
     char *fullModelDir = getCombinedPath(2, modDir, MODEL_DIR);
 
     recomp_free(modDir);
@@ -117,17 +151,19 @@ PLAYERMODELMANAGER_CALLBACK_REGISTER_MODELS void registerDiskModels() {
         return;
     }
 
-    int numDiskEntries = PMMZobj_scanForDiskEntries(fullModelDir);
+    PMMZobj_setPMMDir(pmmDir);
+
+    int numDiskEntries = PMMZobj_scanForDiskEntries();
 
     for (int i = 0; i < numDiskEntries; ++i) {
-        int internalLen = PMMZobj_entryInternalNameLength(i);
+        char *internalName = getStringFromEntry(i, PMMZobj_writeInternalNameToBuffer, PMMZobj_entryInternalNameLength);
+        char *displayName = getStringFromEntry(i, PMMZobj_writeDisplayNameToBuffer, PMMZobj_entryDisplayNameLength);
+        char *authorName = getStringFromEntry(i, PMMZobj_writeAuthorNameToBuffer, PMMZobj_entryAuthorNameLength);
 
-        if (internalLen < 1) {
-            continue;
-        }
+        // TODO: DO STUFF
 
-
-
-
+        recomp_free(internalName);
+        recomp_free(displayName);
+        recomp_free(authorName);
     }
 }

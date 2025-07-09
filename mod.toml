@@ -42,6 +42,7 @@ dependencies = [
 native_libraries = [
 # Example native library:
    { name = "yazmt_mm_playermodelmanager_zobjsupport_extlib", funcs = [
+      "PMMZobj_setPMMDir",
       "PMMZobj_scanForDiskEntries",
       "PMMZobj_getNumDiskEntries",
       "PMMZobj_entryInternalNameLength",
@@ -57,6 +58,7 @@ native_libraries = [
       "PMMZobj_readEntryU8",
       "PMMZobj_readEntryU16",
       "PMMZobj_readEntryU32",
+      "PMMZobj_getEntryFormType",
    ] }
 ]
 
