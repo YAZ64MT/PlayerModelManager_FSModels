@@ -34,7 +34,7 @@ extern "C" {
 
 // Check if zobj is standalone.
 // Moodifies stream input position.
-bool isValidStandaloneZobj(std::ifstream& f) {
+bool isValidStandaloneZobj(std::ifstream &f) {
     if (!f) {
         return false;
     }
@@ -43,7 +43,7 @@ bool isValidStandaloneZobj(std::ifstream& f) {
         const size_t MINIMUM_STANDALONE_ZOBJ_SIZE = 0x5800;
 
         f.seekg(MINIMUM_STANDALONE_ZOBJ_SIZE);
-        
+
         char tmp;
         f.read(&tmp, 1);
 
@@ -79,7 +79,7 @@ bool isValidStandaloneZobj(std::ifstream& f) {
     return false;
 }
 
-void extractEmbeddedInfo(const std::vector<char>& v, ModelDiskEntry& entry) {
+void extractEmbeddedInfo(const std::vector<char> &v, ModelDiskEntry &entry) {
     const std::array<char, sizeof("PLAYERMODELINFO")> PLAYER_MODEL_INFO_HEADER_STR("PLAYERMODELINFO");
 
     const size_t EMBEDDED_INFO_HEADER_LOCATION = 0x5500;
@@ -96,7 +96,7 @@ void extractEmbeddedInfo(const std::vector<char>& v, ModelDiskEntry& entry) {
             const size_t EMBEDDED_DISPLAY_NAME_LOCATION = EMBEDDED_INTERNAL_NAME_LOCATION + INTERNAL_NAME_FIELD_SIZE;
             const size_t EMBEDDED_AUTHOR_NAME_LOCATION = EMBEDDED_DISPLAY_NAME_LOCATION + DISPLAY_NAME_FIELD_SIZE;
 
-            auto setEntryStr = [v](size_t offset, size_t maxSize, std::string& result) {
+            auto setEntryStr = [v](size_t offset, size_t maxSize, std::string &result) {
                 auto start = v.begin() + offset;
                 auto end = start + maxSize;
 
@@ -142,7 +142,7 @@ RECOMP_DLL_FUNC(PMMZobj_scanForDiskEntries) {
 
                 if (isValidStandaloneZobj(file)) {
                     file.seekg(0);
-                    
+
                     std::vector<char> fileBuf(std::istreambuf_iterator(file), {});
 
                     ModelDiskEntry mde;
@@ -201,17 +201,18 @@ bool writeEntryDataToRecompBuffer(uint8_t *rdram, recomp_context *ctx, const voi
         return false;
     }
 
-    PTR(char)
-    buf = RECOMP_ARG(PTR(char), 1);
+    // clang-format off
+    PTR(char) buf = RECOMP_ARG(PTR(char), 1);
+    // clang-format on
 
-    const char *bytes = static_cast<const char*>(data);
+    const char *bytes = static_cast<const char *>(data);
 
     for (size_t i = 0; i < dataSize; i++) {
         MEM_B(buf, i) = bytes[i];
     }
 }
 
-bool writeEntryStringToRecompBuffer(uint8_t *rdram, recomp_context *ctx, const std::string& s) {
+bool writeEntryStringToRecompBuffer(uint8_t *rdram, recomp_context *ctx, const std::string &s) {
     return writeEntryDataToRecompBuffer(rdram, ctx, s.c_str(), s.size() + 1);
 }
 
@@ -322,7 +323,9 @@ RECOMP_DLL_FUNC(PMMZobj_readEntryU8) {
         RECOMP_RETURN(bool, false);
     }
 
+    // clang-format off
     PTR(unsigned char) out = RECOMP_ARG(PTR(unsigned char), 2);
+    // clang-format on
 
     if (!out) {
         RECOMP_RETURN(bool, false);
@@ -346,8 +349,9 @@ RECOMP_DLL_FUNC(PMMZobj_readEntryU16) {
         RECOMP_RETURN(bool, false);
     }
 
-    PTR(unsigned char)
-    out = RECOMP_ARG(PTR(unsigned char), 2);
+    // clang-format off
+    PTR(unsigned char) out = RECOMP_ARG(PTR(unsigned char), 2);
+    // clang-format on
 
     if (!out) {
         RECOMP_RETURN(bool, false);
@@ -371,8 +375,9 @@ RECOMP_DLL_FUNC(PMMZobj_readEntryU32) {
         RECOMP_RETURN(bool, false);
     }
 
-    PTR(unsigned char)
-    out = RECOMP_ARG(PTR(unsigned char), 2);
+    // clang-format off
+    PTR(unsigned char) out = RECOMP_ARG(PTR(unsigned char), 2);
+    // clang-format on
 
     if (!out) {
         RECOMP_RETURN(bool, false);
