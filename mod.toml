@@ -54,6 +54,9 @@ native_libraries = [
       "PMMZobj_getEntryFileData",
       "PMMZobj_createDirectory",
       "PMMZobj_isDirectoryExist",
+      "PMMZobj_readEntryU8",
+      "PMMZobj_readEntryU16",
+      "PMMZobj_readEntryU32",
    ] }
 ]
 

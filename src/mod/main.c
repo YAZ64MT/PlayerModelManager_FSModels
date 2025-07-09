@@ -18,6 +18,9 @@ RECOMP_IMPORT(".", int PMMZobj_getEntryFileSize(int i));
 RECOMP_IMPORT(".", bool PMMZobj_getEntryFileData(int i, char *buffer, int bufferSize));
 RECOMP_IMPORT(".", bool PMMZobj_createDirectory(char *path));
 RECOMP_IMPORT(".", bool PMMZobj_isDirectoryExist(char *path));
+RECOMP_IMPORT(".", bool PMMZobj_readEntryU8(int i, int offset, u8 *));
+RECOMP_IMPORT(".", bool PMMZobj_readEntryU16(int i, int offset, u16 *));
+RECOMP_IMPORT(".", bool PMMZobj_readEntryU32(int i, int offset, u32 *));
 
 typedef struct {
     Gfx displayLists[PMM_DL_MAX];
