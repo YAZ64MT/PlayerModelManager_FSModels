@@ -41,7 +41,20 @@ dependencies = [
 # Native libraries (e.g. DLLs) and the functions they export.
 native_libraries = [
 # Example native library:
-   { name = "yazmt_mm_playermodelmanager_zobjsupport_extlib", funcs = ["native_lib_test"] }
+   { name = "yazmt_mm_playermodelmanager_zobjsupport_extlib", funcs = [
+      "PMMZobj_scanForDiskEntries",
+      "PMMZobj_getNumDiskEntries",
+      "PMMZobj_entryInternalNameLength",
+      "PMMZobj_entryDisplayNameLength",
+      "PMMZobj_entryAuthorNameLength",
+      "PMMZobj_writeInternalNameToBuffer",
+      "PMMZobj_writeDisplayNameToBuffer",
+      "PMMZobj_writeAuthorNameToBuffer",
+      "PMMZobj_getEntryFileSize",
+      "PMMZobj_getEntryFileData",
+      "PMMZobj_createDirectory",
+      "PMMZobj_isDirectoryExist",
+   ] }
 ]
 
 # Inputs to the mod tool.
@@ -106,31 +119,3 @@ macos_release_build_preset = "zig-macos-aarch64-Release"
 
 linux_release_configure_preset = "zig-linux-x64-Release"
 linux_release_build_preset = "zig-linux-x64-Release"
-
-# Mod config options
-[[manifest.config_options]]
-id = "enum_option"
-name = "Enum Option"
-description = "Test enum config option"
-type = "Enum"
-options = [ "First", "Second" ]
-default = "First"
-
-[[manifest.config_options]]
-id = "number_option"
-name = "Number Option"
-description = "Test number config option."
-type = "Number"
-min = 0
-max = 10
-step = 0.1
-precision = 1
-percent = false
-default = 1
-
-[[manifest.config_options]]
-id = "string_option"
-name = "String Option"
-description = "Test string config option."
-type = "String"
-default = "Lorem Ipsum"
