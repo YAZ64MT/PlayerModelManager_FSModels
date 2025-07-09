@@ -66,7 +66,7 @@ additional_files = [ ]
 [extlib_compiling]
 
 # # Name of the extlib. This information is passed to CMake as the target name for the extlib.
-library_name = "yazmt_mm_playermodelmanager_addon_zobjsupport_extlib"
+library_name = "yazmt_mm_playermodelmanager_zobjsupport_extlib"
 
 # Your CMake presets in this file should be designed to handle cross-compilation (using the provided
 # Zig toolchain is recommended). When building the mod, CMake will be invoked 3 times to build
