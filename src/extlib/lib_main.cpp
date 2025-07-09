@@ -342,7 +342,7 @@ RECOMP_DLL_FUNC(PMMZobj_readEntryU16) {
 
     int offset = RECOMP_ARG(int, 1);
 
-    if (offset >= entry->fileSize) {
+    if (offset >= entry->fileSize + sizeof(uint16_t)) {
         RECOMP_RETURN(bool, false);
     }
 
@@ -353,7 +353,7 @@ RECOMP_DLL_FUNC(PMMZobj_readEntryU16) {
         RECOMP_RETURN(bool, false);
     }
 
-    MEM_HU(static_cast<size_t>(out), 0) = (uint16_t)(entry->modelData[offset] << 8) | entry->modelData[offset + 1];
+    MEM_HU(static_cast<size_t>(out), 0) = (static_cast<uint16_t>(entry->modelData[offset]) << 8) | entry->modelData[offset + 1];
 
     RECOMP_RETURN(bool, true);
 }
@@ -367,7 +367,7 @@ RECOMP_DLL_FUNC(PMMZobj_readEntryU32) {
 
     int offset = RECOMP_ARG(int, 1);
 
-    if (offset >= entry->fileSize) {
+    if (offset >= entry->fileSize + sizeof(uint32_t)) {
         RECOMP_RETURN(bool, false);
     }
 
@@ -378,7 +378,7 @@ RECOMP_DLL_FUNC(PMMZobj_readEntryU32) {
         RECOMP_RETURN(bool, false);
     }
 
-    MEM_HU(static_cast<size_t>(out), 0) = (uint32_t)(entry->modelData[offset] << 8) | (uint32_t)(entry->modelData[offset] << 8) | entry->modelData[offset];
+    MEM_W(static_cast<size_t>(out), 0) = (uint32_t)(static_cast<uint32_t>(entry->modelData[offset]) << 24) | (uint32_t)(entry->modelData[offset + 1] << 16) | static_cast<uint32_t>(entry->modelData[offset + 2] << 8) | entry->modelData[offset + 3];
 
     RECOMP_RETURN(bool, true);
 }
