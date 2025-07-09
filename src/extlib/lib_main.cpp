@@ -383,7 +383,11 @@ RECOMP_DLL_FUNC(PMMZobj_readEntryU32) {
         RECOMP_RETURN(bool, false);
     }
 
-    MEM_W(static_cast<size_t>(out), 0) = (uint32_t)(static_cast<uint32_t>(entry->modelData[offset]) << 24) | (uint32_t)(entry->modelData[offset + 1] << 16) | static_cast<uint32_t>(entry->modelData[offset + 2] << 8) | entry->modelData[offset + 3];
+    MEM_W(static_cast<size_t>(out), 0) =
+        (static_cast<uint32_t>(entry->modelData[offset]) << 24) |
+        (static_cast<uint32_t>(entry->modelData[offset + 1]) << 16) |
+        (static_cast<uint32_t>(entry->modelData[offset + 2]) << 8) |
+        (static_cast<uint32_t>(entry->modelData[offset + 3]));
 
     RECOMP_RETURN(bool, true);
 }
