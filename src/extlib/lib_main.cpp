@@ -15,9 +15,9 @@
 namespace fs = std::filesystem;
 
 struct ModelDiskEntry {
-    PlayerModelManager_FormModelType modelType;
     size_t fileSize;
     char *modelData;
+    std::array<bool, PMM_FORM_MODEL_TYPE_MAX> modelTypes;
     std::string internalName;
     std::string displayName;
     std::string authorName;
@@ -173,6 +173,10 @@ RECOMP_DLL_FUNC(PMMZobj_scanForDiskEntries) {
                         }
                     }
 
+                    if (mde.internalName.size() < PMM_MAX_AUTHOR_NAME_LENGTH) {
+                        mde.internalName += " "; // leave 1 byte of padding
+                    }
+
                     if (mde.displayName == "") {
                         mde.displayName = dirEntryPath.stem().string();
 
@@ -187,20 +191,19 @@ RECOMP_DLL_FUNC(PMMZobj_scanForDiskEntries) {
 
                     mde.modelData = new char[fileBuf.size()];
 
-                    // default value
-                    mde.modelType = PMM_FORM_MODEL_TYPE_CHILD;
+                    mde.modelTypes.fill(false);
 
                     memcpy(mde.modelData, fileBuf.data(), fileBuf.size());
 
                     switch (mde.modelData[Z64O_FORM_BYTE]) {
                         case OOTO_FORM_BYTE_ADULT:
                         case MMO_FORM_BYTE_ADULT:
-                            mde.modelType = PMM_FORM_MODEL_TYPE_ADULT;
+                            mde.modelTypes[PMM_FORM_MODEL_TYPE_ADULT] = true;
                             break;
 
                         case OOTO_FORM_BYTE_CHILD:
                         case MMO_FORM_BYTE_CHILD:
-                            mde.modelType = PMM_FORM_MODEL_TYPE_CHILD;
+                            mde.modelTypes[PMM_FORM_MODEL_TYPE_CHILD] = true;
                             break;
 
                         default:
@@ -426,8 +429,14 @@ RECOMP_DLL_FUNC(PMMZobj_getEntryFormType) {
     ModelDiskEntry *entry = getDiskEntry(RECOMP_ARG(int, 0));
 
     if (!entry) {
-        RECOMP_RETURN(PlayerModelManager_FormModelType, PMM_FORM_MODEL_TYPE_NONE);
+        RECOMP_RETURN(bool, false);
     }
 
-    RECOMP_RETURN(PlayerModelManager_FormModelType, entry->modelType);
+    PlayerModelManager_FormModelType type = RECOMP_ARG(PlayerModelManager_FormModelType, 1);
+
+    if (type < 0 || type >= PMM_FORM_MODEL_TYPE_MAX) {
+        RECOMP_RETURN(bool, false);
+    }
+
+    RECOMP_RETURN(bool, entry->modelTypes[type]);
 }

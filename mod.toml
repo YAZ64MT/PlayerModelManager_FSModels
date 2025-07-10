@@ -58,7 +58,7 @@ native_libraries = [
       "PMMZobj_readEntryU8",
       "PMMZobj_readEntryU16",
       "PMMZobj_readEntryU32",
-      "PMMZobj_getEntryFormType",
+      "PMMZobj_isFormModelType",
    ] }
 ]
 

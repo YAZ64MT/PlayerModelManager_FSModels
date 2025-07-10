@@ -25,7 +25,7 @@ RECOMP_IMPORT(".", bool PMMZobj_isDirectoryExist(char *path));
 RECOMP_IMPORT(".", bool PMMZobj_readEntryU8(int i, int offset, u8 *out));
 RECOMP_IMPORT(".", bool PMMZobj_readEntryU16(int i, int offset, u16 *out));
 RECOMP_IMPORT(".", bool PMMZobj_readEntryU32(int i, int offset, u32 *out));
-RECOMP_IMPORT(".", PlayerModelManager_FormModelType PMMZobj_getEntryFormType(int i));
+RECOMP_IMPORT(".", bool PMMZobj_isFormModelType(int i, PlayerModelManager_FormModelType t));
 
 typedef struct {
     void *buffer;
@@ -48,6 +48,44 @@ static FormModelContainer sFormModelContainers[PLAYER_FORM_MAX] = {[0 ... PLAYER
 #define MM_ASSET_DIR ASSET_DIR "/mm/"
 #define GAMEPLAY_KEEP_FILE_NAME "gameplay_keep.zobj"
 #define OOT_GAMEPLAY_KEEP_FILE OOT_ASSET_DIR GAMEPLAY_KEEP_FILE_NAME
+
+static void *sFormModelToFormContainer[PMM_FORM_MODEL_TYPE_MAX] = {
+    [PMM_FORM_MODEL_TYPE_NONE] = NULL,
+    [PMM_FORM_MODEL_TYPE_CHILD] = &sFormModelContainers[PLAYER_FORM_HUMAN],
+    [PMM_FORM_MODEL_TYPE_ADULT] = &sFormModelContainers[PLAYER_FORM_HUMAN],
+    [PMM_FORM_MODEL_TYPE_DEKU] = &sFormModelContainers[PLAYER_FORM_DEKU],
+    [PMM_FORM_MODEL_TYPE_GORON] = &sFormModelContainers[PLAYER_FORM_GORON],
+    [PMM_FORM_MODEL_TYPE_ZORA] = &sFormModelContainers[PLAYER_FORM_ZORA],
+    [PMM_FORM_MODEL_TYPE_FIERCE_DEITY] = &sFormModelContainers[PLAYER_FORM_FIERCE_DEITY],
+};
+
+static const PlayerTransformation FORM_MODEL_TO_FORM[PMM_FORM_MODEL_TYPE_MAX] = {
+    [PMM_FORM_MODEL_TYPE_NONE] = PLAYER_FORM_MAX,
+    [PMM_FORM_MODEL_TYPE_CHILD] = PLAYER_FORM_HUMAN,
+    [PMM_FORM_MODEL_TYPE_ADULT] = PLAYER_FORM_HUMAN,
+    [PMM_FORM_MODEL_TYPE_DEKU] = PLAYER_FORM_DEKU,
+    [PMM_FORM_MODEL_TYPE_GORON] = PLAYER_FORM_GORON,
+    [PMM_FORM_MODEL_TYPE_ZORA] = PLAYER_FORM_ZORA,
+    [PMM_FORM_MODEL_TYPE_FIERCE_DEITY] = PLAYER_FORM_FIERCE_DEITY,
+};
+
+void clearContainerDLs(FormModelContainer *c) {
+    for (int i = 0; i < PMM_DL_MAX; ++i) {
+        gSPDisplayList(&c->displayLists[i], gEmptyDL);
+    }
+}
+
+void eventHandler(PlayerModelManagerFormHandle handle, PlayerModelManager_ModelEvent event, void *userdata) {
+    if (!userdata) {
+        return;
+    }
+
+    if (event == PMM_EVENT_MODEL_REMOVED) {
+        clearContainerDLs(userdata);
+    } else if (event == PMM_EVENT_MODEL_APPLIED) {
+        // TODO: APPLY MODEL
+    }
+}
 
 typedef struct {
     char *str;
@@ -160,7 +198,33 @@ PLAYERMODELMANAGER_CALLBACK_REGISTER_MODELS void registerDiskModels() {
         char *displayName = getStringFromEntry(i, PMMZobj_writeDisplayNameToBuffer, PMMZobj_entryDisplayNameLength);
         char *authorName = getStringFromEntry(i, PMMZobj_writeAuthorNameToBuffer, PMMZobj_entryAuthorNameLength);
 
-        // TODO: DO STUFF
+        if (internalName && internalName[0] != '\0') {
+            char *formChar = internalName;
+
+            while (*formChar != '\0') {
+                formChar++;
+            }
+            formChar--;
+
+            for (int j = 0; j < PMM_FORM_MODEL_TYPE_MAX; ++j) {
+                if (PMMZobj_isFormModelType(i, j)) {
+                    // If a model is registered for multiple model types, we differentiate them by the last character internally
+                    *formChar = j;
+
+                    PlayerModelManagerFormHandle h = PLAYERMODELMANAGER_REGISTER_FORM_MODEL(internalName, j);
+
+                    if (displayName) {
+                        PlayerModelManager_setDisplayName(h, displayName);
+                    }
+
+                    if (authorName) {
+                        PlayerModelManager_setAuthor(h, authorName);
+                    }
+
+                    PlayerModelManager_setCallback(h, eventHandler, sFormModelToFormContainer[j]);
+                }
+            }
+        }
 
         recomp_free(internalName);
         recomp_free(displayName);
