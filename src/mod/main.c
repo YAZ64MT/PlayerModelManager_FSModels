@@ -32,12 +32,9 @@ typedef struct {
     Gfx displayLists[PMM_DL_MAX];
 } FormModelContainer;
 
-// clang format off
-#define DEFAULT_CONTAINER                                                                     \
-    {                                                                                         \
-        .buffer = NULL, .displayLists = { [0 ... PMM_DL_MAX - 1] = gsSPBranchList(gEmptyDL) } \
-    }
-// clang format on
+// clang-format off
+#define DEFAULT_CONTAINER { .buffer = NULL, .displayLists = { [0 ... PMM_DL_MAX - 1] = gsSPBranchList(gEmptyDL) }}
+// clang-format on
 
 static FormModelContainer sFormModelContainers[PLAYER_FORM_MAX] = {[0 ... PLAYER_FORM_MAX - 1] = DEFAULT_CONTAINER};
 
@@ -174,22 +171,27 @@ char *getStringFromEntry(int i, bool nameWriter(int i, char *buffer, int bufferS
 }
 
 PLAYERMODELMANAGER_CALLBACK_REGISTER_MODELS void registerDiskModels() {
-    char *modDir = (char *)recomp_get_mod_folder_path();
+    {
+        char *modDir = (char *)recomp_get_mod_folder_path();
 
-    char *pmmDir = getCombinedPath(2, modDir, MAIN_DIR);
-    char *fullModelDir = getCombinedPath(2, modDir, MODEL_DIR);
+        char *pmmDir = getCombinedPath(2, modDir, MAIN_DIR);
+        char *fullModelDir = getCombinedPath(2, modDir, MODEL_DIR);
 
-    recomp_free(modDir);
+        recomp_free(modDir);
 
-    PMMZobj_createDirectory(fullModelDir);
+        PMMZobj_createDirectory(fullModelDir);
 
-    if (!PMMZobj_isDirectoryExist(fullModelDir)) {
-        recomp_printf("PlayerModelManager_ZobjSupport: Could not find %s directory", fullModelDir);
+        if (!PMMZobj_isDirectoryExist(fullModelDir)) {
+            recomp_printf("PlayerModelManager_ZobjSupport: Could not find %s directory", fullModelDir);
+            recomp_free(fullModelDir);
+            return;
+        }
+
+        PMMZobj_setPMMDir(pmmDir);
+
+        recomp_free(pmmDir);
         recomp_free(fullModelDir);
-        return;
     }
-
-    PMMZobj_setPMMDir(pmmDir);
 
     int numDiskEntries = PMMZobj_scanForDiskEntries();
 
