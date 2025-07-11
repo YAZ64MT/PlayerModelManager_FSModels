@@ -46,6 +46,16 @@ static const PlayerTransformation FORM_MODEL_TO_FORM[PMM_FORM_MODEL_TYPE_MAX] = 
     [PMM_FORM_MODEL_TYPE_FIERCE_DEITY] = PLAYER_FORM_FIERCE_DEITY,
 };
 
+static const char FORM_MODEL_TO_SUFFIX[PMM_FORM_MODEL_TYPE_MAX] = {
+    [PMM_FORM_MODEL_TYPE_NONE] = 'N',
+    [PMM_FORM_MODEL_TYPE_CHILD] = 'C',
+    [PMM_FORM_MODEL_TYPE_ADULT] = 'A',
+    [PMM_FORM_MODEL_TYPE_DEKU] = 'D',
+    [PMM_FORM_MODEL_TYPE_GORON] = 'G',
+    [PMM_FORM_MODEL_TYPE_ZORA] = 'Z',
+    [PMM_FORM_MODEL_TYPE_FIERCE_DEITY] = 'F',
+};
+
 static U32ValueHashmapHandle sModelBuffers = 0;
 
 // Combine, at most, 32 path strings
@@ -188,7 +198,7 @@ PLAYERMODELMANAGER_CALLBACK_REGISTER_MODELS void registerDiskModels() {
             for (int j = 0; j < PMM_FORM_MODEL_TYPE_MAX; ++j) {
                 if (PMMZobj_isFormModelType(i, j)) {
                     // If a model is registered for multiple model types, we differentiate them by the last character internally
-                    *formChar = j;
+                    *formChar = FORM_MODEL_TO_SUFFIX[j];
 
                     PlayerModelManagerFormHandle h = PLAYERMODELMANAGER_REGISTER_FORM_MODEL(internalName, j);
 
