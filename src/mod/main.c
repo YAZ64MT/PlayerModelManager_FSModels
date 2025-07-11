@@ -173,10 +173,6 @@ PLAYERMODELMANAGER_CALLBACK_REGISTER_MODELS void registerDiskModels() {
 
     int numDiskEntries = PMMZobj_scanForDiskEntries();
 
-    // find maximum-sized model for each form
-    // Each form has a buffer that is shared by all models loaded from the file system
-    int bufferSizes[PLAYER_FORM_MAX] = {0};
-
     for (int i = 0; i < numDiskEntries; ++i) {
         char *internalName = getStringFromEntry(i, PMMZobj_writeInternalNameToBuffer, PMMZobj_entryInternalNameLength);
         char *displayName = getStringFromEntry(i, PMMZobj_writeDisplayNameToBuffer, PMMZobj_entryDisplayNameLength);
@@ -209,6 +205,8 @@ PLAYERMODELMANAGER_CALLBACK_REGISTER_MODELS void registerDiskModels() {
                     if (authorName) {
                         PlayerModelManager_setAuthor(h, authorName);
                     }
+
+                    recomputil_u32_value_hashmap_insert(sModelBuffers, h, (uintptr_t)modelBuf);
                 }
             }
         }
