@@ -432,7 +432,7 @@ RECOMP_DLL_FUNC(PMMZobj_getEntryFormType) {
         RECOMP_RETURN(bool, false);
     }
 
-    PlayerModelManager_FormModelType type = RECOMP_ARG(PlayerModelManager_FormModelType, 1);
+    PlayerModelManagerFormModelType type = RECOMP_ARG(PlayerModelManagerFormModelType, 1);
 
     if (type < 0 || type >= PMM_FORM_MODEL_TYPE_MAX) {
         RECOMP_RETURN(bool, false);

@@ -132,10 +132,10 @@ typedef enum {
     PMM_DL_MASK_FIERCE_DEITY_SCREAM,
 
     // Elegy of Emptiness statues
-    PMM_DL_ELEGY_OF_EMPTINESS_SHELL_HUMAN,
-    PMM_DL_ELEGY_OF_EMPTINESS_SHELL_DEKU,
-    PMM_DL_ELEGY_OF_EMPTINESS_SHELL_GORON,
-    PMM_DL_ELEGY_OF_EMPTINESS_SHELL_ZORA,
+    PMM_DL_ELEGY_OF_EMPTINESS_SHELL_HUMAN, // Only used if model is human
+    PMM_DL_ELEGY_OF_EMPTINESS_SHELL_DEKU,  // Only used if model is Deku
+    PMM_DL_ELEGY_OF_EMPTINESS_SHELL_GORON, // Only used if model is Goron
+    PMM_DL_ELEGY_OF_EMPTINESS_SHELL_ZORA,  // Only used if model is Zora
 
     // Strength Upgrades (OoT)
     PMM_DL_BRACELET_LFOREARM,
@@ -310,7 +310,7 @@ typedef enum {
     PMM_DL_SHIM_CENTER_FLOWER_PROPELLER_OPEN,
     PMM_DL_SHIM_CENTER_FLOWER_PROPELLER_CLOSED,
     PMM_DL_MAX
-} PlayerModelManager_DisplayListId;
+} PlayerModelManagerDisplayListId;
 
 #define PMM_DL_SWORD_KOKIRI_HILT PMM_DL_SWORD1_HILT
 #define PMM_DL_SWORD_KOKIRI_BLADE PMM_DL_SWORD1_BLADE
@@ -349,7 +349,7 @@ typedef enum {
     PMM_MTX_SWORD3_PEDESTAL_GRABBED,
     PMM_MTX_MASKS,
     PMM_MTX_MAX,
-} PlayerModelManager_MatrixId;
+} PlayerModelManagerMatrixId;
 
 #define PMM_MTX_SWORD_KOKIRI_BACK PMM_MTX_SWORD1_BACK
 #define PMM_MTX_SWORD_RAZOR_BACK PMM_MTX_SWORD2_BACK
@@ -367,14 +367,14 @@ typedef enum {
     PMM_FORM_MODEL_TYPE_ZORA,
     PMM_FORM_MODEL_TYPE_FIERCE_DEITY,
     PMM_FORM_MODEL_TYPE_MAX
-} PlayerModelManager_FormModelType;
+} PlayerModelManagerFormModelType;
 
 typedef enum {
     PMM_EVENT_MODEL_APPLIED,
     PMM_EVENT_MODEL_REMOVED,
-} PlayerModelManager_ModelEvent;
+} PlayerModelManagerModelEvent;
 
-typedef void PlayerModelManagerEventHandler(PlayerModelManagerFormHandle handle, PlayerModelManager_ModelEvent event, void *userdata);
+typedef void PlayerModelManagerEventHandler(PlayerModelManagerFormHandle handle, PlayerModelManagerModelEvent event, void *userdata);
 
 #ifndef YAZMT_PMM_NO_API_IMPORTS
 
@@ -390,7 +390,7 @@ typedef void PlayerModelManagerEventHandler(PlayerModelManagerFormHandle handle,
 //
 // This function can only be used during the PlayerModelManager_onRegisterModels event. Otherwise, an invalid handle will be returned.
 #define PLAYERMODELMANAGER_REGISTER_FORM_MODEL(internalName, modelType) PlayerModelManager_registerFormModel(PMM_API_VERSION, internalName, modelType)
-RECOMP_IMPORT(YAZMT_PMM_MOD_NAME, PlayerModelManagerFormHandle PlayerModelManager_registerFormModel(unsigned long apiVersion, char *id, PlayerModelManager_FormModelType modelType));
+RECOMP_IMPORT(YAZMT_PMM_MOD_NAME, PlayerModelManagerFormHandle PlayerModelManager_registerFormModel(unsigned long apiVersion, const char *internalName, PlayerModelManagerFormModelType modelType));
 
 // Sets the name that will appear in the menu for the passed in model handle.
 //
@@ -399,7 +399,7 @@ RECOMP_IMPORT(YAZMT_PMM_MOD_NAME, PlayerModelManagerFormHandle PlayerModelManage
 // This function can only be used during the PlayerModelManager_onRegisterModels event.
 //
 // Returns true if successfully set, false otherwise.
-RECOMP_IMPORT(YAZMT_PMM_MOD_NAME, bool PlayerModelManager_setDisplayName(PlayerModelManagerFormHandle h, char *displayName));
+RECOMP_IMPORT(YAZMT_PMM_MOD_NAME, bool PlayerModelManager_setDisplayName(PlayerModelManagerFormHandle h, const char *displayName));
 
 // Sets the name that will appear in the author field of the menu.
 //
@@ -408,7 +408,7 @@ RECOMP_IMPORT(YAZMT_PMM_MOD_NAME, bool PlayerModelManager_setDisplayName(PlayerM
 // This function can only be used during the PlayerModelManager_onRegisterModels event.
 //
 // Returns true if successfully set, false otherwise.
-RECOMP_IMPORT(YAZMT_PMM_MOD_NAME, bool PlayerModelManager_setAuthor(PlayerModelManagerFormHandle h, char *author));
+RECOMP_IMPORT(YAZMT_PMM_MOD_NAME, bool PlayerModelManager_setAuthor(PlayerModelManagerFormHandle h, const char *author));
 
 // Sets the skeleton and any display lists attached to it on a custom model.
 //
@@ -422,20 +422,20 @@ RECOMP_IMPORT(YAZMT_PMM_MOD_NAME, bool PlayerModelManager_setSkeleton(PlayerMode
 // Returns true if successfully set, false otherwise.
 RECOMP_IMPORT(YAZMT_PMM_MOD_NAME, bool PlayerModelManager_setShieldingSkeleton(PlayerModelManagerFormHandle h, FlexSkeletonHeader *skel));
 
-// Set a display list on the model. The ID can be obtained from PlayerModelManager_DisplayListId.
+// Set a display list on the model. The ID can be obtained from PlayerModelManagerDisplayListId.
 //
 // Display lists prefixed with SHIM are automatically generated, and while you can replace them, you are encouraged not to
 // to increase compatibility with equipment replacement mods.
 //
 // Returns true upon successful display list set, false otherwise.
-RECOMP_IMPORT(YAZMT_PMM_MOD_NAME, bool PlayerModelManager_setDL(PlayerModelManagerFormHandle h, PlayerModelManager_DisplayListId dlId, Gfx *dl));
+RECOMP_IMPORT(YAZMT_PMM_MOD_NAME, bool PlayerModelManager_setDL(PlayerModelManagerFormHandle h, PlayerModelManagerDisplayListId dlId, Gfx *dl));
 
 // Sets a matrix on the custom model.
 //
 // Returns true if matrix was successfully set, false otherwise.
-RECOMP_IMPORT(YAZMT_PMM_MOD_NAME, bool PlayerModelManager_setMtx(PlayerModelManagerFormHandle h, PlayerModelManager_MatrixId mtxId, Mtx *matrix));
+RECOMP_IMPORT(YAZMT_PMM_MOD_NAME, bool PlayerModelManager_setMtx(PlayerModelManagerFormHandle h, PlayerModelManagerMatrixId mtxId, Mtx *matrix));
 
-// Set a callback function for this model. The types of events that can be responded to are in the PlayerModelManager_ModelEvent enum.
+// Set a callback function for this model. The types of events that can be responded to are in the PlayerModelManagerModelEvent enum.
 //
 // Returns true if callback successfully set, false otherwise.
 RECOMP_IMPORT(YAZMT_PMM_MOD_NAME, bool PlayerModelManager_setCallback(PlayerModelManagerFormHandle h, PlayerModelManagerEventHandler *callback, void *userdata));
@@ -453,7 +453,7 @@ RECOMP_IMPORT(YAZMT_PMM_MOD_NAME, bool PlayerModelManager_setMouthTextures(Playe
 // Get a static pointer to a DL in a particular form. The visual will be automatically updated if the model for that form changes.
 //
 // If an invalid display list ID is passed in, NULL will be returned.
-RECOMP_IMPORT(YAZMT_PMM_MOD_NAME, Gfx *PlayerModelManager_getDL(unsigned long apiVersion, PlayerTransformation form, PlayerModelManager_DisplayListId dlId));
+RECOMP_IMPORT(YAZMT_PMM_MOD_NAME, Gfx *PlayerModelManager_getFormDisplayList(unsigned long apiVersion, PlayerTransformation form, PlayerModelManagerDisplayListId dlId));
 
 // Helper define for PlayerModelManager_getDL. See PlayerModelManager_getDL description for functionality.
 #define PLAYERMODELMANAGER_GET_FORM_DISPLAY_LIST(form, displayListId) PlayerModelManager_getDL(PMM_API_VERSION, form, displayListId)
