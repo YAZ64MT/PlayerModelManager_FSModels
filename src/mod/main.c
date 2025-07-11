@@ -2,6 +2,7 @@
 #include "global.h"
 #include "recomputils.h"
 #include "recompconfig.h"
+#include "recompdata.h"
 #include "yazmtcorelib_api.h"
 #include "playermodelmanager_api.h"
 #include "libc/string.h"
@@ -27,17 +28,6 @@ RECOMP_IMPORT(".", bool PMMZobj_readEntryU16(int i, int offset, u16 *out));
 RECOMP_IMPORT(".", bool PMMZobj_readEntryU32(int i, int offset, u32 *out));
 RECOMP_IMPORT(".", bool PMMZobj_isFormModelType(int i, PlayerModelManager_FormModelType t));
 
-typedef struct {
-    void *buffer;
-    Gfx displayLists[PMM_DL_MAX];
-} FormModelContainer;
-
-// clang-format off
-#define DEFAULT_CONTAINER { .buffer = NULL, .displayLists = { [0 ... PMM_DL_MAX - 1] = gsSPBranchList(gEmptyDL) }}
-// clang-format on
-
-static FormModelContainer sFormModelContainers[PLAYER_FORM_MAX] = {[0 ... PLAYER_FORM_MAX - 1] = DEFAULT_CONTAINER};
-
 #define MAIN_DIR "playermodelmanager"
 #define MODEL_DIR MAIN_DIR "/models/"
 #define ASSET_DIR MAIN_DIR "/assets/"
@@ -45,16 +35,6 @@ static FormModelContainer sFormModelContainers[PLAYER_FORM_MAX] = {[0 ... PLAYER
 #define MM_ASSET_DIR ASSET_DIR "/mm/"
 #define GAMEPLAY_KEEP_FILE_NAME "gameplay_keep.zobj"
 #define OOT_GAMEPLAY_KEEP_FILE OOT_ASSET_DIR GAMEPLAY_KEEP_FILE_NAME
-
-static void *sFormModelToFormContainer[PMM_FORM_MODEL_TYPE_MAX] = {
-    [PMM_FORM_MODEL_TYPE_NONE] = NULL,
-    [PMM_FORM_MODEL_TYPE_CHILD] = &sFormModelContainers[PLAYER_FORM_HUMAN],
-    [PMM_FORM_MODEL_TYPE_ADULT] = &sFormModelContainers[PLAYER_FORM_HUMAN],
-    [PMM_FORM_MODEL_TYPE_DEKU] = &sFormModelContainers[PLAYER_FORM_DEKU],
-    [PMM_FORM_MODEL_TYPE_GORON] = &sFormModelContainers[PLAYER_FORM_GORON],
-    [PMM_FORM_MODEL_TYPE_ZORA] = &sFormModelContainers[PLAYER_FORM_ZORA],
-    [PMM_FORM_MODEL_TYPE_FIERCE_DEITY] = &sFormModelContainers[PLAYER_FORM_FIERCE_DEITY],
-};
 
 static const PlayerTransformation FORM_MODEL_TO_FORM[PMM_FORM_MODEL_TYPE_MAX] = {
     [PMM_FORM_MODEL_TYPE_NONE] = PLAYER_FORM_MAX,
@@ -66,31 +46,15 @@ static const PlayerTransformation FORM_MODEL_TO_FORM[PMM_FORM_MODEL_TYPE_MAX] = 
     [PMM_FORM_MODEL_TYPE_FIERCE_DEITY] = PLAYER_FORM_FIERCE_DEITY,
 };
 
-void clearContainerDLs(FormModelContainer *c) {
-    for (int i = 0; i < PMM_DL_MAX; ++i) {
-        gSPDisplayList(&c->displayLists[i], gEmptyDL);
-    }
-}
-
-void eventHandler(PlayerModelManagerFormHandle handle, PlayerModelManager_ModelEvent event, void *userdata) {
-    if (!userdata) {
-        return;
-    }
-
-    if (event == PMM_EVENT_MODEL_REMOVED) {
-        clearContainerDLs(userdata);
-    } else if (event == PMM_EVENT_MODEL_APPLIED) {
-        // TODO: APPLY MODEL
-    }
-}
-
-typedef struct {
-    char *str;
-    int length;
-} StringInfo;
+static U32ValueHashmapHandle sModelBuffers = 0;
 
 // Combine, at most, 32 path strings
 char *getCombinedPath(int count, ...) {
+    typedef struct {
+        char *str;
+        int length;
+    } StringInfo;
+
     const int MAX_COUNT = 32;
 
     if (count > MAX_COUNT) {
@@ -171,6 +135,10 @@ char *getStringFromEntry(int i, bool nameWriter(int i, char *buffer, int bufferS
 }
 
 PLAYERMODELMANAGER_CALLBACK_REGISTER_MODELS void registerDiskModels() {
+    if (!sModelBuffers) {
+        sModelBuffers = recomputil_create_u32_value_hashmap();
+    }
+
     {
         char *modDir = (char *)recomp_get_mod_folder_path();
 
@@ -195,18 +163,27 @@ PLAYERMODELMANAGER_CALLBACK_REGISTER_MODELS void registerDiskModels() {
 
     int numDiskEntries = PMMZobj_scanForDiskEntries();
 
+    // find maximum-sized model for each form
+    // Each form has a buffer that is shared by all models loaded from the file system
+    int bufferSizes[PLAYER_FORM_MAX] = {0};
+
     for (int i = 0; i < numDiskEntries; ++i) {
         char *internalName = getStringFromEntry(i, PMMZobj_writeInternalNameToBuffer, PMMZobj_entryInternalNameLength);
         char *displayName = getStringFromEntry(i, PMMZobj_writeDisplayNameToBuffer, PMMZobj_entryDisplayNameLength);
         char *authorName = getStringFromEntry(i, PMMZobj_writeAuthorNameToBuffer, PMMZobj_entryAuthorNameLength);
+        int entrySize = PMMZobj_getEntryFileSize(i);
 
-        if (internalName && internalName[0] != '\0') {
+        if (entrySize > 0 && internalName && internalName[0] != '\0') {
             char *formChar = internalName;
 
             while (*formChar != '\0') {
                 formChar++;
             }
             formChar--;
+
+            void *modelBuf = recomp_alloc(entrySize);
+
+            PMMZobj_getEntryFileData(i, modelBuf, entrySize);
 
             for (int j = 0; j < PMM_FORM_MODEL_TYPE_MAX; ++j) {
                 if (PMMZobj_isFormModelType(i, j)) {
@@ -222,8 +199,6 @@ PLAYERMODELMANAGER_CALLBACK_REGISTER_MODELS void registerDiskModels() {
                     if (authorName) {
                         PlayerModelManager_setAuthor(h, authorName);
                     }
-
-                    PlayerModelManager_setCallback(h, eventHandler, sFormModelToFormContainer[j]);
                 }
             }
         }
