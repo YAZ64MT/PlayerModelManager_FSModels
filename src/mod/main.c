@@ -36,24 +36,24 @@ RECOMP_IMPORT(".", bool PMMZobj_isFormModelType(int i, PlayerModelManagerFormMod
 #define GAMEPLAY_KEEP_FILE_NAME "gameplay_keep.zobj"
 #define OOT_GAMEPLAY_KEEP_FILE OOT_ASSET_DIR GAMEPLAY_KEEP_FILE_NAME
 
-static const PlayerTransformation FORM_MODEL_TO_FORM[PMM_FORM_MODEL_TYPE_MAX] = {
-    [PMM_FORM_MODEL_TYPE_NONE] = PLAYER_FORM_MAX,
-    [PMM_FORM_MODEL_TYPE_CHILD] = PLAYER_FORM_HUMAN,
-    [PMM_FORM_MODEL_TYPE_ADULT] = PLAYER_FORM_HUMAN,
-    [PMM_FORM_MODEL_TYPE_DEKU] = PLAYER_FORM_DEKU,
-    [PMM_FORM_MODEL_TYPE_GORON] = PLAYER_FORM_GORON,
-    [PMM_FORM_MODEL_TYPE_ZORA] = PLAYER_FORM_ZORA,
-    [PMM_FORM_MODEL_TYPE_FIERCE_DEITY] = PLAYER_FORM_FIERCE_DEITY,
+static const PlayerTransformation FORM_MODEL_TO_FORM[PMM_MODEL_TYPE_MAX] = {
+    [PMM_MODEL_TYPE_NONE] = PLAYER_FORM_MAX,
+    [PMM_MODEL_TYPE_CHILD] = PLAYER_FORM_HUMAN,
+    [PMM_MODEL_TYPE_ADULT] = PLAYER_FORM_HUMAN,
+    [PMM_MODEL_TYPE_DEKU] = PLAYER_FORM_DEKU,
+    [PMM_MODEL_TYPE_GORON] = PLAYER_FORM_GORON,
+    [PMM_MODEL_TYPE_ZORA] = PLAYER_FORM_ZORA,
+    [PMM_MODEL_TYPE_FIERCE_DEITY] = PLAYER_FORM_FIERCE_DEITY,
 };
 
-static const char FORM_MODEL_TO_SUFFIX[PMM_FORM_MODEL_TYPE_MAX] = {
-    [PMM_FORM_MODEL_TYPE_NONE] = 'N',
-    [PMM_FORM_MODEL_TYPE_CHILD] = 'C',
-    [PMM_FORM_MODEL_TYPE_ADULT] = 'A',
-    [PMM_FORM_MODEL_TYPE_DEKU] = 'D',
-    [PMM_FORM_MODEL_TYPE_GORON] = 'G',
-    [PMM_FORM_MODEL_TYPE_ZORA] = 'Z',
-    [PMM_FORM_MODEL_TYPE_FIERCE_DEITY] = 'F',
+static const char FORM_MODEL_TO_SUFFIX[PMM_MODEL_TYPE_MAX] = {
+    [PMM_MODEL_TYPE_NONE] = 'N',
+    [PMM_MODEL_TYPE_CHILD] = 'C',
+    [PMM_MODEL_TYPE_ADULT] = 'A',
+    [PMM_MODEL_TYPE_DEKU] = 'D',
+    [PMM_MODEL_TYPE_GORON] = 'G',
+    [PMM_MODEL_TYPE_ZORA] = 'Z',
+    [PMM_MODEL_TYPE_FIERCE_DEITY] = 'F',
 };
 
 static U32ValueHashmapHandle sModelBuffers = 0;
@@ -191,12 +191,12 @@ PLAYERMODELMANAGER_CALLBACK_REGISTER_MODELS void registerDiskModels() {
 
             PMMZobj_getEntryFileData(i, modelBuf, entrySize);
 
-            for (int j = 0; j < PMM_FORM_MODEL_TYPE_MAX; ++j) {
+            for (int j = 0; j < PMM_MODEL_TYPE_MAX; ++j) {
                 if (PMMZobj_isFormModelType(i, j)) {
                     // If a model is registered for multiple model types, we differentiate them by the last character internally
                     *formChar = FORM_MODEL_TO_SUFFIX[j];
 
-                    PlayerModelManagerFormHandle h = PLAYERMODELMANAGER_REGISTER_FORM_MODEL(internalName, j);
+                    PlayerModelManagerHandle h = PLAYERMODELMANAGER_REGISTER_FORM_MODEL(internalName, j);
 
                     if (displayName) {
                         PlayerModelManager_setDisplayName(h, displayName);

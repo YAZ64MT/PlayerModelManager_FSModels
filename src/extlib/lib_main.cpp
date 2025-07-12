@@ -17,7 +17,7 @@ namespace fs = std::filesystem;
 struct ModelDiskEntry {
     size_t fileSize;
     char *modelData;
-    std::array<bool, PMM_FORM_MODEL_TYPE_MAX> modelTypes;
+    std::array<bool, PMM_MODEL_TYPE_MAX> modelTypes;
     std::string internalName;
     std::string displayName;
     std::string authorName;
@@ -198,12 +198,12 @@ RECOMP_DLL_FUNC(PMMZobj_scanForDiskEntries) {
                     switch (mde.modelData[Z64O_FORM_BYTE]) {
                         case OOTO_FORM_BYTE_ADULT:
                         case MMO_FORM_BYTE_ADULT:
-                            mde.modelTypes[PMM_FORM_MODEL_TYPE_ADULT] = true;
+                            mde.modelTypes[PMM_MODEL_TYPE_ADULT] = true;
                             break;
 
                         case OOTO_FORM_BYTE_CHILD:
                         case MMO_FORM_BYTE_CHILD:
-                            mde.modelTypes[PMM_FORM_MODEL_TYPE_CHILD] = true;
+                            mde.modelTypes[PMM_MODEL_TYPE_CHILD] = true;
                             break;
 
                         default:
@@ -432,9 +432,9 @@ RECOMP_DLL_FUNC(PMMZobj_getEntryFormType) {
         RECOMP_RETURN(bool, false);
     }
 
-    PlayerModelManagerFormModelType type = RECOMP_ARG(PlayerModelManagerFormModelType, 1);
+    PlayerModelManagerModelType type = RECOMP_ARG(PlayerModelManagerModelType, 1);
 
-    if (type < 0 || type >= PMM_FORM_MODEL_TYPE_MAX) {
+    if (type < 0 || type >= PMM_MODEL_TYPE_MAX) {
         RECOMP_RETURN(bool, false);
     }
 
