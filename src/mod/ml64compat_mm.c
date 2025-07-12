@@ -220,10 +220,18 @@ static Mtx sHookshotHookMatrix = gdSPDefMtx(
 );
 // clang-format on
 
+static bool sIsOotHookshotMtxInitialized = false;
+static Mtx sOotHookshotMtx;
+
 #define SET_OOTO_ADULT_MODEL(dest, src) SET_Z64O_MODEL(dest, src, OOTO_ADULT)
 #define QSET_OOTO_ADULT_MODEL(dlName) SET_OOTO_ADULT_MODEL(dlName, dlName)
 
 void setupZobjOotoAdult(PlayerModelManagerHandle h, u8 *zobj) {
+    if (!sIsOotHookshotMtxInitialized) {
+        guPosition(&sIsOotHookshotMtxInitialized, 0, 0, 0, 1, 50, 840, 0);
+        sIsOotHookshotMtxInitialized = true;
+    }
+
     // OotoFixHeaderSkelPtr MUST run before repointZobjDls to ensure the latter reads the right offset for the skeleton in old zobjs
 
     // old versions of manifest did not write header ptr
@@ -242,6 +250,7 @@ void setupZobjOotoAdult(PlayerModelManagerHandle h, u8 *zobj) {
     SET_MATRIX(PMM_MTX_SWORD_GILDED_BACK, OOTO_ADULT_MATRIX_SWORD_BACK);
     SET_MATRIX(PMM_MTX_SHIELD_HERO_BACK, OOTO_ADULT_MATRIX_SHIELD_BACK);
     SET_MATRIX(PMM_MTX_SHIELD_MIRROR_BACK, OOTO_ADULT_MATRIX_SHIELD_BACK);
+    PlayerModelManager_setMatrix(h, PMM_MTX_HOOKSHOT_CHAIN_AND_HOOK, &sIsOotHookshotMtxInitialized);
 
     QSET_OOTO_ADULT_MODEL(WAIST);
     QSET_OOTO_ADULT_MODEL(RTHIGH);
@@ -279,16 +288,7 @@ void setupZobjOotoAdult(PlayerModelManagerHandle h, u8 *zobj) {
     SET_OOTO_ADULT_MODEL(SHIELD_HERO, SHIELD_HYLIAN);
     QSET_OOTO_ADULT_MODEL(SHIELD_MIRROR);
     QSET_OOTO_ADULT_MODEL(OCARINA_TIME);
-
-    Gfx *hookshotHookDL = recomp_alloc(sizeof(Gfx) * 4);
-
-    gSPMatrix(&hookshotHookDL[0], &sHookshotHookMatrix, G_MTX_PUSH | G_MTX_MUL | G_MTX_MODELVIEW);
-    gSPDisplayList(&hookshotHookDL[1], &zobj[OOTO_ADULT_LUT_DL_HOOKSHOT_HOOK]);
-    gSPPopMatrix(&hookshotHookDL[2], G_MTX_MODELVIEW);
-    gSPEndDisplayList(&hookshotHookDL[3]);
-
-    SET_MODEL_DIRECT(PMM_DL_HOOKSHOT_HOOK, hookshotHookDL);
-
+    QSET_OOTO_ADULT_MODEL(HOOKSHOT_HOOK);
     QSET_OOTO_ADULT_MODEL(HOOKSHOT_CHAIN);
     QSET_OOTO_ADULT_MODEL(HOOKSHOT_RETICLE);
     QSET_OOTO_ADULT_MODEL(HOOKSHOT);
