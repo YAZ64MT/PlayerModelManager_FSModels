@@ -46,6 +46,7 @@ void repointExternalSegments(u8 *zobj, u32 start, u32 end) {
 }
 
 void repointZobjDls(u8 *zobj, u32 start, u32 end) {
+    // TODO: FIGURE OUT WHY THIS FUNCTION IS BORKED
     if (IS_ALREADY_REPOINTED(zobj)) {
         return;
     }
@@ -94,7 +95,7 @@ void handleZobjSkeleton(PlayerModelManagerHandle h, u8 *zobj, LimbToAlias limbsT
         return;
     }
 
-    FlexSkeletonHeader *flexHeader = SEGMENTED_TO_GLOBAL_PTR(zobj, *(FlexSkeletonHeader **)(zobj + Z64O_SKELETON_HEADER_POINTER));
+    FlexSkeletonHeader *flexHeader = SEGMENTED_TO_GLOBAL_PTR(zobj, *(u32 *)(zobj + Z64O_SKELETON_HEADER_POINTER));
 
     GlobalObjects_globalizeLodLimbSkeleton(zobj, flexHeader);
 
@@ -104,15 +105,17 @@ void handleZobjSkeleton(PlayerModelManagerHandle h, u8 *zobj, LimbToAlias limbsT
         int limbIdx = l2a->limb - 1;
         
         LodLimb *limb = flexHeader->sh.segment[limbIdx];
+
+        GlobalObjects_globalizeSegmentedDL(zobj, (Gfx *)SEGMENT_ADDR(0x06, (uintptr_t)limb->dLists[0] - (uintptr_t)zobj));
     }
 
     PlayerModelManager_setSkeleton(h, flexHeader);
 }
 
 #define SET_MATRIX(dest, src) PlayerModelManager_setMatrix(h, dest, (Mtx *)&zobj[src])
-#define SET_MODEL_DIRECT(dest, src) PlayerModelManager_setDisplayList(h, dest, src)
+#define SET_MODEL_DIRECT(dest, src) PlayerModelManager_setDisplayList(h, PMM_DL_##dest, src)
 #define SET_MODEL(dest, src) SET_MODEL_DIRECT(dest, (Gfx *)&zobj[src])
-#define SET_Z64O_MODEL(dest, src, modName) SET_MODEL(PMM_DL_##dest, modName##_LUT_DL_##src)
+#define SET_Z64O_MODEL(dest, src, modName) SET_MODEL(dest, modName##_LUT_DL_##src)
 
 #define SET_MMO_MODEL(dest, src) SET_Z64O_MODEL(dest, src, MMO)
 #define QSET_MMO_MODEL(dlName) SET_MMO_MODEL(dlName, dlName)
@@ -124,6 +127,7 @@ void setupZobjMmoHuman(PlayerModelManagerHandle h, u8 *zobj) {
     handleZobjSkeleton(h, zobj, sMMOLimbs);
 
     setupFaceTextures(h, zobj);
+    return;
 
     SET_MATRIX(PMM_MTX_SWORD_KOKIRI_BACK, MMO_MATRIX_SWORD_A);
     SET_MATRIX(PMM_MTX_SWORD_RAZOR_BACK, MMO_MATRIX_SWORD_B);
@@ -131,25 +135,8 @@ void setupZobjMmoHuman(PlayerModelManagerHandle h, u8 *zobj) {
     SET_MATRIX(PMM_MTX_SHIELD_HERO_BACK, MMO_MATRIX_SHIELD_HERO);
     SET_MATRIX(PMM_MTX_SHIELD_MIRROR_BACK, MMO_MATRIX_SHIELD_MIRROR);
 
-    QSET_MMO_MODEL(WAIST);
-    QSET_MMO_MODEL(RTHIGH);
-    QSET_MMO_MODEL(RSHIN);
-    QSET_MMO_MODEL(RFOOT);
-    QSET_MMO_MODEL(LTHIGH);
-    QSET_MMO_MODEL(LSHIN);
-    QSET_MMO_MODEL(LFOOT);
-    QSET_MMO_MODEL(HEAD);
-    QSET_MMO_MODEL(HAT);
-    QSET_MMO_MODEL(COLLAR);
-    QSET_MMO_MODEL(LSHOULDER);
-    QSET_MMO_MODEL(LFOREARM);
-    QSET_MMO_MODEL(RSHOULDER);
-    QSET_MMO_MODEL(RFOREARM);
-    QSET_MMO_MODEL(TORSO);
-    QSET_MMO_MODEL(LHAND);
     QSET_MMO_MODEL(LFIST);
     QSET_MMO_MODEL(LHAND_BOTTLE);
-    QSET_MMO_MODEL(RHAND);
     QSET_MMO_MODEL(RFIST);
     QSET_MMO_MODEL(SWORD_KOKIRI_SHEATH);
     QSET_MMO_MODEL(SWORD_RAZOR_SHEATH);
@@ -167,7 +154,7 @@ void setupZobjMmoHuman(PlayerModelManagerHandle h, u8 *zobj) {
     SET_MMO_MODEL(FPS_HOOKSHOT, HOOKSHOT);
     SET_MMO_MODEL(FPS_LFOREARM, LFOREARM);
     SET_MMO_MODEL(FPS_LHAND, LFIST);
-    SET_MODEL_DIRECT(PMM_DL_FPS_RFOREARM, gEmptyDL);
+    SET_MODEL_DIRECT(FPS_RFOREARM, gEmptyDL);
     QSET_MMO_MODEL(FPS_RHAND);
 }
 
@@ -194,29 +181,12 @@ void setupZobjOotoChild(PlayerModelManagerHandle h, u8 *zobj) {
     SET_MATRIX(PMM_MTX_SWORD_KOKIRI_BACK, OOTO_CHILD_MATRIX_SWORD_BACK);
     SET_MATRIX(PMM_MTX_SHIELD_HERO_BACK, OOTO_CHILD_MATRIX_SHIELD_BACK);
 
-    QSET_OOTO_CHILD_MODEL(WAIST);
-    QSET_OOTO_CHILD_MODEL(RTHIGH);
-    QSET_OOTO_CHILD_MODEL(RSHIN);
-    QSET_OOTO_CHILD_MODEL(RFOOT);
-    QSET_OOTO_CHILD_MODEL(LTHIGH);
-    QSET_OOTO_CHILD_MODEL(LSHIN);
-    QSET_OOTO_CHILD_MODEL(LFOOT);
-    QSET_OOTO_CHILD_MODEL(HEAD);
-    QSET_OOTO_CHILD_MODEL(HAT);
-    QSET_OOTO_CHILD_MODEL(COLLAR);
-    QSET_OOTO_CHILD_MODEL(LSHOULDER);
-    QSET_OOTO_CHILD_MODEL(LFOREARM);
-    QSET_OOTO_CHILD_MODEL(RSHOULDER);
-    QSET_OOTO_CHILD_MODEL(RFOREARM);
-    QSET_OOTO_CHILD_MODEL(TORSO);
-    QSET_OOTO_CHILD_MODEL(LHAND);
     QSET_OOTO_CHILD_MODEL(LFIST);
     QSET_OOTO_CHILD_MODEL(LHAND_BOTTLE);
-    QSET_OOTO_CHILD_MODEL(RHAND);
     QSET_OOTO_CHILD_MODEL(RFIST);
     QSET_OOTO_CHILD_MODEL(DEKU_STICK);
     QSET_OOTO_CHILD_MODEL(BOTTLE_GLASS);
-    SET_MODEL_DIRECT(PMM_DL_BOTTLE_CONTENTS, gEmptyDL);
+    SET_MODEL_DIRECT(BOTTLE_CONTENTS, gEmptyDL);
     QSET_OOTO_CHILD_MODEL(SWORD_KOKIRI_SHEATH);
     QSET_OOTO_CHILD_MODEL(SWORD_KOKIRI_HILT);
     QSET_OOTO_CHILD_MODEL(SWORD_KOKIRI_BLADE);
@@ -224,7 +194,7 @@ void setupZobjOotoChild(PlayerModelManagerHandle h, u8 *zobj) {
     QSET_OOTO_CHILD_MODEL(OCARINA_TIME);
     SET_OOTO_CHILD_MODEL(FPS_LFOREARM, LFOREARM);
     SET_OOTO_CHILD_MODEL(FPS_LHAND, LFIST);
-    SET_MODEL_DIRECT(PMM_DL_FPS_RFOREARM, gEmptyDL);
+    SET_MODEL_DIRECT(FPS_RFOREARM, gEmptyDL);
     QSET_OOTO_CHILD_MODEL(FPS_RHAND);
 }
 
@@ -269,25 +239,8 @@ void setupZobjOotoAdult(PlayerModelManagerHandle h, u8 *zobj) {
     SET_MATRIX(PMM_MTX_SHIELD_MIRROR_BACK, OOTO_ADULT_MATRIX_SHIELD_BACK);
     PlayerModelManager_setMatrix(h, PMM_MTX_HOOKSHOT_CHAIN_AND_HOOK, &sOotHookshotMtx);
 
-    QSET_OOTO_ADULT_MODEL(WAIST);
-    QSET_OOTO_ADULT_MODEL(RTHIGH);
-    QSET_OOTO_ADULT_MODEL(RSHIN);
-    QSET_OOTO_ADULT_MODEL(RFOOT);
-    QSET_OOTO_ADULT_MODEL(LTHIGH);
-    QSET_OOTO_ADULT_MODEL(LSHIN);
-    QSET_OOTO_ADULT_MODEL(LFOOT);
-    QSET_OOTO_ADULT_MODEL(HEAD);
-    QSET_OOTO_ADULT_MODEL(HAT);
-    QSET_OOTO_ADULT_MODEL(COLLAR);
-    QSET_OOTO_ADULT_MODEL(LSHOULDER);
-    QSET_OOTO_ADULT_MODEL(LFOREARM);
-    QSET_OOTO_ADULT_MODEL(RSHOULDER);
-    QSET_OOTO_ADULT_MODEL(RFOREARM);
-    QSET_OOTO_ADULT_MODEL(TORSO);
-    QSET_OOTO_ADULT_MODEL(LHAND);
     QSET_OOTO_ADULT_MODEL(LFIST);
     QSET_OOTO_ADULT_MODEL(LHAND_BOTTLE);
-    QSET_OOTO_ADULT_MODEL(RHAND);
     QSET_OOTO_ADULT_MODEL(RFIST);
     SET_OOTO_ADULT_MODEL(SWORD_KOKIRI_SHEATH, SWORD_MASTER_SHEATH);
     SET_OOTO_ADULT_MODEL(SWORD_KOKIRI_HILT, SWORD_MASTER_HILT);
@@ -312,7 +265,7 @@ void setupZobjOotoAdult(PlayerModelManagerHandle h, u8 *zobj) {
     QSET_OOTO_ADULT_MODEL(BOW);
     QSET_OOTO_ADULT_MODEL(BOW_STRING);
     QSET_OOTO_ADULT_MODEL(BOTTLE_GLASS);
-    SET_MODEL_DIRECT(PMM_DL_BOTTLE_CONTENTS, gEmptyDL);
+    SET_MODEL_DIRECT(BOTTLE_CONTENTS, gEmptyDL);
     QSET_OOTO_ADULT_MODEL(FPS_LFOREARM);
     QSET_OOTO_ADULT_MODEL(FPS_LHAND);
     QSET_OOTO_ADULT_MODEL(FPS_RFOREARM);

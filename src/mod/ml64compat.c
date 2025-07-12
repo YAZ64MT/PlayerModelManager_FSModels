@@ -116,7 +116,7 @@ void remapPtrs(void *obj, Gfx *dlPtr, U32ValueHashmapHandle oldPtrs2New) {
                 break;
         }
 
-        globalPtr = (Gfx *)((uintptr_t)globalPtr + sizeof(Gfx));
+        globalPtr++;
     }
 }
 

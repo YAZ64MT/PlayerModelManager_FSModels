@@ -197,29 +197,42 @@ PLAYERMODELMANAGER_CALLBACK_REGISTER_MODELS void registerDiskModels() {
             }
             formChar--;
 
+            recomp_printf("Allocating 0x%X bytes for model with internal name '%s'...\n", entrySize, internalName);
             void *modelBuf = recomp_alloc(entrySize);
 
-            PMMZobj_getEntryFileData(i, modelBuf, entrySize);
+            if (PMMZobj_getEntryFileData(i, modelBuf, entrySize)) {
+                for (int j = 0; j < PMM_MODEL_TYPE_MAX; ++j) {
+                    if (PMMZobj_isModelType(i, j)) {
+                        // If a model is registered for multiple model types, we differentiate them by the last character internally
+                        *formChar = FORM_MODEL_TO_SUFFIX[j];
 
-            for (int j = 0; j < PMM_MODEL_TYPE_MAX; ++j) {
-                if (PMMZobj_isModelType(i, j)) {
-                    // If a model is registered for multiple model types, we differentiate them by the last character internally
-                    *formChar = FORM_MODEL_TO_SUFFIX[j];
+                        PlayerModelManagerHandle h = PLAYERMODELMANAGER_REGISTER_MODEL(internalName, j);
 
-                    PlayerModelManagerHandle h = PLAYERMODELMANAGER_REGISTER_MODEL(internalName, j);
+                        if (displayName) {
+                            PlayerModelManager_setDisplayName(h, displayName);
+                        }
 
-                    if (displayName) {
-                        PlayerModelManager_setDisplayName(h, displayName);
+                        if (authorName) {
+                            PlayerModelManager_setAuthor(h, authorName);
+                        }
+
+                        recomputil_u32_value_hashmap_insert(sModelBuffers, h, (uintptr_t)modelBuf);
+
+                        char *debugDispName = displayName ? displayName : "";
+                        char *debugAuthorName = authorName ? authorName : "";
+                        recomp_printf("Processing zobj...\n"
+                                      "Display Name: %s\n"
+                                      "Internal Name: %s\n"
+                                      "Author: %s\n"
+                                      "-----------------\n",
+                                      debugDispName,
+                                      internalName,
+                                      authorName);
+                        setupZobjZ64O(h, modelBuf);
                     }
-
-                    if (authorName) {
-                        PlayerModelManager_setAuthor(h, authorName);
-                    }
-
-                    recomputil_u32_value_hashmap_insert(sModelBuffers, h, (uintptr_t)modelBuf);
-
-                    setupZobjZ64O(h, modelBuf);
                 }
+            } else {
+                recomp_free(modelBuf);
             }
         }
 
