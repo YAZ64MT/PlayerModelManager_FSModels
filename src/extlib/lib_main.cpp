@@ -114,11 +114,6 @@ void extractEmbeddedInfo(const std::vector<char> &v, ModelDiskEntry &entry) {
                     it++;
                 }
 
-                // Don't read null terminator into string
-                if (it > start && *it == '\0') {
-                    it--;
-                }
-
                 result = start != it ? std::string(start, it) : "";
             };
 
