@@ -326,7 +326,7 @@ RECOMP_DLL_FUNC(PMMZobj_getEntryFileData) {
     ModelDiskEntry *entry = getDiskEntry(RECOMP_ARG(int, 0));
 
     if (!entry) {
-        RECOMP_RETURN(int, -1);
+        RECOMP_RETURN(bool, false);
     }
 
     RECOMP_RETURN(bool, writeEntryDataToRecompBuffer(rdram, ctx, entry->modelData, entry->fileSize));
