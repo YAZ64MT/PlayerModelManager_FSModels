@@ -9,6 +9,7 @@
 #include "defines_z64o.h"
 #include "defines_ooto.h"
 #include "defines_mmo.h"
+#include "ml64compat_mm.h"
 
 RECOMP_IMPORT(".", int PMMZobj_setPMMDir(const char *str));
 RECOMP_IMPORT(".", int PMMZobj_scanForDiskEntries());
@@ -26,7 +27,7 @@ RECOMP_IMPORT(".", bool PMMZobj_isDirectoryExist(char *path));
 RECOMP_IMPORT(".", bool PMMZobj_readEntryU8(int i, int offset, u8 *out));
 RECOMP_IMPORT(".", bool PMMZobj_readEntryU16(int i, int offset, u16 *out));
 RECOMP_IMPORT(".", bool PMMZobj_readEntryU32(int i, int offset, u32 *out));
-RECOMP_IMPORT(".", bool PMMZobj_isFormModelType(int i, PlayerModelManagerModelType t));
+RECOMP_IMPORT(".", bool PMMZobj_isModelType(int i, PlayerModelManagerModelType t));
 
 #define MAIN_DIR "playermodelmanager"
 #define MODEL_DIR MAIN_DIR "/models/"
@@ -144,7 +145,15 @@ char *getStringFromEntry(int i, bool nameWriter(int i, char *buffer, int bufferS
     return result;
 }
 
+RECOMP_DECLARE_EVENT(_internal_initHashObjects());
+static bool sIsHashObjectsInitialized = false;
+
 PLAYERMODELMANAGER_CALLBACK_REGISTER_MODELS void registerDiskModels() {
+    if (!sIsHashObjectsInitialized) {
+        _internal_initHashObjects();
+        sIsHashObjectsInitialized = true;
+    }
+
     if (!sModelBuffers) {
         sModelBuffers = recomputil_create_u32_value_hashmap();
     }
@@ -190,23 +199,32 @@ PLAYERMODELMANAGER_CALLBACK_REGISTER_MODELS void registerDiskModels() {
             void *modelBuf = recomp_alloc(entrySize);
 
             PMMZobj_getEntryFileData(i, modelBuf, entrySize);
+            recomp_printf("Got here 1\n");
 
             for (int j = 0; j < PMM_MODEL_TYPE_MAX; ++j) {
-                if (PMMZobj_isFormModelType(i, j)) {
+                if (PMMZobj_isModelType(i, j)) {
                     // If a model is registered for multiple model types, we differentiate them by the last character internally
                     *formChar = FORM_MODEL_TO_SUFFIX[j];
+                    recomp_printf("Got here 2\n");
 
                     PlayerModelManagerHandle h = PLAYERMODELMANAGER_REGISTER_FORM_MODEL(internalName, j);
+                    recomp_printf("Got here 3\n");
 
                     if (displayName) {
                         PlayerModelManager_setDisplayName(h, displayName);
+                        recomp_printf("Got here 4\n");
                     }
 
                     if (authorName) {
                         PlayerModelManager_setAuthor(h, authorName);
+                        recomp_printf("Got here 5\n");
                     }
 
                     recomputil_u32_value_hashmap_insert(sModelBuffers, h, (uintptr_t)modelBuf);
+
+                    recomp_printf("Got here 6\n");
+                    setupZobjZ64O(h, modelBuf);
+                    recomp_printf("Got here 7\n");
                 }
             }
         }

@@ -243,6 +243,8 @@ bool writeEntryDataToRecompBuffer(uint8_t *rdram, recomp_context *ctx, const voi
     for (size_t i = 0; i < dataSize; i++) {
         MEM_B(buf, i) = bytes[i];
     }
+
+    return true;
 }
 
 bool writeEntryStringToRecompBuffer(uint8_t *rdram, recomp_context *ctx, const std::string &s) {
@@ -425,14 +427,14 @@ RECOMP_DLL_FUNC(PMMZobj_readEntryU32) {
     RECOMP_RETURN(bool, true);
 }
 
-RECOMP_DLL_FUNC(PMMZobj_getEntryFormType) {
+RECOMP_DLL_FUNC(PMMZobj_isModelType) {
     ModelDiskEntry *entry = getDiskEntry(RECOMP_ARG(int, 0));
 
     if (!entry) {
         RECOMP_RETURN(bool, false);
     }
 
-    PlayerModelManagerModelType type = RECOMP_ARG(PlayerModelManagerModelType, 1);
+    int type = RECOMP_ARG(int, 1);
 
     if (type < 0 || type >= PMM_MODEL_TYPE_MAX) {
         RECOMP_RETURN(bool, false);

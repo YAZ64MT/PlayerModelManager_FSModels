@@ -2,6 +2,7 @@
 #include "global.h"
 #include "recomputils.h"
 #include "recompconfig.h"
+#include "recompdata.h"
 #include "defines_mmo.h"
 #include "defines_ooto.h"
 #include "globalobjects_api.h"
@@ -10,6 +11,10 @@
 #include "assets/objects/object_link_child/object_link_child.h"
 #include "libc/string.h"
 #include "playermodelmanager_api.h"
+
+static U32HashsetHandle sRepointedBuffers = 0;
+
+#define IS_ALREADY_REPOINTED(buf) recomputil_u32_hashset_contains(sRepointedBuffers, (u32)buf)
 
 void setupFaceTextures(PlayerModelManagerHandle h, u8 *zobj) {
     TexturePtr eyes[PLAYER_EYES_MAX];
@@ -28,6 +33,10 @@ void setupFaceTextures(PlayerModelManagerHandle h, u8 *zobj) {
 }
 
 void repointExternalSegments(u8 *zobj, u32 start, u32 end) {
+    if (IS_ALREADY_REPOINTED(zobj)) {
+        return;
+    }
+
     u32 current = start;
 
     while (current < end) {
@@ -37,6 +46,10 @@ void repointExternalSegments(u8 *zobj, u32 start, u32 end) {
 }
 
 void repointZobjDls(u8 *zobj, u32 start, u32 end) {
+    if (IS_ALREADY_REPOINTED(zobj)) {
+        return;
+    }
+
     u32 current = start;
 
     while (current < end) {
@@ -77,6 +90,10 @@ DECLARE_Z64O_LIMB_ALIAS(sOoTOChildLimbs, OOTO_CHILD, OOTO_CHILD_LUT_DL_SWORD_KOK
 DECLARE_Z64O_LIMB_ALIAS(sOoTOAdultLimbs, OOTO_ADULT, OOTO_ADULT_LUT_DL_SWORD_MASTER_SHEATH);
 
 void handleZobjSkeleton(PlayerModelManagerHandle h, u8 *zobj, LimbToAlias limbsToAliases[]) {
+    if (IS_ALREADY_REPOINTED(zobj)) {
+        return;
+    }
+
     FlexSkeletonHeader *flexHeader = SEGMENTED_TO_GLOBAL_PTR(zobj, *(FlexSkeletonHeader **)(zobj + Z64O_SKELETON_HEADER_POINTER));
 
     GlobalObjects_globalizeLodLimbSkeleton(zobj, flexHeader);
@@ -250,7 +267,7 @@ void setupZobjOotoAdult(PlayerModelManagerHandle h, u8 *zobj) {
     SET_MATRIX(PMM_MTX_SWORD_GILDED_BACK, OOTO_ADULT_MATRIX_SWORD_BACK);
     SET_MATRIX(PMM_MTX_SHIELD_HERO_BACK, OOTO_ADULT_MATRIX_SHIELD_BACK);
     SET_MATRIX(PMM_MTX_SHIELD_MIRROR_BACK, OOTO_ADULT_MATRIX_SHIELD_BACK);
-    PlayerModelManager_setMatrix(h, PMM_MTX_HOOKSHOT_CHAIN_AND_HOOK, &sIsOotHookshotMtxInitialized);
+    PlayerModelManager_setMatrix(h, PMM_MTX_HOOKSHOT_CHAIN_AND_HOOK, &sOotHookshotMtx);
 
     QSET_OOTO_ADULT_MODEL(WAIST);
     QSET_OOTO_ADULT_MODEL(RTHIGH);
@@ -304,6 +321,10 @@ void setupZobjOotoAdult(PlayerModelManagerHandle h, u8 *zobj) {
 }
 
 void setupZobjZ64O(PlayerModelManagerHandle h, u8 *zobj) {
+    if (!sRepointedBuffers) {
+        sRepointedBuffers = recomputil_create_u32_hashset();
+    }
+
     switch (zobj[Z64O_FORM_BYTE]) {
         case MMO_FORM_BYTE_CHILD:
         case MMO_FORM_BYTE_ADULT:
@@ -321,6 +342,8 @@ void setupZobjZ64O(PlayerModelManagerHandle h, u8 *zobj) {
         default:
             break;
     }
+
+    recomputil_u32_hashset_insert(sRepointedBuffers, (u32)zobj);
 }
 
 void remapSegmentPtrs() {
@@ -346,6 +369,7 @@ void remapSegmentPtrs() {
     //setSegmentPtrRemap(OOT_GK_BOTTLE_GLASS_TEX, (u32)gOotBottleGlassTex);
 }
 
+/*
 RECOMP_DECLARE_EVENT(_internal_onReadyML64Compat());
 
 RECOMP_CALLBACK(".", _internal_onReadyML64CompatBase)
@@ -354,3 +378,4 @@ void initML64CompatMM_onReadyML64CompatBase() {
 
     _internal_onReadyML64Compat();
 }
+*/

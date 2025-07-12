@@ -34,7 +34,6 @@ dependencies = [
 # Example dependency:
 #    "modname:1.0.0"
    "yazmt_mm_playermodelmanager",
-   "yazmt_mm_globalobjects",
    "yazmt_mm_corelib",
    "yazmt_mm_global_objects",
 ]
@@ -59,7 +58,7 @@ native_libraries = [
       "PMMZobj_readEntryU8",
       "PMMZobj_readEntryU16",
       "PMMZobj_readEntryU32",
-      "PMMZobj_isFormModelType",
+      "PMMZobj_isModelType",
    ] }
 ]
 
