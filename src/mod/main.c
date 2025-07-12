@@ -26,7 +26,7 @@ RECOMP_IMPORT(".", bool PMMZobj_isDirectoryExist(char *path));
 RECOMP_IMPORT(".", bool PMMZobj_readEntryU8(int i, int offset, u8 *out));
 RECOMP_IMPORT(".", bool PMMZobj_readEntryU16(int i, int offset, u16 *out));
 RECOMP_IMPORT(".", bool PMMZobj_readEntryU32(int i, int offset, u32 *out));
-RECOMP_IMPORT(".", bool PMMZobj_isFormModelType(int i, PlayerModelManagerFormModelType t));
+RECOMP_IMPORT(".", bool PMMZobj_isFormModelType(int i, PlayerModelManagerModelType t));
 
 #define MAIN_DIR "playermodelmanager"
 #define MODEL_DIR MAIN_DIR "/models/"

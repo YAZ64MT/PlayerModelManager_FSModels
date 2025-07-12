@@ -44,7 +44,7 @@ void OotoFixChildLeftShoulder(void *obj) {
         Gfx *lForearm = (Gfx *)(lForearmLUT->words.w1);
 
         if (lShoulder == lForearm) {
-            FlexSkeletonHeader *skel = zobj + SEGMENT_OFFSET(*(uintptr_t *)(zobj + Z64O_SKELETON_HEADER_POINTER));
+            FlexSkeletonHeader *skel = (FlexSkeletonHeader *)(zobj + SEGMENT_OFFSET(*(uintptr_t *)(zobj + Z64O_SKELETON_HEADER_POINTER)));
 
             LodLimb **limbs = (LodLimb **)(zobj + SEGMENT_OFFSET(skel->sh.segment));
 
@@ -53,6 +53,10 @@ void OotoFixChildLeftShoulder(void *obj) {
             lShoulderLUT->words.w1 = (uintptr_t)lShoulderLimb->dLists[0];
         }
     }
+}
+
+bool isSegmentedPtr(void *p) {
+    return (uintptr_t)p >> 24 <= 0xF;
 }
 
 U32ValueHashmapHandle gSegmentPointersRemap;

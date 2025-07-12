@@ -36,6 +36,7 @@ dependencies = [
    "yazmt_mm_playermodelmanager",
    "yazmt_mm_globalobjects",
    "yazmt_mm_corelib",
+   "yazmt_mm_global_objects",
 ]
 
 # Native libraries (e.g. DLLs) and the functions they export.

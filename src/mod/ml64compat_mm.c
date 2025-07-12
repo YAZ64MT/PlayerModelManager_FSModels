@@ -228,7 +228,7 @@ static Mtx sOotHookshotMtx;
 
 void setupZobjOotoAdult(PlayerModelManagerHandle h, u8 *zobj) {
     if (!sIsOotHookshotMtxInitialized) {
-        guPosition(&sIsOotHookshotMtxInitialized, 0, 0, 0, 1, 50, 840, 0);
+        guPosition(&sOotHookshotMtx, 0, 0, 0, 1, 50, 840, 0);
         sIsOotHookshotMtxInitialized = true;
     }
 
