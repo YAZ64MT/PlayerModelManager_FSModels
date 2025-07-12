@@ -199,32 +199,25 @@ PLAYERMODELMANAGER_CALLBACK_REGISTER_MODELS void registerDiskModels() {
             void *modelBuf = recomp_alloc(entrySize);
 
             PMMZobj_getEntryFileData(i, modelBuf, entrySize);
-            recomp_printf("Got here 1\n");
 
             for (int j = 0; j < PMM_MODEL_TYPE_MAX; ++j) {
                 if (PMMZobj_isModelType(i, j)) {
                     // If a model is registered for multiple model types, we differentiate them by the last character internally
                     *formChar = FORM_MODEL_TO_SUFFIX[j];
-                    recomp_printf("Got here 2\n");
 
-                    PlayerModelManagerHandle h = PLAYERMODELMANAGER_REGISTER_FORM_MODEL(internalName, j);
-                    recomp_printf("Got here 3\n");
+                    PlayerModelManagerHandle h = PLAYERMODELMANAGER_REGISTER_MODEL(internalName, j);
 
                     if (displayName) {
                         PlayerModelManager_setDisplayName(h, displayName);
-                        recomp_printf("Got here 4\n");
                     }
 
                     if (authorName) {
                         PlayerModelManager_setAuthor(h, authorName);
-                        recomp_printf("Got here 5\n");
                     }
 
                     recomputil_u32_value_hashmap_insert(sModelBuffers, h, (uintptr_t)modelBuf);
 
-                    recomp_printf("Got here 6\n");
                     setupZobjZ64O(h, modelBuf);
-                    recomp_printf("Got here 7\n");
                 }
             }
         }
