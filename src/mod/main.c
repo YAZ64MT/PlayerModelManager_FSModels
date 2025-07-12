@@ -28,6 +28,7 @@ RECOMP_IMPORT(".", bool PMMZobj_readEntryU8(int i, int offset, u8 *out));
 RECOMP_IMPORT(".", bool PMMZobj_readEntryU16(int i, int offset, u16 *out));
 RECOMP_IMPORT(".", bool PMMZobj_readEntryU32(int i, int offset, u32 *out));
 RECOMP_IMPORT(".", bool PMMZobj_isModelType(int i, PlayerModelManagerModelType t));
+RECOMP_IMPORT(".", void PMMZobj_clearDiskEntries());
 
 #define MAIN_DIR "playermodelmanager"
 #define MODEL_DIR MAIN_DIR "/models/"
@@ -226,4 +227,6 @@ PLAYERMODELMANAGER_CALLBACK_REGISTER_MODELS void registerDiskModels() {
         recomp_free(displayName);
         recomp_free(authorName);
     }
+
+    PMMZobj_clearDiskEntries();
 }

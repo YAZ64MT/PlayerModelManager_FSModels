@@ -442,3 +442,16 @@ RECOMP_DLL_FUNC(PMMZobj_isModelType) {
 
     RECOMP_RETURN(bool, entry->modelTypes[type]);
 }
+
+RECOMP_DLL_FUNC(PMMZobj_clearDiskEntries) {
+    for (int i = 0; i < sModelDiskEntries.size(); ++i) {
+        auto &entry = sModelDiskEntries[i];
+
+        if (entry.modelData) {
+            delete[] entry.modelData;
+        }
+    }
+
+    sModelDiskEntries.clear();
+    sModelDiskEntries.shrink_to_fit();
+}
