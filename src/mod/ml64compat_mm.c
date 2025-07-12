@@ -127,7 +127,6 @@ void setupZobjMmoHuman(PlayerModelManagerHandle h, u8 *zobj) {
     handleZobjSkeleton(h, zobj, sMMOLimbs);
 
     setupFaceTextures(h, zobj);
-    return;
 
     SET_MATRIX(PMM_MTX_SWORD_KOKIRI_BACK, MMO_MATRIX_SWORD_A);
     SET_MATRIX(PMM_MTX_SWORD_RAZOR_BACK, MMO_MATRIX_SWORD_B);
