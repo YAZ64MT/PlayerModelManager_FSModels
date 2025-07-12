@@ -11,14 +11,20 @@
 #include "libc/string.h"
 #include "playermodelmanager_api.h"
 
-void setupFaceTextures(Link_ModelInfo *modelInfo, u8 *zobj) {
-    for (u32 i = 0; i < PLAYER_EYES_MAX; ++i) {
-        modelInfo->eyesTextures[i] = (TexturePtr)&zobj[Z64O_TEX_EYES_START + Z64O_TEX_EYES_SIZE * i];
+void setupFaceTextures(PlayerModelManagerHandle h, u8 *zobj) {
+    TexturePtr eyes[PLAYER_EYES_MAX];
+    TexturePtr mouths[PLAYER_MOUTH_MAX];
+
+    for (int i = 0; i < PLAYER_EYES_MAX; ++i) {
+        eyes[i] = (TexturePtr)&zobj[Z64O_TEX_EYES_START + Z64O_TEX_EYES_SIZE * i];
     }
 
-    for (u32 i = 0; i < PLAYER_MOUTH_MAX; ++i) {
-        modelInfo->mouthTextures[i] = (TexturePtr)&zobj[Z64O_TEX_MOUTH_START + Z64O_TEX_MOUTH_SIZE * i];
+    for (int i = 0; i < PLAYER_MOUTH_MAX; ++i) {
+        mouths[i] = (TexturePtr)&zobj[Z64O_TEX_MOUTH_START + Z64O_TEX_MOUTH_SIZE * i];
     }
+
+    PlayerModelManager_setEyesTextures(h, eyes);
+    PlayerModelManager_setMouthTextures(h, mouths);
 }
 
 void repointExternalSegments(u8 *zobj, u32 start, u32 end) {
@@ -70,8 +76,8 @@ DECLARE_Z64O_LIMB_ALIAS(sMMOLimbs, MMO, MMO_LUT_DL_SWORD_KOKIRI_SHEATH);
 DECLARE_Z64O_LIMB_ALIAS(sOoTOChildLimbs, OOTO_CHILD, OOTO_CHILD_LUT_DL_SWORD_KOKIRI_SHEATH);
 DECLARE_Z64O_LIMB_ALIAS(sOoTOAdultLimbs, OOTO_ADULT, OOTO_ADULT_LUT_DL_SWORD_MASTER_SHEATH);
 
-void handleZobjSkeleton(Link_ModelInfo *modelInfo, u8 *zobj, LimbToAlias limbsToAliases[]) {
-    FlexSkeletonHeader *flexHeader = SEGMENTED_TO_GLOBAL_PTR(zobj, readU32(zobj, Z64O_SKELETON_HEADER_POINTER));
+void handleZobjSkeleton(PlayerModelManagerHandle h, u8 *zobj, LimbToAlias limbsToAliases[]) {
+    FlexSkeletonHeader *flexHeader = SEGMENTED_TO_GLOBAL_PTR(zobj, *(FlexSkeletonHeader **)(zobj + Z64O_SKELETON_HEADER_POINTER));
 
     GlobalObjects_globalizeLodLimbSkeleton(zobj, flexHeader);
 
@@ -81,40 +87,32 @@ void handleZobjSkeleton(Link_ModelInfo *modelInfo, u8 *zobj, LimbToAlias limbsTo
         int limbIdx = l2a->limb - 1;
         
         LodLimb *limb = flexHeader->sh.segment[limbIdx];
-        
-        if (!limb->dLists[0]) {
-            gSPBranchList(&zobj[l2a->aliasTableIndex], gCallEmptyDisplayList);
-        }
     }
 
-    modelInfo->skeleton = flexHeader;
+    PlayerModelManager_setSkeleton(h, flexHeader);
 }
 
-#define SET_MODEL(dest, src) modelInfo->models[dest] = (Gfx *)&zobj[src]
+#define SET_MATRIX(dest, src) PlayerModelManager_setMatrix(h, dest, (Mtx *)&zobj[src])
+#define SET_MODEL_DIRECT(dest, src) PlayerModelManager_setDisplayList(h, dest, src)
+#define SET_MODEL(dest, src) SET_MODEL_DIRECT(dest, (Gfx *)&zobj[src])
 #define SET_Z64O_MODEL(dest, src, modName) SET_MODEL(PMM_DL_##dest, modName##_LUT_DL_##src)
 
 #define SET_MMO_MODEL(dest, src) SET_Z64O_MODEL(dest, src, MMO)
 #define QSET_MMO_MODEL(dlName) SET_MMO_MODEL(dlName, dlName)
 
-void setupZobjMmoHuman(Link_ModelInfo *modelInfo, u8 *zobj) {
-
-    clearLinkModelInfo(modelInfo);
-
-    if (zobj[Z64O_FORM_BYTE] == MMO_FORM_BYTE_ADULT) {
-        modelInfo->flags |= LINK_MODELINFO_FLAG_MM_ADULT_FIX;
-    }
+void setupZobjMmoHuman(PlayerModelManagerHandle h, u8 *zobj) {
 
     repointZobjDls(zobj, MMO_LUT_DL_WAIST, MMO_LUT_DL_DF_COMMAND);
 
-    handleZobjSkeleton(modelInfo, zobj, sMMOLimbs);
+    handleZobjSkeleton(h, zobj, sMMOLimbs);
 
-    setupFaceTextures(modelInfo, zobj);
+    setupFaceTextures(h, zobj);
 
-    modelInfo->equipMtx[LINK_EQUIP_MATRIX_SWORD_KOKIRI_BACK] = (Mtx *)&zobj[MMO_MATRIX_SWORD_A];
-    modelInfo->equipMtx[LINK_EQUIP_MATRIX_SWORD_RAZOR_BACK] = (Mtx *)&zobj[MMO_MATRIX_SWORD_B];
-    modelInfo->equipMtx[LINK_EQUIP_MATRIX_SWORD_GILDED_BACK] = (Mtx *)&zobj[MMO_MATRIX_SWORD_A];
-    modelInfo->equipMtx[LINK_EQUIP_MATRIX_SHIELD_HERO_BACK] = (Mtx *)&zobj[MMO_MATRIX_SHIELD_HERO];
-    modelInfo->equipMtx[LINK_EQUIP_MATRIX_SHIELD_MIRROR_BACK] = (Mtx *)&zobj[MMO_MATRIX_SHIELD_MIRROR];
+    SET_MATRIX(PMM_MTX_SWORD_KOKIRI_BACK, MMO_MATRIX_SWORD_A);
+    SET_MATRIX(PMM_MTX_SWORD_RAZOR_BACK, MMO_MATRIX_SWORD_B);
+    SET_MATRIX(PMM_MTX_SWORD_GILDED_BACK, MMO_MATRIX_SWORD_A);
+    SET_MATRIX(PMM_MTX_SHIELD_HERO_BACK, MMO_MATRIX_SHIELD_HERO);
+    SET_MATRIX(PMM_MTX_SHIELD_MIRROR_BACK, MMO_MATRIX_SHIELD_MIRROR);
 
     QSET_MMO_MODEL(WAIST);
     QSET_MMO_MODEL(RTHIGH);
@@ -143,7 +141,7 @@ void setupZobjMmoHuman(Link_ModelInfo *modelInfo, u8 *zobj) {
     QSET_MMO_MODEL(SWORD_GILDED_BLADE);
     QSET_MMO_MODEL(SWORD_GREAT_FAIRY_BLADE);
     QSET_MMO_MODEL(SHIELD_HERO);
-    modelInfo->models[PMM_DL_SHIELD_MIRROR] = (Gfx *)&zobj[MMO_DL_SHIELD_MIRROR_COMBINED];
+    SET_MMO_MODEL(SHIELD_MIRROR, SHIELD_MIRROR_COMBINED);
     QSET_MMO_MODEL(OCARINA_TIME);
     QSET_MMO_MODEL(BOW);
     QSET_MMO_MODEL(BOW_STRING);
@@ -152,17 +150,14 @@ void setupZobjMmoHuman(Link_ModelInfo *modelInfo, u8 *zobj) {
     SET_MMO_MODEL(FPS_HOOKSHOT, HOOKSHOT);
     SET_MMO_MODEL(FPS_LFOREARM, LFOREARM);
     SET_MMO_MODEL(FPS_LHAND, LFIST);
-    modelInfo->models[PMM_DL_FPS_RFOREARM] = gEmptyDisplayList;
+    SET_MODEL_DIRECT(PMM_DL_FPS_RFOREARM, gEmptyDL);
     QSET_MMO_MODEL(FPS_RHAND);
 }
 
 #define SET_OOTO_CHILD_MODEL(dest, src) SET_Z64O_MODEL(dest, src, OOTO_CHILD)
 #define QSET_OOTO_CHILD_MODEL(dlName) SET_OOTO_CHILD_MODEL(dlName, dlName)
 
-void setupZobjOotoChild(Link_ModelInfo *modelInfo, u8 *zobj) {
-
-    clearLinkModelInfo(modelInfo);
-
+void setupZobjOotoChild(PlayerModelManagerHandle h, u8 *zobj) {
     // OotoFixHeaderSkelPtr MUST run before OotoFixChildLeftShoulder to ensure the latter reads the right offset for the skeleton in old zobjs
     // OotoFixChildLeftShoulder MUST run before repointZobjDls to ensure the left shoulder is repointed in old zobjs
 
@@ -175,12 +170,12 @@ void setupZobjOotoChild(Link_ModelInfo *modelInfo, u8 *zobj) {
 
     repointZobjDls(zobj, OOTO_CHILD_LUT_DL_WAIST, OOTO_CHILD_LUT_DL_FPS_RARM_SLINGSHOT);
 
-    handleZobjSkeleton(modelInfo, zobj, sOoTOChildLimbs);
+    handleZobjSkeleton(h, zobj, sOoTOChildLimbs);
 
-    setupFaceTextures(modelInfo, zobj);
+    setupFaceTextures(h, zobj);
 
-    modelInfo->equipMtx[LINK_EQUIP_MATRIX_SWORD_KOKIRI_BACK] = (Mtx *)&zobj[OOTO_CHILD_MATRIX_SWORD_BACK];
-    modelInfo->equipMtx[LINK_EQUIP_MATRIX_SHIELD_HERO_BACK] = (Mtx *)&zobj[OOTO_CHILD_MATRIX_SHIELD_BACK];
+    SET_MATRIX(PMM_MTX_SWORD_KOKIRI_BACK, OOTO_CHILD_MATRIX_SWORD_BACK);
+    SET_MATRIX(PMM_MTX_SHIELD_HERO_BACK, OOTO_CHILD_MATRIX_SHIELD_BACK);
 
     QSET_OOTO_CHILD_MODEL(WAIST);
     QSET_OOTO_CHILD_MODEL(RTHIGH);
@@ -204,7 +199,7 @@ void setupZobjOotoChild(Link_ModelInfo *modelInfo, u8 *zobj) {
     QSET_OOTO_CHILD_MODEL(RFIST);
     QSET_OOTO_CHILD_MODEL(DEKU_STICK);
     QSET_OOTO_CHILD_MODEL(BOTTLE_GLASS);
-    modelInfo->models[PMM_DL_BOTTLE_CONTENTS] = gEmptyDisplayList;
+    SET_MODEL_DIRECT(PMM_DL_BOTTLE_CONTENTS, gEmptyDL);
     QSET_OOTO_CHILD_MODEL(SWORD_KOKIRI_SHEATH);
     QSET_OOTO_CHILD_MODEL(SWORD_KOKIRI_HILT);
     QSET_OOTO_CHILD_MODEL(SWORD_KOKIRI_BLADE);
@@ -212,27 +207,23 @@ void setupZobjOotoChild(Link_ModelInfo *modelInfo, u8 *zobj) {
     QSET_OOTO_CHILD_MODEL(OCARINA_TIME);
     SET_OOTO_CHILD_MODEL(FPS_LFOREARM, LFOREARM);
     SET_OOTO_CHILD_MODEL(FPS_LHAND, LFIST);
-    modelInfo->models[PMM_DL_FPS_RFOREARM] = gEmptyDisplayList;
+    SET_MODEL_DIRECT(PMM_DL_FPS_RFOREARM, gEmptyDL);
     QSET_OOTO_CHILD_MODEL(FPS_RHAND);
 }
 
-static Mtx sHookshotHookMatrix;
-static Gfx sHookshotHookTranslatedDL[] = {
-    gsSPMatrix(&sHookshotHookMatrix, G_MTX_PUSH | G_MTX_MUL | G_MTX_MODELVIEW),
-    gsSPDisplayList(gEmptyDL),
-    gsSPPopMatrix(G_MTX_MODELVIEW),
-    gsSPEndDisplayList(),
-};
+// clang-format off
+static Mtx sHookshotHookMatrix = gdSPDefMtx(
+    1.0f, 0.0f, 0.0f, 0.0f,
+    0.0f, 1.0f, 0.0f, 0.0f,
+    0.0f, 0.0f, 1.0f, 800.0f,
+    0.0f, 0.0f, 0.0f, 1.0f
+);
+// clang-format on
 
 #define SET_OOTO_ADULT_MODEL(dest, src) SET_Z64O_MODEL(dest, src, OOTO_ADULT)
 #define QSET_OOTO_ADULT_MODEL(dlName) SET_OOTO_ADULT_MODEL(dlName, dlName)
 
-void setupZobjOotoAdult(Link_ModelInfo *modelInfo, u8 *zobj) {
-
-    clearLinkModelInfo(modelInfo);
-
-    modelInfo->flags |= LINK_MODELINFO_FLAG_MM_ADULT_FIX;
-
+void setupZobjOotoAdult(PlayerModelManagerHandle h, u8 *zobj) {
     // OotoFixHeaderSkelPtr MUST run before repointZobjDls to ensure the latter reads the right offset for the skeleton in old zobjs
 
     // old versions of manifest did not write header ptr
@@ -242,15 +233,15 @@ void setupZobjOotoAdult(Link_ModelInfo *modelInfo, u8 *zobj) {
 
     repointZobjDls(zobj, OOTO_ADULT_LUT_DL_WAIST, OOTO_ADULT_LUT_DL_FPS_LHAND_HOOKSHOT);
 
-    handleZobjSkeleton(modelInfo, zobj, sOoTOAdultLimbs);
+    handleZobjSkeleton(h, zobj, sOoTOAdultLimbs);
 
-    setupFaceTextures(modelInfo, zobj);
+    setupFaceTextures(h, zobj);
 
-    modelInfo->equipMtx[LINK_EQUIP_MATRIX_SWORD_KOKIRI_BACK] = (Mtx *)&zobj[OOTO_ADULT_MATRIX_SWORD_BACK];
-    modelInfo->equipMtx[LINK_EQUIP_MATRIX_SWORD_RAZOR_BACK] = (Mtx *)&zobj[OOTO_ADULT_MATRIX_SWORD_BACK];
-    modelInfo->equipMtx[LINK_EQUIP_MATRIX_SWORD_GILDED_BACK] = (Mtx *)&zobj[OOTO_ADULT_MATRIX_SWORD_BACK];
-    modelInfo->equipMtx[LINK_EQUIP_MATRIX_SHIELD_HERO_BACK] = (Mtx *)&zobj[OOTO_ADULT_MATRIX_SHIELD_BACK];
-    modelInfo->equipMtx[LINK_EQUIP_MATRIX_SHIELD_MIRROR_BACK] = (Mtx *)&zobj[OOTO_ADULT_MATRIX_SHIELD_BACK];
+    SET_MATRIX(PMM_MTX_SWORD_KOKIRI_BACK, OOTO_ADULT_MATRIX_SWORD_BACK);
+    SET_MATRIX(PMM_MTX_SWORD_RAZOR_BACK, OOTO_ADULT_MATRIX_SWORD_BACK);
+    SET_MATRIX(PMM_MTX_SWORD_GILDED_BACK, OOTO_ADULT_MATRIX_SWORD_BACK);
+    SET_MATRIX(PMM_MTX_SHIELD_HERO_BACK, OOTO_ADULT_MATRIX_SHIELD_BACK);
+    SET_MATRIX(PMM_MTX_SHIELD_MIRROR_BACK, OOTO_ADULT_MATRIX_SHIELD_BACK);
 
     QSET_OOTO_ADULT_MODEL(WAIST);
     QSET_OOTO_ADULT_MODEL(RTHIGH);
@@ -289,8 +280,14 @@ void setupZobjOotoAdult(Link_ModelInfo *modelInfo, u8 *zobj) {
     QSET_OOTO_ADULT_MODEL(SHIELD_MIRROR);
     QSET_OOTO_ADULT_MODEL(OCARINA_TIME);
 
-    modelInfo->models[PMM_DL_HOOKSHOT_HOOK] = sHookshotHookTranslatedDL;
-    gSPDisplayList(&sHookshotHookTranslatedDL[1], &zobj[OOTO_ADULT_LUT_DL_HOOKSHOT_HOOK]);
+    Gfx *hookshotHookDL = recomp_alloc(sizeof(Gfx) * 4);
+
+    gSPMatrix(&hookshotHookDL[0], &sHookshotHookMatrix, G_MTX_PUSH | G_MTX_MUL | G_MTX_MODELVIEW);
+    gSPDisplayList(&hookshotHookDL[1], &zobj[OOTO_ADULT_LUT_DL_HOOKSHOT_HOOK]);
+    gSPPopMatrix(&hookshotHookDL[2], G_MTX_MODELVIEW);
+    gSPEndDisplayList(&hookshotHookDL[3]);
+
+    SET_MODEL_DIRECT(PMM_DL_HOOKSHOT_HOOK, hookshotHookDL);
 
     QSET_OOTO_ADULT_MODEL(HOOKSHOT_CHAIN);
     QSET_OOTO_ADULT_MODEL(HOOKSHOT_RETICLE);
@@ -298,7 +295,7 @@ void setupZobjOotoAdult(Link_ModelInfo *modelInfo, u8 *zobj) {
     QSET_OOTO_ADULT_MODEL(BOW);
     QSET_OOTO_ADULT_MODEL(BOW_STRING);
     QSET_OOTO_ADULT_MODEL(BOTTLE_GLASS);
-    modelInfo->models[PMM_DL_BOTTLE_CONTENTS] = gEmptyDisplayList;
+    SET_MODEL_DIRECT(PMM_DL_BOTTLE_CONTENTS, gEmptyDL);
     QSET_OOTO_ADULT_MODEL(FPS_LFOREARM);
     QSET_OOTO_ADULT_MODEL(FPS_LHAND);
     QSET_OOTO_ADULT_MODEL(FPS_RFOREARM);
@@ -306,19 +303,19 @@ void setupZobjOotoAdult(Link_ModelInfo *modelInfo, u8 *zobj) {
     QSET_OOTO_ADULT_MODEL(FPS_HOOKSHOT);
 }
 
-void setupZobjZ64O(Link_ModelInfo *modelInfo, u8 *zobj) {
+void setupZobjZ64O(PlayerModelManagerHandle h, u8 *zobj) {
     switch (zobj[Z64O_FORM_BYTE]) {
         case MMO_FORM_BYTE_CHILD:
         case MMO_FORM_BYTE_ADULT:
-            setupZobjMmoHuman(modelInfo, zobj);
+            setupZobjMmoHuman(h, zobj);
             break;
 
         case OOTO_FORM_BYTE_CHILD:
-            setupZobjOotoChild(modelInfo, zobj);
+            setupZobjOotoChild(h, zobj);
             break;
 
         case OOTO_FORM_BYTE_ADULT:
-            setupZobjOotoAdult(modelInfo, zobj);
+            setupZobjOotoAdult(h, zobj);
             break;
 
         default:
@@ -354,8 +351,6 @@ RECOMP_DECLARE_EVENT(_internal_onReadyML64Compat());
 RECOMP_CALLBACK(".", _internal_onReadyML64CompatBase)
 void initML64CompatMM_onReadyML64CompatBase() {
     remapSegmentPtrs();
-
-    guPosition(&sHookshotHookMatrix, 0.0f, 0.0f, 0.0f, 1.0f, 0.0f, 0.0f, 800.0f);
 
     _internal_onReadyML64Compat();
 }
