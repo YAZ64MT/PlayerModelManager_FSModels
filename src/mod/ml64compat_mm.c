@@ -77,23 +77,21 @@ DECLARE_Z64O_LIMB_ALIAS(sOoTOChildLimbs, OOTO_CHILD, OOTO_CHILD_LUT_DL_SWORD_KOK
 DECLARE_Z64O_LIMB_ALIAS(sOoTOAdultLimbs, OOTO_ADULT, OOTO_ADULT_LUT_DL_SWORD_MASTER_SHEATH);
 
 void handleZobjSkeleton(PlayerModelManagerHandle h, u8 *zobj, LimbToAlias limbsToAliases[]) {
-    if (IS_ALREADY_REPOINTED(zobj)) {
-        return;
-    }
-
     FlexSkeletonHeader *flexHeader = SEGMENTED_TO_GLOBAL_PTR(zobj, *(u32 *)(zobj + Z64O_SKELETON_HEADER_POINTER));
 
-    GlobalObjects_globalizeLodLimbSkeleton(zobj, flexHeader);
+    if (!IS_ALREADY_REPOINTED(zobj)) {
+        GlobalObjects_globalizeLodLimbSkeleton(zobj, flexHeader);
 
-    for (size_t i = 0; i < ARRAY_COUNT(sMMOLimbs); ++i) {
-        LimbToAlias *l2a = &limbsToAliases[i];
+        for (size_t i = 0; i < ARRAY_COUNT(sMMOLimbs); ++i) {
+            LimbToAlias *l2a = &limbsToAliases[i];
 
-        int limbIdx = l2a->limb - 1;
+            int limbIdx = l2a->limb - 1;
 
-        LodLimb *limb = flexHeader->sh.segment[limbIdx];
+            LodLimb *limb = flexHeader->sh.segment[limbIdx];
 
-        if (limb->dLists[0]) {
-            GlobalObjects_rebaseDL(zobj, limb->dLists[0], 0x06);
+            if (limb->dLists[0]) {
+                GlobalObjects_rebaseDL(zobj, limb->dLists[0], 0x06);
+            }
         }
     }
 
