@@ -33,6 +33,7 @@ RECOMP_IMPORT(".", void PMMZobj_clearDiskEntries());
 #define MAIN_DIR "playermodelmanager"
 #define MODEL_DIR MAIN_DIR "/models/"
 #define ASSET_DIR MAIN_DIR "/assets/"
+#define ROM_DIR MAIN_DIR "/roms/"
 #define OOT_ASSET_DIR ASSET_DIR "/oot/"
 #define MM_ASSET_DIR ASSET_DIR "/mm/"
 #define GAMEPLAY_KEEP_FILE_NAME "gameplay_keep.zobj"
@@ -164,21 +165,17 @@ PLAYERMODELMANAGER_CALLBACK_REGISTER_MODELS void registerDiskModels() {
 
         char *pmmDir = getCombinedPath(2, modDir, MAIN_DIR);
         char *fullModelDir = getCombinedPath(2, modDir, MODEL_DIR);
-
-        recomp_free(modDir);
+        char *fullRomDir = getCombinedPath(2, ROM_DIR);
 
         PMMZobj_createDirectory(fullModelDir);
-
-        if (!PMMZobj_isDirectoryExist(fullModelDir)) {
-            recomp_printf("PlayerModelManager_ZobjSupport: Could not find %s directory", fullModelDir);
-            recomp_free(fullModelDir);
-            return;
-        }
+        PMMZobj_createDirectory(fullRomDir);
 
         PMMZobj_setPMMDir(pmmDir);
 
+        recomp_free(modDir);
         recomp_free(pmmDir);
         recomp_free(fullModelDir);
+        recomp_free(fullRomDir);
     }
 
     int numDiskEntries = PMMZobj_scanForDiskEntries();
