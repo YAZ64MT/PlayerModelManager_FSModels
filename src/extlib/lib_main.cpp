@@ -15,8 +15,7 @@
 namespace fs = std::filesystem;
 
 struct ModelDiskEntry {
-    size_t fileSize;
-    char *modelData;
+    std::vector<char> modelData;
     std::array<bool, PMM_MODEL_TYPE_MAX> modelTypes;
     std::string internalName;
     std::string displayName;
@@ -145,18 +144,18 @@ RECOMP_DLL_FUNC(PMMZobj_scanForDiskEntries) {
     for (const auto &dirEntry : fs::directory_iterator(folderEntry.path())) {
         if (dirEntry.file_size() < MAX_MODEL_SIZE) {
             if (dirEntry.is_regular_file() || (dirEntry.is_symlink() && fs::is_regular_file(fs::weakly_canonical(dirEntry.path())))) {
-                std::ifstream file(dirEntry.path(), std::ios::in | std::ios::binary);
+                std::ifstream file(dirEntry.path(), std::ios::binary);
 
                 if (isValidStandaloneZobj(file)) {
                     file.seekg(0);
 
-                    std::vector<char> fileBuf(std::istreambuf_iterator(file), {});
+                    std::istreambuf_iterator<char> fileStart{file}, fileEnd;
+
+                    std::vector<char> fileBuf(fileStart, fileEnd);
 
                     ModelDiskEntry mde;
 
                     extractEmbeddedInfo(fileBuf, mde);
-
-                    mde.fileSize = fileBuf.size();
 
                     fs::path dirEntryPath = dirEntry.path();
 
@@ -184,11 +183,9 @@ RECOMP_DLL_FUNC(PMMZobj_scanForDiskEntries) {
                         mde.authorName = "N/A";
                     }
 
-                    mde.modelData = new char[fileBuf.size()];
+                    mde.modelData = fileBuf;
 
                     mde.modelTypes.fill(false);
-
-                    memcpy(mde.modelData, fileBuf.data(), fileBuf.size());
 
                     switch (mde.modelData[Z64O_FORM_BYTE]) {
                         case OOTO_FORM_BYTE_ADULT:
@@ -319,7 +316,7 @@ RECOMP_DLL_FUNC(PMMZobj_getEntryFileSize) {
         RECOMP_RETURN(int, -1);
     }
 
-    RECOMP_RETURN(int, entry->fileSize);
+    RECOMP_RETURN(int, entry->modelData.size());
 }
 
 RECOMP_DLL_FUNC(PMMZobj_getEntryFileData) {
@@ -329,7 +326,7 @@ RECOMP_DLL_FUNC(PMMZobj_getEntryFileData) {
         RECOMP_RETURN(bool, false);
     }
 
-    RECOMP_RETURN(bool, writeEntryDataToRecompBuffer(rdram, ctx, entry->modelData, entry->fileSize));
+    RECOMP_RETURN(bool, writeEntryDataToRecompBuffer(rdram, ctx, entry->modelData.data(), entry->modelData.size()));
 }
 
 RECOMP_DLL_FUNC(PMMZobj_createDirectory) {
@@ -349,7 +346,7 @@ RECOMP_DLL_FUNC(PMMZobj_readEntryU8) {
 
     int offset = RECOMP_ARG(int, 1);
 
-    if (offset >= entry->fileSize) {
+    if (offset >= entry->modelData.size()) {
         RECOMP_RETURN(bool, false);
     }
 
@@ -375,7 +372,7 @@ RECOMP_DLL_FUNC(PMMZobj_readEntryU16) {
 
     int offset = RECOMP_ARG(int, 1);
 
-    if (offset >= entry->fileSize + sizeof(uint16_t)) {
+    if (offset >= entry->modelData.size() + sizeof(uint16_t)) {
         RECOMP_RETURN(bool, false);
     }
 
@@ -401,7 +398,7 @@ RECOMP_DLL_FUNC(PMMZobj_readEntryU32) {
 
     int offset = RECOMP_ARG(int, 1);
 
-    if (offset >= entry->fileSize + sizeof(uint32_t)) {
+    if (offset >= entry->modelData.size() + sizeof(uint32_t)) {
         RECOMP_RETURN(bool, false);
     }
 
@@ -439,14 +436,6 @@ RECOMP_DLL_FUNC(PMMZobj_isModelType) {
 }
 
 RECOMP_DLL_FUNC(PMMZobj_clearDiskEntries) {
-    for (int i = 0; i < sModelDiskEntries.size(); ++i) {
-        auto &entry = sModelDiskEntries[i];
-
-        if (entry.modelData) {
-            delete[] entry.modelData;
-        }
-    }
-
     sModelDiskEntries.clear();
     sModelDiskEntries.shrink_to_fit();
 }

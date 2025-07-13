@@ -46,7 +46,6 @@ void repointExternalSegments(u8 *zobj, u32 start, u32 end) {
 }
 
 void repointZobjDls(u8 *zobj, u32 start, u32 end) {
-    // TODO: FIGURE OUT WHY THIS FUNCTION IS BORKED
     if (IS_ALREADY_REPOINTED(zobj)) {
         return;
     }
@@ -54,7 +53,10 @@ void repointZobjDls(u8 *zobj, u32 start, u32 end) {
     u32 current = start;
 
     while (current < end) {
-        GlobalObjects_globalizeSegmentedDL(zobj, (Gfx *)SEGMENT_ADDR(0x06, current));
+        Gfx *dl = (Gfx *)(zobj + current);
+        if (dl->words.w0 == 0xDE010000) {
+            GlobalObjects_globalizeSegmentedDL(zobj, (Gfx *)(SEGMENT_ADDR(0x06, current)));
+        }
         current += 8;
     }
 }
