@@ -45,22 +45,6 @@ void repointExternalSegments(u8 *zobj, u32 start, u32 end) {
     }
 }
 
-void repointZobjDls(u8 *zobj, u32 start, u32 end) {
-    if (IS_ALREADY_REPOINTED(zobj)) {
-        return;
-    }
-
-    u32 current = start;
-
-    while (current < end) {
-        Gfx *dl = (Gfx *)(zobj + current);
-        if (dl->words.w0 == 0xDE010000) {
-            GlobalObjects_globalizeSegmentedDL(zobj, (Gfx *)(SEGMENT_ADDR(0x06, current)));
-        }
-        current += 8;
-    }
-}
-
 typedef struct {
     PlayerLimb limb;
     u32 aliasTableIndex;
@@ -105,17 +89,26 @@ void handleZobjSkeleton(PlayerModelManagerHandle h, u8 *zobj, LimbToAlias limbsT
         LimbToAlias *l2a = &limbsToAliases[i];
 
         int limbIdx = l2a->limb - 1;
-        
+
         LodLimb *limb = flexHeader->sh.segment[limbIdx];
 
-        GlobalObjects_globalizeSegmentedDL(zobj, (Gfx *)SEGMENT_ADDR(0x06, (uintptr_t)limb->dLists[0] - (uintptr_t)zobj));
+        if (limb->dLists[0]) {
+            GlobalObjects_rebaseDL(zobj, limb->dLists[0], 0x06);
+        }
     }
 
     PlayerModelManager_setSkeleton(h, flexHeader);
 }
 
 #define SET_MATRIX(dest, src) PlayerModelManager_setMatrix(h, dest, (Mtx *)&zobj[src])
-#define SET_MODEL_DIRECT(dest, src) PlayerModelManager_setDisplayList(h, PMM_DL_##dest, src)
+#define SET_MODEL_DIRECT(dest, src)                               \
+    {                                                             \
+        Gfx *_g = src;                                            \
+        if (_g->words.w1 >> 24 == 0x06)                           \
+            GlobalObjects_rebaseDL(zobj, _g, 0x06);               \
+        PlayerModelManager_setDisplayList(h, PMM_DL_##dest, src); \
+    }                                                             \
+    (void)0
 #define SET_MODEL(dest, src) SET_MODEL_DIRECT(dest, (Gfx *)&zobj[src])
 #define SET_Z64O_MODEL(dest, src, modName) SET_MODEL(dest, modName##_LUT_DL_##src)
 
@@ -123,8 +116,6 @@ void handleZobjSkeleton(PlayerModelManagerHandle h, u8 *zobj, LimbToAlias limbsT
 #define QSET_MMO_MODEL(dlName) SET_MMO_MODEL(dlName, dlName)
 
 void setupZobjMmoHuman(PlayerModelManagerHandle h, u8 *zobj) {
-
-    repointZobjDls(zobj, MMO_LUT_DL_WAIST, MMO_LUT_DL_DF_COMMAND);
 
     handleZobjSkeleton(h, zobj, sMMOLimbs);
 
@@ -172,8 +163,6 @@ void setupZobjOotoChild(PlayerModelManagerHandle h, u8 *zobj) {
     OotoFixChildLeftShoulder(zobj);
 
     repointExternalSegments(zobj, OOTO_CHILD_LUT_DL_WAIST, OOTO_CHILD_LUT_DL_FPS_RARM_SLINGSHOT);
-
-    repointZobjDls(zobj, OOTO_CHILD_LUT_DL_WAIST, OOTO_CHILD_LUT_DL_FPS_RARM_SLINGSHOT);
 
     handleZobjSkeleton(h, zobj, sOoTOChildLimbs);
 
@@ -226,8 +215,6 @@ void setupZobjOotoAdult(PlayerModelManagerHandle h, u8 *zobj) {
     OotoFixHeaderSkelPtr(zobj);
 
     repointExternalSegments(zobj, OOTO_ADULT_LUT_DL_WAIST, OOTO_ADULT_LUT_DL_FPS_LHAND_HOOKSHOT);
-
-    repointZobjDls(zobj, OOTO_ADULT_LUT_DL_WAIST, OOTO_ADULT_LUT_DL_FPS_LHAND_HOOKSHOT);
 
     handleZobjSkeleton(h, zobj, sOoTOAdultLimbs);
 
@@ -319,8 +306,8 @@ void remapSegmentPtrs() {
 
     PTR_OBJ_REMAP_SET(human, OOT_GK_OCARINA_OF_TIME_TEX, gLinkHumanOcarinaTex);
 
-    //setSegmentPtrRemap(OOT_GK_HYLIAN_SHIELD_TEX, (u32)gOotHylianShieldTex);
-    //setSegmentPtrRemap(OOT_GK_BOTTLE_GLASS_TEX, (u32)gOotBottleGlassTex);
+    // setSegmentPtrRemap(OOT_GK_HYLIAN_SHIELD_TEX, (u32)gOotHylianShieldTex);
+    // setSegmentPtrRemap(OOT_GK_BOTTLE_GLASS_TEX, (u32)gOotBottleGlassTex);
 }
 
 /*
