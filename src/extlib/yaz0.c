@@ -62,7 +62,7 @@ typedef struct {
 } Yaz0Header;
 
 // dst is caller-freed memory!
-uint32_t yaz0_compress(uint32_t input_size, uint8_t *src, uint8_t **dst) {
+uint32_t yaz0_compress(uint32_t input_size, const uint8_t *src, uint8_t **dst) {
     // Worst-case size for output is zero compression on the input, meaning the input size plus the number of layout bytes.
     // There would be one layout byte for every 8 input bytes, so the worst-case size is:
     //   input_size + ROUND_UP_DIVIDE(input_size, 8)
@@ -265,7 +265,7 @@ void naive_copy(void *dst, void *src, int size) {
     }
 }
 
-void yaz0_decompress(uint32_t uncompressedLength, uint32_t compressedSize, uint8_t *srcPtr, uint8_t *dstPtr) {
+void yaz0_decompress(uint32_t uncompressedLength, uint32_t compressedSize, const uint8_t *srcPtr, uint8_t *dstPtr) {
     int32_t layoutBitIndex;
     uint8_t *srcEnd;
     uint8_t *dstEnd;
