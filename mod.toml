@@ -60,6 +60,7 @@ native_libraries = [
       "PMMZobj_readEntryU32",
       "PMMZobj_isModelType",
       "PMMZobj_clearDiskEntries",
+      "PMMZobj_extractGameplayKeep",
    ] }
 ]
 

@@ -29,6 +29,7 @@ RECOMP_IMPORT(".", bool PMMZobj_readEntryU16(int i, int offset, u16 *out));
 RECOMP_IMPORT(".", bool PMMZobj_readEntryU32(int i, int offset, u32 *out));
 RECOMP_IMPORT(".", bool PMMZobj_isModelType(int i, PlayerModelManagerModelType t));
 RECOMP_IMPORT(".", void PMMZobj_clearDiskEntries());
+RECOMP_IMPORT(".", bool PMMZobj_extractGameplayKeep(void *buffer, int bufferSize));
 
 #define MAIN_DIR "playermodelmanager"
 #define MODEL_DIR MAIN_DIR "/models/"
