@@ -32,10 +32,11 @@
 #include <stdint.h>
 #include <stdbool.h>
 #include <math.h>
+#include "yaz0.hpp"
 
-static void search(int a1, int a2, int *a3, int *a4, uint8_t *data_in);
-static int mischarsearch(unsigned char *a1, int a2, unsigned char *a3, int a4);
-static void initskip(unsigned char *a1, int a2, unsigned short *skip);
+static void search(int a1, int a2, int *a3, int *a4, const uint8_t *data_in);
+static int mischarsearch(const uint8_t *a1, int a2, const uint8_t *a3, int a4);
+static void initskip(const uint8_t *a1, int a2, unsigned short *skip);
 
 static inline uint32_t bswap32(uint32_t x) {
     return __builtin_bswap32(x);
@@ -66,7 +67,7 @@ uint32_t yaz0_compress(uint32_t input_size, const uint8_t *src, uint8_t **dst) {
     // Worst-case size for output is zero compression on the input, meaning the input size plus the number of layout bytes.
     // There would be one layout byte for every 8 input bytes, so the worst-case size is:
     //   input_size + ROUND_UP_DIVIDE(input_size, 8)
-    uint8_t *output = calloc(input_size + DIVIDE_ROUND_UP(input_size, 8), sizeof(unsigned char));
+    uint8_t *output = static_cast<uint8_t *>(calloc(input_size + DIVIDE_ROUND_UP(input_size, 8), sizeof(unsigned char)));
     uint8_t *cur_layout_byte = &output[0];
     uint8_t *out_ptr = cur_layout_byte + 1;
     unsigned int input_pos = 0;
@@ -150,7 +151,7 @@ uint32_t yaz0_compress(uint32_t input_size, const uint8_t *src, uint8_t **dst) {
 #define MAX_OFFSET 0x1000
 #define MAX_SIZE 0x111
 
-static void search(int input_pos, int input_size, int *pos_out, int *size_out, uint8_t *data_in) {
+static void search(int input_pos, int input_size, int *pos_out, int *size_out, const uint8_t *data_in) {
     // Current group size
     int cur_size = 3;
     // Current position being searched
@@ -203,7 +204,7 @@ static void search(int input_pos, int input_size, int *pos_out, int *size_out, u
     }
 }
 
-static int mischarsearch(unsigned char *pattern, int patternlen, unsigned char *data, int datalen) {
+static int mischarsearch(const uint8_t *pattern, int patternlen, const uint8_t *data, int datalen) {
     static unsigned short skip[256]; // idb
     int result;                      // eax
     int i;                           // ebx
@@ -246,7 +247,7 @@ static int mischarsearch(unsigned char *pattern, int patternlen, unsigned char *
     return result;
 }
 
-static void initskip(unsigned char *pattern, int len, unsigned short *skip) {
+static void initskip(const uint8_t *pattern, int len, unsigned short *skip) {
     for (int i = 0; i < 256; i++) {
         skip[i] = len;
     }
@@ -257,8 +258,8 @@ static void initskip(unsigned char *pattern, int len, unsigned short *skip) {
 }
 
 void naive_copy(void *dst, void *src, int size) {
-    uint8_t *cur_out = dst;
-    uint8_t *cur_in = src;
+    uint8_t *cur_out = static_cast<uint8_t *>(dst);
+    uint8_t *cur_in = static_cast<uint8_t *>(src);
 
     while (size--) {
         *cur_out++ = *cur_in++;
@@ -267,7 +268,7 @@ void naive_copy(void *dst, void *src, int size) {
 
 void yaz0_decompress(uint32_t uncompressedLength, uint32_t compressedSize, const uint8_t *srcPtr, uint8_t *dstPtr) {
     int32_t layoutBitIndex;
-    uint8_t *srcEnd;
+    const uint8_t *srcEnd;
     uint8_t *dstEnd;
     uint8_t layoutBits;
 
