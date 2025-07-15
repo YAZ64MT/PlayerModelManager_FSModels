@@ -161,7 +161,7 @@ RECOMP_DLL_FUNC(PMMZobj_scanForDiskEntries) {
                 if (isValidStandaloneZobj(file)) {
                     file.seekg(0);
 
-                    std::vector<char> fileBuf(std::istreambuf_iterator<char> {}, {});
+                    std::vector<char> fileBuf(std::istreambuf_iterator<char> {file}, {});
 
                     ModelDiskEntry mde;
 
@@ -459,26 +459,26 @@ RECOMP_DLL_FUNC(PMMZobj_clearDiskEntries) {
     sModelDiskEntries.shrink_to_fit();
 }
 
-static const std::unordered_map<std::string, unsigned> DMA_DATA_OFFSETS = {
-    {"328a1f1beba30ce5e178f031662019eb32c5f3b5", 0x7950},  // PAL 1.0
-    {"cfbb98d392e4a9d39da8285d10cbef3974c2f012", 0x7950},  // PAL 1.1
-    {"0227d7c0074f2d0ac935631990da8ec5914597b4", 0x7170},  // PAL GC
-    {"f46239439f59a2a594ef83cf68ef65043b1bffe2", 0x7170},  // PAL MQ
-    {"cee6bc3c2a634b41728f2af8da54d9bf8cc14099", 0x12F70}, // PAL GC (Debug)
-    {"079b855b943d6ad8bd1eb026c0ed169ecbdac7da", 0x12F70}, // PAL MQ (Debug)
-    {"50bebedad9e0f10746a52b07239e47fa6c284d03", 0x12F70}, // PAL MQ (Debug)
-    {"cfecfdc58d650e71a200c81f033de4e6d617a9f6", 0x12F70}, // PAL MQ (Debug)
-    {"ad69c91157f6705e8ab06c79fe08aad47bb57ba7", 0x7430},  // NTSC 1.0 (US)
-    {"d3ecb253776cd847a5aa63d859d8c89a2f37b364", 0x7430},  // NTSC 1.1 (US)
-    {"41b3bdc48d98c48529219919015a1af22f5057c2", 0x7430},  // NTSC 1.2 (US)
-    {"c892bbda3993e66bd0d56a10ecd30b1ee612210f", 0x7430},  // NTSC 1.0 (JP)
-    {"dbfc81f655187dc6fefd93fa6798face770d579d", 0x7430},  // NTSC 1.1 (JP)
-    {"fa5f5942b27480d60243c2d52c0e93e26b9e6b86", 0x7430},  // NTSC 1.2 (JP)
-    {"b82710ba2bd3b4c6ee8aa1a7e9acf787dfc72e9b", 0x7170},  // NTSC GC (US)
-    {"8b5d13aac69bfbf989861cfdc50b1d840945fc1d", 0x7170},  // NTSC MQ (US)
-    {"0769c84615422d60f16925cd859593cdfa597f84", 0x7170},  // NTSC GC (JP)
-    {"2ce2d1a9f0534c9cd9fa04ea5317b80da21e5e73", 0x7170},  // NTSC GC CE (JP)
-    {"dd14e143c4275861fe93ea79d0c02e36ae8c6c2f", 0x7170},  // NTSC MQ (JP)
+static const std::unordered_map<std::string, std::pair<std::string, unsigned>> DMA_DATA_OFFSETS = {
+    {"328a1f1beba30ce5e178f031662019eb32c5f3b5", {"OOT PAL 1.0", 0x7950}},         // PAL 1.0
+    {"cfbb98d392e4a9d39da8285d10cbef3974c2f012", {"OOT PAL 1.1", 0x7950}},         // PAL 1.1
+    {"0227d7c0074f2d0ac935631990da8ec5914597b4", {"OOT PAL GC", 0x7170}},          // PAL GC
+    {"f46239439f59a2a594ef83cf68ef65043b1bffe2", {"OOT PAL MQ", 0x7170}},          // PAL MQ
+    {"cee6bc3c2a634b41728f2af8da54d9bf8cc14099", {"OOT PAL GC (Debug)", 0x12F70}}, // PAL GC (Debug)
+    {"079b855b943d6ad8bd1eb026c0ed169ecbdac7da", {"OOT PAL MQ (Debug)", 0x12F70}}, // PAL MQ (Debug)
+    {"50bebedad9e0f10746a52b07239e47fa6c284d03", {"OOT PAL MQ (Debug)", 0x12F70}}, // PAL MQ (Debug)
+    {"cfecfdc58d650e71a200c81f033de4e6d617a9f6", {"OOT PAL MQ (Debug)", 0x12F70}}, // PAL MQ (Debug)
+    {"ad69c91157f6705e8ab06c79fe08aad47bb57ba7", {"OOT NTSC 1.0 (US)", 0x7430}},   // NTSC 1.0 (US)
+    {"d3ecb253776cd847a5aa63d859d8c89a2f37b364", {"OOT NTSC 1.1 (US)", 0x7430}},   // NTSC 1.1 (US)
+    {"41b3bdc48d98c48529219919015a1af22f5057c2", {"OOT NTSC 1.2 (US)", 0x7430}},   // NTSC 1.2 (US)
+    {"c892bbda3993e66bd0d56a10ecd30b1ee612210f", {"OOT NTSC 1.0 (JP)", 0x7430}},   // NTSC 1.0 (JP)
+    {"dbfc81f655187dc6fefd93fa6798face770d579d", {"OOT NTSC 1.1 (JP)", 0x7430}},   // NTSC 1.1 (JP)
+    {"fa5f5942b27480d60243c2d52c0e93e26b9e6b86", {"OOT NTSC 1.2 (JP)", 0x7430}},   // NTSC 1.2 (JP)
+    {"b82710ba2bd3b4c6ee8aa1a7e9acf787dfc72e9b", {"OOT NTSC GC (US)", 0x7170}},    // NTSC GC (US)
+    {"8b5d13aac69bfbf989861cfdc50b1d840945fc1d", {"OOT NTSC MQ (US)", 0x7170}},    // NTSC MQ (US)
+    {"0769c84615422d60f16925cd859593cdfa597f84", {"OOT NTSC GC (JP)", 0x7170}},    // NTSC GC (JP)
+    {"2ce2d1a9f0534c9cd9fa04ea5317b80da21e5e73", {"NTSC GC CE (JP)", 0x7170}},     // NTSC GC CE (JP)
+    {"dd14e143c4275861fe93ea79d0c02e36ae8c6c2f", {"NTSC MQ (JP)", 0x7170}},        // NTSC MQ (JP)
 };
 
 const int ROM_LITTLE_ENDIAN = 0x40;
@@ -506,7 +506,7 @@ void doBS2BE(std::string &rom) {
     }
 }
 
-uint32_t toU32(const char *buf) {
+uint32_t toU32(const unsigned char *buf) {
     uint32_t b0 = buf[0];
     uint32_t b1 = buf[1];
     uint32_t b2 = buf[2];
@@ -515,12 +515,14 @@ uint32_t toU32(const char *buf) {
     return b0 << 24 | b1 << 16 | b2 << 8 | b3;
 }
 
+#define SIZE_OF_YAZ0_HEADER 0x10
+
 struct DMADataEntry {
     std::pair<uint32_t, uint32_t> virtualAddr;
     std::pair<uint32_t, uint32_t> physicalAddr;
 
     const bool isCompressed() {
-        return physicalAddr.second == 0;
+        return physicalAddr.second != 0;
     }
 
     const bool isExist() {
@@ -550,15 +552,20 @@ struct DMADataEntry {
     DMADataEntry(): virtualAddr({0, 0}), physicalAddr({0xFFFFFFFF, 0xFFFFFFFF}) {}
 
     static void fillEntry(DMADataEntry &entry, const char *rom, unsigned dmaStart, unsigned index) {
-        const char *entryRaw = rom + dmaStart + index * (sizeof(virtualAddr) + sizeof(physicalAddr));
+        const unsigned char *entryRaw = reinterpret_cast<const unsigned char *>(rom + dmaStart + index * (sizeof(virtualAddr) + sizeof(physicalAddr)));
 
         entry.virtualAddr.first = toU32(entryRaw);
         entry.virtualAddr.second = toU32(entryRaw + sizeof(uint32_t));
         entry.physicalAddr.first = toU32(entryRaw + sizeof(uint32_t) * 2);
         entry.physicalAddr.second = toU32(entryRaw + sizeof(uint32_t) * 3);
+
+        std::cout << std::hex << "fillEntry:\ndmaStart: 0x" << dmaStart << "\nindex: 0x" << index << "\n" <<
+        "ROM Offset: 0x" << dmaStart + index * (sizeof(virtualAddr) + sizeof(physicalAddr)) << "\n" <<
+        "Virtual Address: {Start: 0x" << entry.virtualAddr.first << ", End: 0x" << entry.virtualAddr.second << "}\n"
+        "Physical Address: {Start: 0x" << entry.physicalAddr.first << ", End: 0x" << entry.physicalAddr.second << "}\n";
     }
 
-    static const unsigned OOT_OBJECT_TABLE_START_INDEX = 498;
+    static const unsigned OOT_OBJECT_TABLE_START_INDEX = 0x1F2;
 
     static void fillEntry(DMADataEntry &entry, const char *rom, unsigned dmaStart, ObjectIdOOT id) {
         fillEntry(entry, rom, dmaStart, static_cast<unsigned>(id) - 1 + OOT_OBJECT_TABLE_START_INDEX);
@@ -573,6 +580,8 @@ struct DMADataEntry {
     }
 };
 
+const std::string GAMEPLAY_KEEP_OOT_SHA1_CHECKSUM = "82f9c4c3224fa82884401fabf1b7e24b00d45883";
+
 RECOMP_DLL_FUNC(PMMZobj_extractGameplayKeep) {
     // clang-format off
     PTR(char) rdramBuf = RECOMP_ARG(PTR(char), 0);
@@ -583,6 +592,16 @@ RECOMP_DLL_FUNC(PMMZobj_extractGameplayKeep) {
     }
 
     unsigned rdramBufSize = RECOMP_ARG(unsigned, 1);
+
+    fs::path gkCachedPath = sPMMDir / OOT_ASSET_DIR / "gameplay_keep.zobj";
+
+    {
+        fs::directory_entry gkDirEnt(gkCachedPath);
+
+        if (gkDirEnt.exists() && !gkDirEnt.is_directory()) {
+            std::ifstream file(gkCachedPath, std::ios::binary);
+        }
+    }
 
     fs::path romPathZ64 = sPMMDir / "oot.z64";
     fs::path romPathN64 = sPMMDir / "oot.n64";
@@ -598,17 +617,28 @@ RECOMP_DLL_FUNC(PMMZobj_extractGameplayKeep) {
     }
 
     if (romPath) {
+        std::cout << "Found OoT ROM at " << romPath->string() << '\n';
+
         std::string rom;
 
         {
             std::ifstream file(*romPath, std::ios::binary);
-            rom.assign(std::istreambuf_iterator<char>{}, {});
+            std::string gkCandidate(std::istreambuf_iterator<char>{file}, {});
+
+            SHA1 gkChecksum;
+            gkChecksum.update(gkCandidate);
+
+            if (gkChecksum.final() == GAMEPLAY_KEEP_OOT_SHA1_CHECKSUM) {
+                RECOMP_RETURN(bool, writeDataToRecompBuffer(rdram, ctx, rdramBuf, rdramBufSize, gkCandidate.data(), gkCandidate.size()));
+            }
         }
 
         if (rom.size() > 0) {
             if (rom[0] == ROM_LITTLE_ENDIAN) {
+                std::cout << "ROM is little endian (.v64)! Converting to big endian (.z64)...";
                 doLE2BE(rom);
             } else if (rom[0] == ROM_BYTESWAPPED) {
+                std::cout << "ROM is byte-swapped (.n64)! Converting to big endian (.z64)...";
                 doBS2BE(rom);
             }
 
@@ -620,33 +650,42 @@ RECOMP_DLL_FUNC(PMMZobj_extractGameplayKeep) {
             auto dmaIt = DMA_DATA_OFFSETS.find(checksumStr);
 
             if (dmaIt != DMA_DATA_OFFSETS.end()) {
-                unsigned dma = dmaIt->second;
+                std::cout << "ROM identified as " << dmaIt->second.first << '\n';
+
+                unsigned dma = dmaIt->second.second;
 
                 DMADataEntry gkEntry = DMADataEntry(rom.data(), dma, ObjectIdOOT::OBJECT_GAMEPLAY_KEEP);
 
                 size_t gkSize = gkEntry.getUncompressedSize();
 
-                if (gkSize) {
+                if (gkSize > SIZE_OF_YAZ0_HEADER) {
+                    std::cout << "Extracting gameplay keep from 0x" << std::hex << gkEntry.physicalAddr.first << '\n';
+
                     std::unique_ptr<uint8_t> gkBuf(new uint8_t[gkSize]);
 
                     bool isExtracted = false;
+
+                    uint32_t physicalStart = gkEntry.physicalAddr.first + SIZE_OF_YAZ0_HEADER;
                     if (gkEntry.isCompressed()) {
+                        std::cout << "Extracting compressed file...\n";
+
                         size_t gkSizeCompressed = gkEntry.getCompressedSize();
 
                         if (gkSizeCompressed) {
-                            yaz0_decompress(gkSize, gkSizeCompressed, reinterpret_cast<const uint8_t*>(rom.data() + gkEntry.physicalAddr.first), gkBuf.get());
+                            yaz0_decompress(gkSize, gkSizeCompressed - SIZE_OF_YAZ0_HEADER, reinterpret_cast<const uint8_t*>(rom.data() + physicalStart), gkBuf.get());
                             isExtracted = true;
                         }
                     }
                     else {
-                        memcpy(gkBuf.get(), rom.data() + gkEntry.physicalAddr.first, gkSize);
+                        memcpy(gkBuf.get(), rom.data() + physicalStart, gkSize);
                         isExtracted = true;
                     }
 
                     if (isExtracted) {
-                        fs::create_directories(OOT_ASSET_DIR);
+                        fs::create_directories(sPMMDir / OOT_ASSET_DIR);
 
-                        std::ofstream gkOut(OOT_ASSET_DIR / "gameplay_keep.zobj", std::ios::binary);
+                        std::cout << "Writing gameplay keep to " << gkCachedPath.string() << '\n';
+                        std::ofstream gkOut(gkCachedPath, std::ios::binary);
                         
                         gkOut.write(reinterpret_cast<char *>(gkBuf.get()), gkSize);
 

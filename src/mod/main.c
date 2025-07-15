@@ -151,6 +151,9 @@ char *getStringFromEntry(int i, bool nameWriter(int i, char *buffer, int bufferS
 RECOMP_DECLARE_EVENT(_internal_initHashObjects());
 static bool sIsHashObjectsInitialized = false;
 
+#define OOT_GAMEPLAY_KEEP_SIZE 0x05BCE0
+u8 gGameplayKeepOOT[OOT_GAMEPLAY_KEEP_SIZE];
+
 PLAYERMODELMANAGER_CALLBACK_REGISTER_MODELS void registerDiskModels() {
     if (!sIsHashObjectsInitialized) {
         _internal_initHashObjects();
@@ -179,6 +182,8 @@ PLAYERMODELMANAGER_CALLBACK_REGISTER_MODELS void registerDiskModels() {
         recomp_free(fullRomDir);
     }
 
+    PMMZobj_extractGameplayKeep(gGameplayKeepOOT, sizeof(gGameplayKeepOOT));
+
     int numDiskEntries = PMMZobj_scanForDiskEntries();
 
     for (int i = 0; i < numDiskEntries; ++i) {
@@ -195,7 +200,7 @@ PLAYERMODELMANAGER_CALLBACK_REGISTER_MODELS void registerDiskModels() {
             }
             formChar--;
 
-            recomp_printf("Allocating 0x%X bytes for model with internal name '%s'...\n", entrySize, internalName);
+            //recomp_printf("Allocating 0x%X bytes for model with internal name '%s'...\n", entrySize, internalName);
             void *modelBuf = recomp_alloc(entrySize);
 
             if (PMMZobj_getEntryFileData(i, modelBuf, entrySize)) {
