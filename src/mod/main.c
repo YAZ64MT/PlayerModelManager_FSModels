@@ -154,6 +154,10 @@ static bool sIsHashObjectsInitialized = false;
 #define OOT_GAMEPLAY_KEEP_SIZE 0x05BCE0
 u8 gGameplayKeepOOT[OOT_GAMEPLAY_KEEP_SIZE];
 
+void *getGameplayKeepOOT() {
+    return gGameplayKeepOOT;
+}
+
 PLAYERMODELMANAGER_CALLBACK_REGISTER_MODELS void registerDiskModels() {
     if (!sIsHashObjectsInitialized) {
         _internal_initHashObjects();
@@ -182,7 +186,12 @@ PLAYERMODELMANAGER_CALLBACK_REGISTER_MODELS void registerDiskModels() {
         recomp_free(fullRomDir);
     }
 
-    PMMZobj_extractGameplayKeep(gGameplayKeepOOT, sizeof(gGameplayKeepOOT));
+    if (!PMMZobj_extractGameplayKeep(gGameplayKeepOOT, sizeof(gGameplayKeepOOT))) {
+        recomp_printf("Could not load OOT gameplay keep from file system! Filling buffer with dummy values...\n");
+        for (size_t i = 0; i < sizeof(gGameplayKeepOOT); i += sizeof(Gfx)) {
+            gGameplayKeepOOT[i] = G_ENDDL;
+        }
+    }
 
     int numDiskEntries = PMMZobj_scanForDiskEntries();
 
