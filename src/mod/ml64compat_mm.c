@@ -32,19 +32,6 @@ void setupFaceTextures(PlayerModelManagerHandle h, u8 *zobj) {
     PlayerModelManager_setMouthTextures(h, mouths);
 }
 
-void repointExternalSegments(u8 *zobj, u32 start, u32 end) {
-    if (IS_ALREADY_REPOINTED(zobj)) {
-        return;
-    }
-
-    u32 current = start;
-
-    while (current < end) {
-        applySegmentPtrRemaps(zobj, (Gfx *)SEGMENT_ADDR(0x06, current));
-        current += 8;
-    }
-}
-
 typedef struct {
     PlayerLimb limb;
     u32 aliasTableIndex;
@@ -76,6 +63,8 @@ DECLARE_Z64O_LIMB_ALIAS(sMMOLimbs, MMO, MMO_LUT_DL_SWORD_KOKIRI_SHEATH);
 DECLARE_Z64O_LIMB_ALIAS(sOoTOChildLimbs, OOTO_CHILD, OOTO_CHILD_LUT_DL_SWORD_KOKIRI_SHEATH);
 DECLARE_Z64O_LIMB_ALIAS(sOoTOAdultLimbs, OOTO_ADULT, OOTO_ADULT_LUT_DL_SWORD_MASTER_SHEATH);
 
+static GlobalObjectsSegmentMap sML64SegmentMap = {NULL};
+
 void handleZobjSkeleton(PlayerModelManagerHandle h, u8 *zobj, LimbToAlias limbsToAliases[]) {
     FlexSkeletonHeader *flexHeader = SEGMENTED_TO_GLOBAL_PTR(zobj, *(u32 *)(zobj + Z64O_SKELETON_HEADER_POINTER));
 
@@ -90,7 +79,7 @@ void handleZobjSkeleton(PlayerModelManagerHandle h, u8 *zobj, LimbToAlias limbsT
             LodLimb *limb = flexHeader->sh.segment[limbIdx];
 
             if (limb->dLists[0]) {
-                GlobalObjects_rebaseDL(zobj, limb->dLists[0], 0x06);
+                GlobalObjects_rebaseDL(limb->dLists[0], sML64SegmentMap);
             }
         }
     }
@@ -99,15 +88,16 @@ void handleZobjSkeleton(PlayerModelManagerHandle h, u8 *zobj, LimbToAlias limbsT
 }
 
 #define SET_MATRIX(dest, src) PlayerModelManager_setMatrix(h, dest, (Mtx *)&zobj[src])
-#define SET_MODEL_DIRECT(dest, src)                               \
-    {                                                             \
-        Gfx *_g = src;                                            \
-        if (_g->words.w1 >> 24 == 0x06)                           \
-            GlobalObjects_rebaseDL(zobj, _g, 0x06);               \
-        PlayerModelManager_setDisplayList(h, PMM_DL_##dest, src); \
-    }                                                             \
+#define SET_MODEL_DIRECT(dest, src)                              \
+    {                                                            \
+        Gfx *_g = (Gfx *)src;                                    \
+        if (!IS_ALREADY_REPOINTED(zobj)) {                       \
+            GlobalObjects_rebaseDL(_g, sML64SegmentMap);         \
+        }                                                        \
+        PlayerModelManager_setDisplayList(h, PMM_DL_##dest, _g); \
+    }                                                            \
     (void)0
-#define SET_MODEL(dest, src) SET_MODEL_DIRECT(dest, (Gfx *)&zobj[src])
+#define SET_MODEL(dest, src) SET_MODEL_DIRECT(dest, &zobj[src])
 #define SET_Z64O_MODEL(dest, src, modName) SET_MODEL(dest, modName##_LUT_DL_##src)
 
 #define SET_MMO_MODEL(dest, src) SET_Z64O_MODEL(dest, src, MMO)
@@ -160,8 +150,6 @@ void setupZobjOotoChild(PlayerModelManagerHandle h, u8 *zobj) {
     // old versions of manifests had a typo that pointed the left shoulder entry to the left forearm
     OotoFixChildLeftShoulder(zobj);
 
-    repointExternalSegments(zobj, OOTO_CHILD_LUT_DL_WAIST, OOTO_CHILD_LUT_DL_FPS_RARM_SLINGSHOT);
-
     handleZobjSkeleton(h, zobj, sOoTOChildLimbs);
 
     setupFaceTextures(h, zobj);
@@ -212,8 +200,6 @@ void setupZobjOotoAdult(PlayerModelManagerHandle h, u8 *zobj) {
     // old versions of manifest did not write header ptr
     OotoFixHeaderSkelPtr(zobj);
 
-    repointExternalSegments(zobj, OOTO_ADULT_LUT_DL_WAIST, OOTO_ADULT_LUT_DL_FPS_LHAND_HOOKSHOT);
-
     handleZobjSkeleton(h, zobj, sOoTOAdultLimbs);
 
     setupFaceTextures(h, zobj);
@@ -259,22 +245,30 @@ void setupZobjOotoAdult(PlayerModelManagerHandle h, u8 *zobj) {
     QSET_OOTO_ADULT_MODEL(FPS_HOOKSHOT);
 }
 
+void *getGameplayKeepOOT();
+
 void setupZobjZ64O(PlayerModelManagerHandle h, u8 *zobj) {
     if (!sRepointedBuffers) {
         sRepointedBuffers = recomputil_create_u32_hashset();
     }
 
+    sML64SegmentMap[0x06] = zobj;
+    sML64SegmentMap[0x04] = NULL;
+
     switch (zobj[Z64O_FORM_BYTE]) {
         case MMO_FORM_BYTE_CHILD:
         case MMO_FORM_BYTE_ADULT:
+            sML64SegmentMap[0x04] = GlobalObjects_getGlobalObject(GAMEPLAY_KEEP);
             setupZobjMmoHuman(h, zobj);
             break;
 
         case OOTO_FORM_BYTE_CHILD:
+            sML64SegmentMap[0x04] = getGameplayKeepOOT();
             setupZobjOotoChild(h, zobj);
             break;
 
         case OOTO_FORM_BYTE_ADULT:
+            sML64SegmentMap[0x04] = getGameplayKeepOOT();
             setupZobjOotoAdult(h, zobj);
             break;
 
@@ -283,38 +277,6 @@ void setupZobjZ64O(PlayerModelManagerHandle h, u8 *zobj) {
     }
 
     recomputil_u32_hashset_insert(sRepointedBuffers, (u32)zobj);
+
+    recomp_printf("Finished zobj setup...\n");
 }
-
-void remapSegmentPtrs() {
-
-#define OOT_GK_HILITE_1_TEX 0x04000000
-#define OOT_GK_OCARINA_OF_TIME_TEX 0x04001400
-#define OOT_GK_DEKU_STICK_TEX 0x04001A00
-#define OOT_GK_HYLIAN_SHIELD_TEX 0x04000400
-#define OOT_GK_BOTTLE_GLASS_TEX 0x04001800
-#define PTR_OBJ_REMAP_SET(obj, key, val) setSegmentPtrRemap(key, (u32)SEGMENTED_TO_GLOBAL_PTR(obj, val))
-#define PTR_GK_REMAP_SET(key, val) PTR_OBJ_REMAP_SET(gk, key, val);
-
-    void *gk = GlobalObjects_getGlobalObject(GAMEPLAY_KEEP);
-
-    void *human = GlobalObjects_getGlobalObject(OBJECT_LINK_CHILD);
-
-    PTR_GK_REMAP_SET(OOT_GK_HILITE_1_TEX, gameplay_keep_Tex_00C830);
-    PTR_GK_REMAP_SET(OOT_GK_DEKU_STICK_TEX, gDekuStickTex);
-
-    PTR_OBJ_REMAP_SET(human, OOT_GK_OCARINA_OF_TIME_TEX, gLinkHumanOcarinaTex);
-
-    // setSegmentPtrRemap(OOT_GK_HYLIAN_SHIELD_TEX, (u32)gOotHylianShieldTex);
-    // setSegmentPtrRemap(OOT_GK_BOTTLE_GLASS_TEX, (u32)gOotBottleGlassTex);
-}
-
-/*
-RECOMP_DECLARE_EVENT(_internal_onReadyML64Compat());
-
-RECOMP_CALLBACK(".", _internal_onReadyML64CompatBase)
-void initML64CompatMM_onReadyML64CompatBase() {
-    remapSegmentPtrs();
-
-    _internal_onReadyML64Compat();
-}
-*/

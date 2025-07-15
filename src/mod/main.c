@@ -230,7 +230,7 @@ PLAYERMODELMANAGER_CALLBACK_REGISTER_MODELS void registerDiskModels() {
 
                         recomputil_u32_value_hashmap_insert(sModelBuffers, h, (uintptr_t)modelBuf);
 
-                        /*
+                        
                         char *debugDispName = displayName ? displayName : "";
                         char *debugAuthorName = authorName ? authorName : "";
                         recomp_printf("Processing zobj...\n"
@@ -241,7 +241,7 @@ PLAYERMODELMANAGER_CALLBACK_REGISTER_MODELS void registerDiskModels() {
                                       debugDispName,
                                       internalName,
                                       authorName);
-                        */
+                        
                         setupZobjZ64O(h, modelBuf);
                     }
                 }

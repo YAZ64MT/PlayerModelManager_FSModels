@@ -599,7 +599,22 @@ RECOMP_DLL_FUNC(PMMZobj_extractGameplayKeep) {
         fs::directory_entry gkDirEnt(gkCachedPath);
 
         if (gkDirEnt.exists() && !gkDirEnt.is_directory()) {
+            std::cout << "Found cached OOT gameplay keep!\n";
+
             std::ifstream file(gkCachedPath, std::ios::binary);
+
+            std::string gkCandidate(std::istreambuf_iterator<char>{file}, {});
+
+            SHA1 gkChecksum;
+            gkChecksum.update(gkCandidate);
+
+            if (gkChecksum.final() == GAMEPLAY_KEEP_OOT_SHA1_CHECKSUM) {
+                RECOMP_RETURN(bool, writeDataToRecompBuffer(rdram, ctx, rdramBuf, rdramBufSize, gkCandidate.data(), gkCandidate.size()));
+            } else {
+                std::cout << "Cached OOT gameplay keep checksum did not match! Deleting and re-extracting...\n";
+                file.close();
+                fs::remove(gkCachedPath);
+            }
         }
     }
 
@@ -623,14 +638,7 @@ RECOMP_DLL_FUNC(PMMZobj_extractGameplayKeep) {
 
         {
             std::ifstream file(*romPath, std::ios::binary);
-            std::string gkCandidate(std::istreambuf_iterator<char>{file}, {});
-
-            SHA1 gkChecksum;
-            gkChecksum.update(gkCandidate);
-
-            if (gkChecksum.final() == GAMEPLAY_KEEP_OOT_SHA1_CHECKSUM) {
-                RECOMP_RETURN(bool, writeDataToRecompBuffer(rdram, ctx, rdramBuf, rdramBufSize, gkCandidate.data(), gkCandidate.size()));
-            }
+            rom.assign(std::istreambuf_iterator{file}, {});
         }
 
         if (rom.size() > 0) {
@@ -682,14 +690,21 @@ RECOMP_DLL_FUNC(PMMZobj_extractGameplayKeep) {
                     }
 
                     if (isExtracted) {
-                        fs::create_directories(sPMMDir / OOT_ASSET_DIR);
+                        SHA1 gkChecksum;
+                        gkChecksum.update(std::string(reinterpret_cast<char *>(gkBuf.get()), gkSize));
 
-                        std::cout << "Writing gameplay keep to " << gkCachedPath.string() << '\n';
-                        std::ofstream gkOut(gkCachedPath, std::ios::binary);
-                        
-                        gkOut.write(reinterpret_cast<char *>(gkBuf.get()), gkSize);
+                        if (gkChecksum.final() == GAMEPLAY_KEEP_OOT_SHA1_CHECKSUM) {
+                            fs::create_directories(sPMMDir / OOT_ASSET_DIR);
 
-                        RECOMP_RETURN(bool, writeDataToRecompBuffer(rdram, ctx, rdramBuf, rdramBufSize, gkBuf.get(), gkSize));
+                            std::cout << "Writing gameplay keep to " << gkCachedPath.string() << '\n';
+                            std::ofstream gkOut(gkCachedPath, std::ios::binary);
+
+                            gkOut.write(reinterpret_cast<char *>(gkBuf.get()), gkSize);
+
+                            RECOMP_RETURN(bool, writeDataToRecompBuffer(rdram, ctx, rdramBuf, rdramBufSize, gkBuf.get(), gkSize));
+                        } else {
+                            std::cout << "Checksum of gameplay keep extracted from ROM did not match!\n";
+                        }
                     }
                 }
             }
