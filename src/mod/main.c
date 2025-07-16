@@ -12,7 +12,7 @@
 #include "ml64compat_mm.h"
 #include "oot_objects.h"
 
-RECOMP_IMPORT(".", int PMMZobj_setPMMDir(const char *str));
+RECOMP_IMPORT(".", bool PMMZobj_setPMMDir(const char *str));
 RECOMP_IMPORT(".", int PMMZobj_scanForDiskEntries());
 RECOMP_IMPORT(".", int PMMZobj_getNumDiskEntries());
 RECOMP_IMPORT(".", int PMMZobj_entryInternalNameLength(int i));
@@ -151,15 +151,7 @@ char *getStringFromEntry(int i, bool nameWriter(int i, char *buffer, int bufferS
     return result;
 }
 
-RECOMP_DECLARE_EVENT(_internal_initHashObjects());
-static bool sIsHashObjectsInitialized = false;
-
 PLAYERMODELMANAGER_CALLBACK_REGISTER_MODELS void registerDiskModels() {
-    if (!sIsHashObjectsInitialized) {
-        _internal_initHashObjects();
-        sIsHashObjectsInitialized = true;
-    }
-
     if (!sModelBuffers) {
         sModelBuffers = recomputil_create_u32_value_hashmap();
     }
@@ -169,7 +161,7 @@ PLAYERMODELMANAGER_CALLBACK_REGISTER_MODELS void registerDiskModels() {
 
         char *pmmDir = getCombinedPath(2, modDir, MAIN_DIR);
         char *fullModelDir = getCombinedPath(2, modDir, MODEL_DIR);
-        char *fullRomDir = getCombinedPath(2, ROM_DIR);
+        char *fullRomDir = getCombinedPath(2, modDir, ROM_DIR);
 
         PMMZobj_createDirectory(fullModelDir);
         PMMZobj_createDirectory(fullRomDir);

@@ -89,6 +89,8 @@ bool isValidStandaloneZobj(std::ifstream &f) {
 
 RECOMP_DLL_FUNC(PMMZobj_setPMMDir) {
     sPMMDir = RECOMP_ARG_STR(0);
+
+    RECOMP_RETURN(bool, true);
 }
 
 void extractEmbeddedInfo(const std::vector<char> &v, ModelDiskEntry &entry) {
@@ -740,7 +742,6 @@ bool extractOrLoadCachedOOTObject(uint8_t *rdram, recomp_context *ctx, unsigned 
             } else {
                 std::cout << "Cached OOT object " << assetPath.filename() << " checksum did not match! Deleting and re-extracting..." << std::endl;
                 file.close();
-                fs::remove(assetPath);
             }
         }
     }
