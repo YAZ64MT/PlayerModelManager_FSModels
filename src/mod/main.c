@@ -37,7 +37,6 @@ RECOMP_IMPORT(".", bool PMMZobj_isOOTRomLoaded());
 #define MAIN_DIR "playermodelmanager"
 #define MODEL_DIR MAIN_DIR "/models/"
 #define ASSET_DIR MAIN_DIR "/assets/"
-#define ROM_DIR MAIN_DIR "/roms/"
 #define OOT_ASSET_DIR ASSET_DIR "/oot/"
 #define MM_ASSET_DIR ASSET_DIR "/mm/"
 #define GAMEPLAY_KEEP_FILE_NAME "gameplay_keep.zobj"
@@ -161,17 +160,14 @@ PLAYERMODELMANAGER_CALLBACK_REGISTER_MODELS void registerDiskModels() {
 
         char *pmmDir = getCombinedPath(2, modDir, MAIN_DIR);
         char *fullModelDir = getCombinedPath(2, modDir, MODEL_DIR);
-        char *fullRomDir = getCombinedPath(2, modDir, ROM_DIR);
 
         PMMZobj_createDirectory(fullModelDir);
-        PMMZobj_createDirectory(fullRomDir);
 
         PMMZobj_setPMMDir(pmmDir);
 
         recomp_free(modDir);
         recomp_free(pmmDir);
         recomp_free(fullModelDir);
-        recomp_free(fullRomDir);
     }
 
     PMMZobj_tryLoadOOTROM();
