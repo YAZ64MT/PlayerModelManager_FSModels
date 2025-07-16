@@ -11,6 +11,7 @@
 #include "assets/objects/object_link_child/object_link_child.h"
 #include "libc/string.h"
 #include "playermodelmanager_api.h"
+#include "oot_objects.h"
 
 static U32HashsetHandle sRepointedBuffers = 0;
 
@@ -245,8 +246,6 @@ void setupZobjOotoAdult(PlayerModelManagerHandle h, u8 *zobj) {
     QSET_OOTO_ADULT_MODEL(FPS_HOOKSHOT);
 }
 
-void *getGameplayKeepOOT();
-
 void setupZobjZ64O(PlayerModelManagerHandle h, u8 *zobj) {
     if (!sRepointedBuffers) {
         sRepointedBuffers = recomputil_create_u32_hashset();
@@ -278,5 +277,5 @@ void setupZobjZ64O(PlayerModelManagerHandle h, u8 *zobj) {
 
     recomputil_u32_hashset_insert(sRepointedBuffers, (u32)zobj);
 
-    recomp_printf("Finished zobj setup...\n");
+    // recomp_printf("Finished zobj setup...\n");
 }

@@ -14,7 +14,6 @@
 #include "defines_mmo.h"
 #include "playermodelmanager_api.h"
 #include "sha1.hpp"
-#include "object_table_oot.hpp"
 #include "yaz0.hpp"
 
 namespace fs = std::filesystem;
@@ -154,14 +153,14 @@ RECOMP_DLL_FUNC(PMMZobj_scanForDiskEntries) {
 
     // TODO: This entire section needs a rewrite to support more model types
     for (const auto &dirEntry : fs::directory_iterator(folderEntry.path())) {
-        if (runningTotalSize < MAX_TOTAL_SIZE &&dirEntry.file_size() < MAX_MODEL_SIZE) {
+        if (runningTotalSize < MAX_TOTAL_SIZE && dirEntry.file_size() < MAX_MODEL_SIZE) {
             if (dirEntry.is_regular_file() || (dirEntry.is_symlink() && fs::is_regular_file(fs::weakly_canonical(dirEntry.path())))) {
                 std::ifstream file(dirEntry.path(), std::ios::binary);
 
                 if (isValidStandaloneZobj(file)) {
                     file.seekg(0);
 
-                    std::vector<char> fileBuf(std::istreambuf_iterator<char> {file}, {});
+                    std::vector<char> fileBuf(std::istreambuf_iterator<char>{file}, {});
 
                     ModelDiskEntry mde;
 
@@ -460,25 +459,12 @@ RECOMP_DLL_FUNC(PMMZobj_clearDiskEntries) {
 }
 
 static const std::unordered_map<std::string, std::pair<std::string, unsigned>> DMA_DATA_OFFSETS = {
-    {"328a1f1beba30ce5e178f031662019eb32c5f3b5", {"OOT PAL 1.0", 0x7950}},         // PAL 1.0
-    {"cfbb98d392e4a9d39da8285d10cbef3974c2f012", {"OOT PAL 1.1", 0x7950}},         // PAL 1.1
-    {"0227d7c0074f2d0ac935631990da8ec5914597b4", {"OOT PAL GC", 0x7170}},          // PAL GC
-    {"f46239439f59a2a594ef83cf68ef65043b1bffe2", {"OOT PAL MQ", 0x7170}},          // PAL MQ
-    {"cee6bc3c2a634b41728f2af8da54d9bf8cc14099", {"OOT PAL GC (Debug)", 0x12F70}}, // PAL GC (Debug)
-    {"079b855b943d6ad8bd1eb026c0ed169ecbdac7da", {"OOT PAL MQ (Debug)", 0x12F70}}, // PAL MQ (Debug)
-    {"50bebedad9e0f10746a52b07239e47fa6c284d03", {"OOT PAL MQ (Debug)", 0x12F70}}, // PAL MQ (Debug)
-    {"cfecfdc58d650e71a200c81f033de4e6d617a9f6", {"OOT PAL MQ (Debug)", 0x12F70}}, // PAL MQ (Debug)
-    {"ad69c91157f6705e8ab06c79fe08aad47bb57ba7", {"OOT NTSC 1.0 (US)", 0x7430}},   // NTSC 1.0 (US)
-    {"d3ecb253776cd847a5aa63d859d8c89a2f37b364", {"OOT NTSC 1.1 (US)", 0x7430}},   // NTSC 1.1 (US)
-    {"41b3bdc48d98c48529219919015a1af22f5057c2", {"OOT NTSC 1.2 (US)", 0x7430}},   // NTSC 1.2 (US)
-    {"c892bbda3993e66bd0d56a10ecd30b1ee612210f", {"OOT NTSC 1.0 (JP)", 0x7430}},   // NTSC 1.0 (JP)
-    {"dbfc81f655187dc6fefd93fa6798face770d579d", {"OOT NTSC 1.1 (JP)", 0x7430}},   // NTSC 1.1 (JP)
-    {"fa5f5942b27480d60243c2d52c0e93e26b9e6b86", {"OOT NTSC 1.2 (JP)", 0x7430}},   // NTSC 1.2 (JP)
-    {"b82710ba2bd3b4c6ee8aa1a7e9acf787dfc72e9b", {"OOT NTSC GC (US)", 0x7170}},    // NTSC GC (US)
-    {"8b5d13aac69bfbf989861cfdc50b1d840945fc1d", {"OOT NTSC MQ (US)", 0x7170}},    // NTSC MQ (US)
-    {"0769c84615422d60f16925cd859593cdfa597f84", {"OOT NTSC GC (JP)", 0x7170}},    // NTSC GC (JP)
-    {"2ce2d1a9f0534c9cd9fa04ea5317b80da21e5e73", {"NTSC GC CE (JP)", 0x7170}},     // NTSC GC CE (JP)
-    {"dd14e143c4275861fe93ea79d0c02e36ae8c6c2f", {"NTSC MQ (JP)", 0x7170}},        // NTSC MQ (JP)
+    {"ad69c91157f6705e8ab06c79fe08aad47bb57ba7", {"OOT NTSC 1.0 (US)", 0x7430}}, // NTSC 1.0 (US)
+    {"d3ecb253776cd847a5aa63d859d8c89a2f37b364", {"OOT NTSC 1.1 (US)", 0x7430}}, // NTSC 1.1 (US)
+    {"41b3bdc48d98c48529219919015a1af22f5057c2", {"OOT NTSC 1.2 (US)", 0x7430}}, // NTSC 1.2 (US)
+    {"c892bbda3993e66bd0d56a10ecd30b1ee612210f", {"OOT NTSC 1.0 (JP)", 0x7430}}, // NTSC 1.0 (JP)
+    {"dbfc81f655187dc6fefd93fa6798face770d579d", {"OOT NTSC 1.1 (JP)", 0x7430}}, // NTSC 1.1 (JP)
+    {"fa5f5942b27480d60243c2d52c0e93e26b9e6b86", {"OOT NTSC 1.2 (JP)", 0x7430}}, // NTSC 1.2 (JP)
 };
 
 const int ROM_LITTLE_ENDIAN = 0x40;
@@ -549,7 +535,7 @@ struct DMADataEntry {
         return physicalAddr.second - physicalAddr.first;
     }
 
-    DMADataEntry(): virtualAddr({0, 0}), physicalAddr({0xFFFFFFFF, 0xFFFFFFFF}) {}
+    DMADataEntry() : virtualAddr({0, 0}), physicalAddr({0xFFFFFFFF, 0xFFFFFFFF}) {}
 
     static void fillEntry(DMADataEntry &entry, const char *rom, unsigned dmaStart, unsigned index) {
         const unsigned char *entryRaw = reinterpret_cast<const unsigned char *>(rom + dmaStart + index * (sizeof(virtualAddr) + sizeof(physicalAddr)));
@@ -559,63 +545,34 @@ struct DMADataEntry {
         entry.physicalAddr.first = toU32(entryRaw + sizeof(uint32_t) * 2);
         entry.physicalAddr.second = toU32(entryRaw + sizeof(uint32_t) * 3);
 
-        std::cout << std::hex << "fillEntry:\ndmaStart: 0x" << dmaStart << "\nindex: 0x" << index << "\n" <<
-        "ROM Offset: 0x" << dmaStart + index * (sizeof(virtualAddr) + sizeof(physicalAddr)) << "\n" <<
-        "Virtual Address: {Start: 0x" << entry.virtualAddr.first << ", End: 0x" << entry.virtualAddr.second << "}\n"
-        "Physical Address: {Start: 0x" << entry.physicalAddr.first << ", End: 0x" << entry.physicalAddr.second << "}\n";
-    }
-
-    static const unsigned OOT_OBJECT_TABLE_START_INDEX = 0x1F2;
-
-    static void fillEntry(DMADataEntry &entry, const char *rom, unsigned dmaStart, ObjectIdOOT id) {
-        fillEntry(entry, rom, dmaStart, static_cast<unsigned>(id) - 1 + OOT_OBJECT_TABLE_START_INDEX);
+        // std::cout << std::hex << "fillEntry:\ndmaStart: 0x" << dmaStart << "\nindex: 0x" << index << "\n"
+        //           << "ROM Offset: 0x" << dmaStart + index * (sizeof(virtualAddr) + sizeof(physicalAddr)) << "\n"
+        //           << "Virtual Address: {Start: 0x" << entry.virtualAddr.first << ", End: 0x" << entry.virtualAddr.second << "}\n"
+        //           << "Physical Address: {Start: 0x"
+        //           << entry.physicalAddr.first << ", End: 0x" << entry.physicalAddr.second << "}\n";
     }
 
     DMADataEntry(const char *rom, unsigned dmaStart, unsigned index) {
         DMADataEntry::fillEntry(*this, rom, dmaStart, index);
     }
-
-    DMADataEntry(const char *rom, unsigned dmaStart, ObjectIdOOT id) {
-        DMADataEntry::fillEntry(*this, rom, dmaStart, id);
-    }
 };
 
-const std::string GAMEPLAY_KEEP_OOT_SHA1_CHECKSUM = "82f9c4c3224fa82884401fabf1b7e24b00d45883";
+static struct {
+    std::vector<char> rom;
+    unsigned dmaStart;
+} sZ64Rom;
 
-RECOMP_DLL_FUNC(PMMZobj_extractGameplayKeep) {
-    // clang-format off
-    PTR(char) rdramBuf = RECOMP_ARG(PTR(char), 0);
-    // clang-format on
+bool unloadOOTRom() {
+    sZ64Rom.dmaStart = 0;
+    sZ64Rom.rom.clear();
+    sZ64Rom.rom.shrink_to_fit();
+    return true;
+}
 
-    if (!rdramBuf) {
-        RECOMP_RETURN(bool, false);
-    }
-
-    unsigned rdramBufSize = RECOMP_ARG(unsigned, 1);
-
-    fs::path gkCachedPath = sPMMDir / OOT_ASSET_DIR / "gameplay_keep.zobj";
-
-    {
-        fs::directory_entry gkDirEnt(gkCachedPath);
-
-        if (gkDirEnt.exists() && !gkDirEnt.is_directory()) {
-            std::cout << "Found cached OOT gameplay keep!\n";
-
-            std::ifstream file(gkCachedPath, std::ios::binary);
-
-            std::string gkCandidate(std::istreambuf_iterator<char>{file}, {});
-
-            SHA1 gkChecksum;
-            gkChecksum.update(gkCandidate);
-
-            if (gkChecksum.final() == GAMEPLAY_KEEP_OOT_SHA1_CHECKSUM) {
-                RECOMP_RETURN(bool, writeDataToRecompBuffer(rdram, ctx, rdramBuf, rdramBufSize, gkCandidate.data(), gkCandidate.size()));
-            } else {
-                std::cout << "Cached OOT gameplay keep checksum did not match! Deleting and re-extracting...\n";
-                file.close();
-                fs::remove(gkCachedPath);
-            }
-        }
+bool tryLoadOOTRom() {
+    if (sPMMDir == "") {
+        std::cout << "Called tryLoadOOTRom before setting PMM directory!\n";
+        return false;
     }
 
     fs::path romPathZ64 = sPMMDir / "oot.z64";
@@ -643,10 +600,10 @@ RECOMP_DLL_FUNC(PMMZobj_extractGameplayKeep) {
 
         if (rom.size() > 0) {
             if (rom[0] == ROM_LITTLE_ENDIAN) {
-                std::cout << "ROM is little endian (.v64)! Converting to big endian (.z64)...";
+                std::cout << "ROM is little endian (.v64)! Converting to big endian (.z64)...\n";
                 doLE2BE(rom);
             } else if (rom[0] == ROM_BYTESWAPPED) {
-                std::cout << "ROM is byte-swapped (.n64)! Converting to big endian (.z64)...";
+                std::cout << "ROM is byte-swapped (.n64)! Converting to big endian (.z64)...\n";
                 doBS2BE(rom);
             }
 
@@ -660,56 +617,153 @@ RECOMP_DLL_FUNC(PMMZobj_extractGameplayKeep) {
             if (dmaIt != DMA_DATA_OFFSETS.end()) {
                 std::cout << "ROM identified as " << dmaIt->second.first << '\n';
 
-                unsigned dma = dmaIt->second.second;
-
-                DMADataEntry gkEntry = DMADataEntry(rom.data(), dma, ObjectIdOOT::OBJECT_GAMEPLAY_KEEP);
-
-                size_t gkSize = gkEntry.getUncompressedSize();
-
-                if (gkSize > SIZE_OF_YAZ0_HEADER) {
-                    std::cout << "Extracting gameplay keep from 0x" << std::hex << gkEntry.physicalAddr.first << '\n';
-
-                    std::unique_ptr<uint8_t> gkBuf(new uint8_t[gkSize]);
-
-                    bool isExtracted = false;
-
-                    uint32_t physicalStart = gkEntry.physicalAddr.first + SIZE_OF_YAZ0_HEADER;
-                    if (gkEntry.isCompressed()) {
-                        std::cout << "Extracting compressed file...\n";
-
-                        size_t gkSizeCompressed = gkEntry.getCompressedSize();
-
-                        if (gkSizeCompressed) {
-                            yaz0_decompress(gkSize, gkSizeCompressed - SIZE_OF_YAZ0_HEADER, reinterpret_cast<const uint8_t*>(rom.data() + physicalStart), gkBuf.get());
-                            isExtracted = true;
-                        }
-                    }
-                    else {
-                        memcpy(gkBuf.get(), rom.data() + physicalStart, gkSize);
-                        isExtracted = true;
-                    }
-
-                    if (isExtracted) {
-                        SHA1 gkChecksum;
-                        gkChecksum.update(std::string(reinterpret_cast<char *>(gkBuf.get()), gkSize));
-
-                        if (gkChecksum.final() == GAMEPLAY_KEEP_OOT_SHA1_CHECKSUM) {
-                            fs::create_directories(sPMMDir / OOT_ASSET_DIR);
-
-                            std::cout << "Writing gameplay keep to " << gkCachedPath.string() << '\n';
-                            std::ofstream gkOut(gkCachedPath, std::ios::binary);
-
-                            gkOut.write(reinterpret_cast<char *>(gkBuf.get()), gkSize);
-
-                            RECOMP_RETURN(bool, writeDataToRecompBuffer(rdram, ctx, rdramBuf, rdramBufSize, gkBuf.get(), gkSize));
-                        } else {
-                            std::cout << "Checksum of gameplay keep extracted from ROM did not match!\n";
-                        }
-                    }
+                sZ64Rom.dmaStart = dmaIt->second.second;
+                sZ64Rom.rom.clear();
+                rom.reserve(rom.size());
+                for (size_t i = 0; i < rom.size(); ++i) {
+                    sZ64Rom.rom.push_back(rom[i]);
                 }
+
+                return true;
             }
         }
     }
 
-    RECOMP_RETURN(bool, false);
+    unloadOOTRom();
+    return false;
+}
+
+bool isRomLoaded() {
+    return sZ64Rom.rom.size() > 0;
+}
+
+RECOMP_DLL_FUNC(PMMZobj_tryLoadOOTROM) {
+    RECOMP_RETURN(bool, tryLoadOOTRom());
+}
+
+RECOMP_DLL_FUNC(PMMZobj_unloadOOTROM) {
+    RECOMP_RETURN(bool, unloadOOTRom());
+}
+
+RECOMP_DLL_FUNC(PMMZobj_isOOTRomLoaded) {
+    RECOMP_RETURN(bool, isRomLoaded());
+}
+
+std::vector<u8> extractZ64Object(const void *romData, unsigned dmaOffset, int dmaIndex, const std::string &checksum, const fs::path &outPath) {
+    const char *rom = static_cast<const char *>(romData);
+
+    DMADataEntry entry = DMADataEntry(rom, dmaOffset, dmaIndex);
+
+    size_t entrySize = entry.getUncompressedSize();
+
+    if (entrySize > SIZE_OF_YAZ0_HEADER) {
+        std::cout << "Extracting " << outPath.filename() << " from 0x" << std::hex << entry.physicalAddr.first << std::endl;
+
+        bool isExtracted = false;
+
+        uint32_t physicalStart = entry.physicalAddr.first + SIZE_OF_YAZ0_HEADER;
+
+        std::unique_ptr<u8> buf(new u8[entrySize]);
+
+        if (entry.isCompressed()) {
+            std::cout << "Extracting compressed file..." << std::endl;
+
+            size_t entrySizeCompressed = entry.getCompressedSize();
+
+            if (entrySizeCompressed) {
+                yaz0_decompress(entrySize, entrySizeCompressed - SIZE_OF_YAZ0_HEADER, reinterpret_cast<const uint8_t *>(rom + physicalStart), buf.get());
+                isExtracted = true;
+            }
+        } else {
+            memcpy(buf.get(), rom + physicalStart, entrySize);
+            isExtracted = true;
+        }
+
+        if (isExtracted) {
+            SHA1 entryChecksum;
+            entryChecksum.update(std::string(reinterpret_cast<char *>(buf.get()), entrySize));
+
+            if (checksum == "" || entryChecksum.final() == checksum) {
+                if (outPath.has_parent_path()) {
+                    fs::create_directories(outPath.parent_path());
+                }
+
+                std::cout << "Writing DMA entry " << std::dec << dmaIndex << " to " << outPath.string() << std::endl;
+                std::ofstream fsOut(outPath, std::ios::binary);
+                fsOut.write(reinterpret_cast<char *>(buf.get()), entrySize);
+                fsOut.flush();
+                std::cout << "Finished writing DMA entry " << std::dec << dmaIndex << " to " << outPath.string() << std::endl;
+
+                std::vector<u8> ret;
+
+                ret.resize(entrySize);
+                for (size_t i = 0; i < entrySize; ++i) {
+                    ret[i] = buf.get()[i];
+                }
+                return ret;
+            } else {
+                std::cout << "Checksum of " << outPath.filename() << " extracted from ROM did not match!" << std::endl;
+            }
+        }
+    }
+
+    return std::vector<u8>({});
+}
+
+bool extractOrLoadCachedOOTObject(uint8_t *rdram, recomp_context *ctx, unsigned dmaIndex, const fs::path &assetPath, const std::string &assetChecksum) {
+    // clang-format off
+    PTR(char) rdramBuf = RECOMP_ARG(PTR(char), 0);
+    // clang-format on
+
+    if (!rdramBuf) {
+        std::cout << "Cannot load OOT object " << assetPath.filename() << " into NULL pointer!" << std::endl;
+        return false;
+    }
+
+    unsigned rdramBufSize = RECOMP_ARG(unsigned, 1);
+
+    if (assetChecksum != "") {
+        fs::directory_entry assetDirEnt(assetPath);
+
+        if (assetDirEnt.exists() && !assetDirEnt.is_directory()) {
+            std::cout << "Found cached OOT object " << assetPath.filename() << "!" << std::endl;
+
+            std::ifstream file(assetPath, std::ios::binary);
+
+            std::string assetCandidate(std::istreambuf_iterator<char>{file}, {});
+
+            SHA1 candidateChecksum;
+            candidateChecksum.update(assetCandidate);
+
+            if (candidateChecksum.final() == assetChecksum && writeDataToRecompBuffer(rdram, ctx, rdramBuf, rdramBufSize, assetCandidate.data(), assetCandidate.size())) {
+                return true;
+            } else {
+                std::cout << "Cached OOT object " << assetPath.filename() << " checksum did not match! Deleting and re-extracting..." << std::endl;
+                file.close();
+                fs::remove(assetPath);
+            }
+        }
+    }
+
+    if (isRomLoaded()) {
+
+        auto obj = extractZ64Object(sZ64Rom.rom.data(), sZ64Rom.dmaStart, dmaIndex, assetChecksum, assetPath);
+        if (obj.size() > 0) {
+            return writeDataToRecompBuffer(rdram, ctx, rdramBuf, rdramBufSize, obj.data(), obj.size());
+        };
+    }
+
+    return false;
+}
+
+RECOMP_DLL_FUNC(PMMZobj_extractGameplayKeep) {
+    RECOMP_RETURN(bool, extractOrLoadCachedOOTObject(rdram, ctx, 498, sPMMDir / OOT_ASSET_DIR / "gameplay_keep.zobj", "82f9c4c3224fa82884401fabf1b7e24b00d45883"));
+}
+
+RECOMP_DLL_FUNC(PMMZobj_extractAdultLink) {
+    RECOMP_RETURN(bool, extractOrLoadCachedOOTObject(rdram, ctx, 502, sPMMDir / OOT_ASSET_DIR / "object_link_boy.zobj", "4ccb321f01568b4aa3a1af1572466a1a78d706ce"));
+}
+
+RECOMP_DLL_FUNC(PMMZobj_extractChildLink) {
+    RECOMP_RETURN(bool, extractOrLoadCachedOOTObject(rdram, ctx, 503, sPMMDir / OOT_ASSET_DIR / "object_link_child.zobj", "30f0d604b60d3c11ba7f8821e08964d6a640d225"));
 }

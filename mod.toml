@@ -61,6 +61,11 @@ native_libraries = [
       "PMMZobj_isModelType",
       "PMMZobj_clearDiskEntries",
       "PMMZobj_extractGameplayKeep",
+      "PMMZobj_extractChildLink",
+      "PMMZobj_extractAdultLink",
+      "PMMZobj_tryLoadOOTROM",
+      "PMMZobj_unloadOOTROM",
+      "PMMZobj_isOOTRomLoaded"
    ] }
 ]
 

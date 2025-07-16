@@ -10,6 +10,7 @@
 #include "defines_ooto.h"
 #include "defines_mmo.h"
 #include "ml64compat_mm.h"
+#include "oot_objects.h"
 
 RECOMP_IMPORT(".", int PMMZobj_setPMMDir(const char *str));
 RECOMP_IMPORT(".", int PMMZobj_scanForDiskEntries());
@@ -29,7 +30,9 @@ RECOMP_IMPORT(".", bool PMMZobj_readEntryU16(int i, int offset, u16 *out));
 RECOMP_IMPORT(".", bool PMMZobj_readEntryU32(int i, int offset, u32 *out));
 RECOMP_IMPORT(".", bool PMMZobj_isModelType(int i, PlayerModelManagerModelType t));
 RECOMP_IMPORT(".", void PMMZobj_clearDiskEntries());
-RECOMP_IMPORT(".", bool PMMZobj_extractGameplayKeep(void *buffer, int bufferSize));
+RECOMP_IMPORT(".", bool PMMZobj_tryLoadOOTROM());
+RECOMP_IMPORT(".", bool PMMZobj_unloadOOTROM());
+RECOMP_IMPORT(".", bool PMMZobj_isOOTRomLoaded());
 
 #define MAIN_DIR "playermodelmanager"
 #define MODEL_DIR MAIN_DIR "/models/"
@@ -151,13 +154,6 @@ char *getStringFromEntry(int i, bool nameWriter(int i, char *buffer, int bufferS
 RECOMP_DECLARE_EVENT(_internal_initHashObjects());
 static bool sIsHashObjectsInitialized = false;
 
-#define OOT_GAMEPLAY_KEEP_SIZE 0x05BCE0
-u8 gGameplayKeepOOT[OOT_GAMEPLAY_KEEP_SIZE];
-
-void *getGameplayKeepOOT() {
-    return gGameplayKeepOOT;
-}
-
 PLAYERMODELMANAGER_CALLBACK_REGISTER_MODELS void registerDiskModels() {
     if (!sIsHashObjectsInitialized) {
         _internal_initHashObjects();
@@ -186,12 +182,8 @@ PLAYERMODELMANAGER_CALLBACK_REGISTER_MODELS void registerDiskModels() {
         recomp_free(fullRomDir);
     }
 
-    if (!PMMZobj_extractGameplayKeep(gGameplayKeepOOT, sizeof(gGameplayKeepOOT))) {
-        recomp_printf("Could not load OOT gameplay keep from file system! Filling buffer with dummy values...\n");
-        for (size_t i = 0; i < sizeof(gGameplayKeepOOT); i += sizeof(Gfx)) {
-            gGameplayKeepOOT[i] = G_ENDDL;
-        }
-    }
+    PMMZobj_tryLoadOOTROM();
+    loadGameplayKeepOOT();
 
     int numDiskEntries = PMMZobj_scanForDiskEntries();
 
@@ -209,7 +201,7 @@ PLAYERMODELMANAGER_CALLBACK_REGISTER_MODELS void registerDiskModels() {
             }
             formChar--;
 
-            //recomp_printf("Allocating 0x%X bytes for model with internal name '%s'...\n", entrySize, internalName);
+            // recomp_printf("Allocating 0x%X bytes for model with internal name '%s'...\n", entrySize, internalName);
             void *modelBuf = recomp_alloc(entrySize);
 
             if (PMMZobj_getEntryFileData(i, modelBuf, entrySize)) {
@@ -230,18 +222,17 @@ PLAYERMODELMANAGER_CALLBACK_REGISTER_MODELS void registerDiskModels() {
 
                         recomputil_u32_value_hashmap_insert(sModelBuffers, h, (uintptr_t)modelBuf);
 
-                        
-                        char *debugDispName = displayName ? displayName : "";
-                        char *debugAuthorName = authorName ? authorName : "";
-                        recomp_printf("Processing zobj...\n"
-                                      "Display Name: %s\n"
-                                      "Internal Name: %s\n"
-                                      "Author: %s\n"
-                                      "-----------------\n",
-                                      debugDispName,
-                                      internalName,
-                                      authorName);
-                        
+                        // char *debugDispName = displayName ? displayName : "";
+                        // char *debugAuthorName = authorName ? authorName : "";
+                        // recomp_printf("Processing zobj...\n"
+                        //               "Display Name: %s\n"
+                        //               "Internal Name: %s\n"
+                        //               "Author: %s\n"
+                        //               "-----------------\n",
+                        //               debugDispName,
+                        //               internalName,
+                        //               authorName);
+
                         setupZobjZ64O(h, modelBuf);
                     }
                 }
@@ -255,5 +246,10 @@ PLAYERMODELMANAGER_CALLBACK_REGISTER_MODELS void registerDiskModels() {
         recomp_free(authorName);
     }
 
+    registerChildLink();
+    registerAdultLink();
+    PMMZobj_unloadOOTROM();
+
     PMMZobj_clearDiskEntries();
+
 }
