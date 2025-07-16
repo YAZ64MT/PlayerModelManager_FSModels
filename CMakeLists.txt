@@ -1,6 +1,8 @@
 cmake_minimum_required(VERSION 3.20)
 
-set(CMAKE_TRY_COMPILE_TARGET_TYPE "STATIC_LIBRARY")
+if (${CMAKE_SYSTEM_NAME} MATCHES "Darwin")
+    set(CMAKE_TRY_COMPILE_TARGET_TYPE "STATIC_LIBRARY")
+endif()
 
 project(recomp_mod_native_lib)
 set(CMAKE_CXX_STANDARD 20)
