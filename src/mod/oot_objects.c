@@ -85,7 +85,7 @@ void registerChildLink() {
     loadGameplayKeepOOT();
 
     if (sIsRealGameplayKeepLoaded && PMMZobj_extractChildLink(gLinkChildOOT, OOT_LINK_CHILD_SIZE)) {
-        //PMMZobj_extractChildLink(gLinkChildOOT, OOT_LINK_CHILD_SIZE);
+        // PMMZobj_extractChildLink(gLinkChildOOT, OOT_LINK_CHILD_SIZE);
 
         GlobalObjectsSegmentMap cLinkSegs = {0};
         cLinkSegs[0x06] = gLinkChildOOT;
@@ -116,13 +116,18 @@ void registerChildLink() {
     }
 }
 
+#define OOT_LINK_ADULT_FPS_RIGHT_FOREARM 0x29FA0
+#define OOT_LINK_ADULT_FPS_LEFT_FOREARM 0x29918
+#define OOT_LINK_ADULT_FPS_LEFT_HAND 0x29C20
+#define OOT_LINK_ADULT_FPS_RIGHT_HAND_AND_BOW 0x2A248
+
 void registerAdultLink() {
     gLinkAdultOOT = recomp_alloc(OOT_LINK_ADULT_SIZE);
 
     loadGameplayKeepOOT();
 
     if (sIsRealGameplayKeepLoaded && PMMZobj_extractAdultLink(gLinkAdultOOT, OOT_LINK_ADULT_SIZE)) {
-        //PMMZobj_extractAdultLink(gLinkAdultOOT, OOT_LINK_ADULT_SIZE);
+        // PMMZobj_extractAdultLink(gLinkAdultOOT, OOT_LINK_ADULT_SIZE);
 
         GlobalObjectsSegmentMap aLinkSegs = {0};
         aLinkSegs[0x06] = gLinkAdultOOT;
@@ -134,25 +139,41 @@ void registerAdultLink() {
 
         repointSkeletonAndDisableLOD(skel, aLinkSegs);
 
+        // Human
         PlayerModelManagerHandle h = PLAYERMODELMANAGER_REGISTER_MODEL("oot_object_link_boy_adult", PMM_MODEL_TYPE_ADULT);
         PlayerModelManager_setDisplayName(h, "Adult Link (OOT)");
         PlayerModelManager_setAuthor(h, "Nintendo");
         PlayerModelManager_setSkeleton(h, skel);
         setupFaceTextures(h, gLinkAdultOOT);
 
+        // Unglue FPS right hand from bow
+        const int BOW_START_DRAW_OFFSET = 0x2A2C0;
+        const int HAND_START_DRAW_OFFSET = 0x2A3F8;
+        gSPBranchList(gLinkAdultOOT + BOW_START_DRAW_OFFSET, SEGMENT_ADDR(6, HAND_START_DRAW_OFFSET));
+
 #define REPOINT_SET_ADULT(dloffset, pmmdl) REPOINT_AND_SET(h, pmmdl, gLinkAdultOOT, dloffset, aLinkSegs)
         REPOINT_SET_ADULT(OOT_LINK_ADULT_LFIST, PMM_DL_LFIST);
         REPOINT_SET_ADULT(OOT_LINK_ADULT_RFIST, PMM_DL_RFIST);
         REPOINT_SET_ADULT(OOT_LINK_ADULT_BOTTLE_HAND, PMM_DL_LHAND_BOTTLE);
+        REPOINT_SET_ADULT(OOT_LINK_ADULT_FPS_LEFT_HAND, PMM_DL_FPS_LHAND);
+        REPOINT_SET_ADULT(OOT_LINK_ADULT_FPS_RIGHT_HAND_AND_BOW, PMM_DL_FPS_RHAND);
+        REPOINT_SET_ADULT(OOT_LINK_ADULT_FPS_RIGHT_FOREARM, PMM_DL_FPS_RFOREARM);
+        REPOINT_SET_ADULT(OOT_LINK_ADULT_FPS_LEFT_FOREARM, PMM_DL_FPS_LFOREARM);
 
+        // Fierce Deity
         h = PLAYERMODELMANAGER_REGISTER_MODEL("oot_object_link_boy_fd", PMM_MODEL_TYPE_FIERCE_DEITY);
         PlayerModelManager_setDisplayName(h, "Adult Link (OOT)");
         PlayerModelManager_setAuthor(h, "Nintendo");
         PlayerModelManager_setSkeleton(h, skel);
         setupFaceTextures(h, gLinkAdultOOT);
+
         REPOINT_SET_ADULT(OOT_LINK_ADULT_LFIST, PMM_DL_LFIST);
         REPOINT_SET_ADULT(OOT_LINK_ADULT_RFIST, PMM_DL_RFIST);
         REPOINT_SET_ADULT(OOT_LINK_ADULT_BOTTLE_HAND, PMM_DL_LHAND_BOTTLE);
+        REPOINT_SET_ADULT(OOT_LINK_ADULT_FPS_LEFT_HAND, PMM_DL_FPS_LHAND);
+        REPOINT_SET_ADULT(OOT_LINK_ADULT_FPS_RIGHT_HAND_AND_BOW, PMM_DL_FPS_RHAND);
+        REPOINT_SET_ADULT(OOT_LINK_ADULT_FPS_RIGHT_FOREARM, PMM_DL_FPS_RFOREARM);
+        REPOINT_SET_ADULT(OOT_LINK_ADULT_FPS_LEFT_FOREARM, PMM_DL_FPS_LFOREARM);
 
 #undef REPOINT_SET_ADULT
     } else {
