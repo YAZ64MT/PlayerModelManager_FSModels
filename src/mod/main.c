@@ -184,6 +184,8 @@ PLAYERMODELMANAGER_CALLBACK_REGISTER_MODELS void registerDiskModels() {
 
     PMMZobj_tryLoadOOTROM();
     loadGameplayKeepOOT();
+    registerChildLink();
+    registerAdultLink();
 
     int numDiskEntries = PMMZobj_scanForDiskEntries();
 
@@ -246,8 +248,6 @@ PLAYERMODELMANAGER_CALLBACK_REGISTER_MODELS void registerDiskModels() {
         recomp_free(authorName);
     }
 
-    registerChildLink();
-    registerAdultLink();
     PMMZobj_unloadOOTROM();
 
     PMMZobj_clearDiskEntries();
