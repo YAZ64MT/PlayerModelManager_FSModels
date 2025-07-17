@@ -55,7 +55,7 @@ dependencies = [
 # Native libraries (e.g. DLLs) and the functions they export.
 native_libraries = [
 # Example native library:
-   { name = "libyazmt_mm_playermodelmanager_fsmodels", funcs = [
+   { name = "yazmt_mm_playermodelmanager_fsmodels_extlib", funcs = [
       "PMMZobj_setPMMDir",
       "PMMZobj_scanForDiskEntries",
       "PMMZobj_getNumDiskEntries",
@@ -105,7 +105,7 @@ additional_files = [ "thumb.png" ]
 [extlib_compiling]
 
 # # Name of the extlib. This information is passed to CMake as the target name for the extlib.
-library_name = "yazmt_mm_playermodelmanager_fsmodels"
+library_name = "yazmt_mm_playermodelmanager_fsmodels_extlib"
 
 # Your CMake presets in this file should be designed to handle cross-compilation (using the provided
 # Zig toolchain is recommended). When building the mod, CMake will be invoked 3 times to build
