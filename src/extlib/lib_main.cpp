@@ -5,6 +5,8 @@
 #include <string>
 #include <unordered_map>
 #include <memory>
+#include <cstring>
+#include <array>
 #include "lib_recomp.hpp"
 #include "defines_z64o.h"
 #include "defines_ooto.h"
