@@ -34,7 +34,7 @@ MOD_TOOL_ZIG_TRIPLET ?= x86_64-windows
 NATIVE_SUBDIR := bin
 NATIVE_EXTENSION := dll
 else ifneq ($(shell uname),Darwin)
-MOD_TOOL_ZIG_TRIPLET ?= x86_64-linux
+MOD_TOOL_ZIG_TRIPLET ?= x86_64-linux-gnu
 NATIVE_SUBDIR := lib
 NATIVE_EXTENSION := so
 else
