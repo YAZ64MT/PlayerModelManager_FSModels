@@ -34,14 +34,6 @@ RECOMP_IMPORT(".", bool PMMZobj_tryLoadOOTROM());
 RECOMP_IMPORT(".", bool PMMZobj_unloadOOTROM());
 RECOMP_IMPORT(".", bool PMMZobj_isOOTRomLoaded());
 
-#define MAIN_DIR "playermodelmanager"
-#define MODEL_DIR MAIN_DIR "/models/"
-#define ASSET_DIR MAIN_DIR "/assets/"
-#define OOT_ASSET_DIR ASSET_DIR "/oot/"
-#define MM_ASSET_DIR ASSET_DIR "/mm/"
-#define GAMEPLAY_KEEP_FILE_NAME "gameplay_keep.zobj"
-#define OOT_GAMEPLAY_KEEP_FILE OOT_ASSET_DIR GAMEPLAY_KEEP_FILE_NAME
-
 static const PlayerTransformation FORM_MODEL_TO_FORM[PMM_MODEL_TYPE_MAX] = {
     [PMM_MODEL_TYPE_NONE] = PLAYER_FORM_MAX,
     [PMM_MODEL_TYPE_CHILD] = PLAYER_FORM_HUMAN,
@@ -158,16 +150,9 @@ PLAYERMODELMANAGER_CALLBACK_REGISTER_MODELS void registerDiskModels() {
     {
         char *modDir = (char *)recomp_get_mod_folder_path();
 
-        char *pmmDir = getCombinedPath(2, modDir, MAIN_DIR);
-        char *fullModelDir = getCombinedPath(2, modDir, MODEL_DIR);
-
-        PMMZobj_createDirectory(fullModelDir);
-
-        PMMZobj_setPMMDir(pmmDir);
+        PMMZobj_setPMMDir(modDir);
 
         recomp_free(modDir);
-        recomp_free(pmmDir);
-        recomp_free(fullModelDir);
     }
 
     PMMZobj_tryLoadOOTROM();

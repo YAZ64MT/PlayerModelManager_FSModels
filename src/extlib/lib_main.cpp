@@ -89,6 +89,8 @@ bool isValidStandaloneZobj(std::ifstream &f) {
 RECOMP_DLL_FUNC(PMMZobj_setPMMDir) {
     sPMMDir = RECOMP_ARG_STR(0);
 
+    sPMMDir = sPMMDir.parent_path() / "mod_data" / "yazmt_z64_playermodelmanager";
+
     RECOMP_RETURN(bool, true);
 }
 

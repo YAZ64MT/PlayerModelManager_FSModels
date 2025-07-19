@@ -8,7 +8,7 @@
 id = "yazmt_mm_playermodelmanager_fsmodels"
 
 # Version of this mod.
-version = "0.1.0"
+version = "0.2.0"
 
 # The name that will show up for this mod in the mod menu. This should be human readable.
 display_name = "PlayerModelManager FS Addon"
@@ -17,7 +17,7 @@ display_name = "PlayerModelManager FS Addon"
 description = """
 File system support for PlayerModelManager.
 
-Allows non-Fast64 player models (".zobj") to be read from <recomp mods folder>/playermodelmanager/models/
+Allows non-Fast64 player models (".zobj") to be read from <recomp appdata folder>/mod_data/models/
 
 Some of these models rely on assets from Ocarina of Time, which may cause corrupted textures when they are \
 loaded into Majora's Mask.
