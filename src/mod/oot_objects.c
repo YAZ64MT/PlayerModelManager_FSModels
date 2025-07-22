@@ -129,6 +129,8 @@ void registerChildLink() {
 #define OOT_LINK_ADULT_HOOKSHOT_HOOK 0x2B288
 #define OOT_LINK_ADULT_HOOKSHOT_CHAIN 0x2AFF0
 #define OOT_LINK_ADULT_FPS_RIGHT_HAND_HOLDING_HOOKSHOT 0x2A738
+#define OOT_LINK_ADULT_RIGHT_HAND_HOLDING_BOW 0x22DA8
+#define OOT_LINK_ADULT_BOW_STRING 0x2B108
 
 static Gfx sMasterSwordHilt[] = {
     gsDPPipeSync(),
@@ -206,6 +208,10 @@ void registerAdultLink() {
         const uintptr_t HOOKSHOT_FPS_HAND_START = 0x2AA28;
         gSPEndDisplayList(gLinkAdultOOT + HOOKSHOT_FPS_HAND_START);
 
+        // Bow
+        const uintptr_t BOW_HAND_START = 0x22F00;
+        gSPEndDisplayList(gLinkAdultOOT + BOW_HAND_START);
+
         Mtx hookshotChainHookOffset;
         guPosition(&hookshotChainHookOffset, 0, 0, 0, 1, 50, 840, 0);
 
@@ -239,6 +245,8 @@ void registerAdultLink() {
         REPOINT_SET_ADULT(OOT_LINK_ADULT_RIGHT_HAND_HOLDING_HOOKSHOT, PMM_DL_HOOKSHOT);
         REPOINT_SET_ADULT(OOT_LINK_ADULT_HOOKSHOT_CHAIN, PMM_DL_HOOKSHOT_CHAIN);
         REPOINT_SET_ADULT(OOT_LINK_ADULT_HOOKSHOT_HOOK, PMM_DL_HOOKSHOT_HOOK);
+        REPOINT_SET_ADULT(OOT_LINK_ADULT_RIGHT_HAND_HOLDING_BOW, PMM_DL_BOW);
+        REPOINT_SET_ADULT(OOT_LINK_ADULT_BOW_STRING, PMM_DL_BOW_STRING);
         PlayerModelManager_setMatrix(h, PMM_MTX_SHIELD_HERO_BACK, &shieldBack);
         PlayerModelManager_setMatrix(h, PMM_MTX_SHIELD_MIRROR_BACK, &shieldBack);
         PlayerModelManager_setMatrix(h, PMM_MTX_SWORD_GILDED_BACK, &swordBack);
@@ -276,6 +284,8 @@ void registerAdultLink() {
         REPOINT_SET_ADULT(OOT_LINK_ADULT_RIGHT_HAND_HOLDING_HOOKSHOT, PMM_DL_HOOKSHOT);
         REPOINT_SET_ADULT(OOT_LINK_ADULT_HOOKSHOT_CHAIN, PMM_DL_HOOKSHOT_CHAIN);
         REPOINT_SET_ADULT(OOT_LINK_ADULT_HOOKSHOT_HOOK, PMM_DL_HOOKSHOT_HOOK);
+        REPOINT_SET_ADULT(OOT_LINK_ADULT_RIGHT_HAND_HOLDING_BOW, PMM_DL_BOW);
+        REPOINT_SET_ADULT(OOT_LINK_ADULT_BOW_STRING, PMM_DL_BOW_STRING);
         PlayerModelManager_setMatrix(h, PMM_MTX_SHIELD_HERO_BACK, &shieldBack);
         PlayerModelManager_setMatrix(h, PMM_MTX_SHIELD_MIRROR_BACK, &shieldBack);
         PlayerModelManager_setMatrix(h, PMM_MTX_SWORD_GILDED_BACK, &swordBack);
