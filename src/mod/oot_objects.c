@@ -131,6 +131,7 @@ void registerChildLink() {
 #define OOT_LINK_ADULT_FPS_RIGHT_HAND_HOLDING_HOOKSHOT 0x2A738
 #define OOT_LINK_ADULT_RIGHT_HAND_HOLDING_BOW 0x22DA8
 #define OOT_LINK_ADULT_BOW_STRING 0x2B108
+#define OOT_LINK_ADULT_LEFT_HAND_HOLDING_BGS 0x238C8
 
 static Gfx sMasterSwordHilt[] = {
     gsDPPipeSync(),
@@ -138,6 +139,15 @@ static Gfx sMasterSwordHilt[] = {
     gsDPSetRenderMode(G_RM_FOG_SHADE_A, G_RM_AA_ZB_OPA_SURF2),
     gsSPSetGeometryMode(G_FOG | G_LIGHTING),
     gsSPDisplayList(0x0C000000),
+    gsDPPipeSync(),
+    gsSPNoOp(), // branch command goes here
+};
+
+static Gfx sBiggoronSwordBlade[] = {
+    gsDPPipeSync(),
+    gsDPSetCombineLERP(TEXEL0, 0, SHADE, 0, 0, 0, 0, 1, COMBINED, 0, PRIMITIVE, 0, 0, 0, 0, COMBINED),
+    gsDPSetRenderMode(G_RM_FOG_SHADE_A, G_RM_AA_ZB_OPA_SURF2),
+    gsSPSetGeometryMode(G_FOG | G_LIGHTING | G_TEXTURE_GEN | G_TEXTURE_GEN_LINEAR),
     gsDPPipeSync(),
     gsSPNoOp(), // branch command goes here
 };
@@ -212,6 +222,17 @@ void registerAdultLink() {
         const uintptr_t BOW_HAND_START = 0x22F00;
         gSPEndDisplayList(gLinkAdultOOT + BOW_HAND_START);
 
+        // Biggoron Sword Hilt
+        GlobalObjects_rebaseDL((Gfx *)(gLinkAdultOOT + OOT_LINK_ADULT_LEFT_HAND_HOLDING_BGS), aLinkSegs);
+        const uintptr_t BIGGORON_SWORD_HILT_END = 0x23A28;
+        gSPEndDisplayList(gLinkAdultOOT + BIGGORON_SWORD_HILT_END);
+
+        // Biggoron Sword Blade
+        const uintptr_t BIGGORON_SWORD_BLADE_START = BIGGORON_SWORD_HILT_END + sizeof(Gfx);
+        const uintptr_t BIGGORON_SWORD_HAND_START = 0x23AE0;
+        gSPBranchList(&sBiggoronSwordBlade[ARRAY_COUNT(sBiggoronSwordBlade) - 1], gLinkAdultOOT + BIGGORON_SWORD_BLADE_START);
+        gSPEndDisplayList(gLinkAdultOOT + BIGGORON_SWORD_HAND_START);
+
         Mtx hookshotChainHookOffset;
         guPosition(&hookshotChainHookOffset, 0, 0, 0, 1, 50, 840, 0);
 
@@ -247,11 +268,19 @@ void registerAdultLink() {
         REPOINT_SET_ADULT(OOT_LINK_ADULT_HOOKSHOT_HOOK, PMM_DL_HOOKSHOT_HOOK);
         REPOINT_SET_ADULT(OOT_LINK_ADULT_RIGHT_HAND_HOLDING_BOW, PMM_DL_BOW);
         REPOINT_SET_ADULT(OOT_LINK_ADULT_BOW_STRING, PMM_DL_BOW_STRING);
+        REPOINT_SET_ADULT(OOT_LINK_ADULT_SHEATH, PMM_DL_SWORD4_SHEATH);
+        REPOINT_SET_ADULT(OOT_LINK_ADULT_LEFT_HAND_HOLDING_BGS, PMM_DL_SWORD_GREAT_FAIRY_HILT);
+        PlayerModelManager_setDisplayList(h, PMM_DL_SWORD_GREAT_FAIRY_BLADE, sBiggoronSwordBlade);
+        REPOINT_SET_ADULT(OOT_LINK_ADULT_SHEATH, PMM_DL_SWORD5_SHEATH);
+        REPOINT_SET_ADULT(OOT_LINK_ADULT_LEFT_HAND_HOLDING_BGS, PMM_DL_SWORD_FIERCE_DEITY_HILT);
+        PlayerModelManager_setDisplayList(h, PMM_DL_SWORD_FIERCE_DEITY_BLADE, sBiggoronSwordBlade);
         PlayerModelManager_setMatrix(h, PMM_MTX_SHIELD_HERO_BACK, &shieldBack);
         PlayerModelManager_setMatrix(h, PMM_MTX_SHIELD_MIRROR_BACK, &shieldBack);
         PlayerModelManager_setMatrix(h, PMM_MTX_SWORD_GILDED_BACK, &swordBack);
         PlayerModelManager_setMatrix(h, PMM_MTX_SWORD_RAZOR_BACK, &swordBack);
         PlayerModelManager_setMatrix(h, PMM_MTX_SWORD_KOKIRI_BACK, &swordBack);
+        PlayerModelManager_setMatrix(h, PMM_MTX_SWORD4_BACK, &swordBack);
+        PlayerModelManager_setMatrix(h, PMM_MTX_SWORD5_BACK, &swordBack);
         PlayerModelManager_setMatrix(h, PMM_MTX_HOOKSHOT_CHAIN_AND_HOOK, &hookshotChainHookOffset);
 
         // Fierce Deity
@@ -286,11 +315,19 @@ void registerAdultLink() {
         REPOINT_SET_ADULT(OOT_LINK_ADULT_HOOKSHOT_HOOK, PMM_DL_HOOKSHOT_HOOK);
         REPOINT_SET_ADULT(OOT_LINK_ADULT_RIGHT_HAND_HOLDING_BOW, PMM_DL_BOW);
         REPOINT_SET_ADULT(OOT_LINK_ADULT_BOW_STRING, PMM_DL_BOW_STRING);
+        REPOINT_SET_ADULT(OOT_LINK_ADULT_SHEATH, PMM_DL_SWORD4_SHEATH);
+        REPOINT_SET_ADULT(OOT_LINK_ADULT_LEFT_HAND_HOLDING_BGS, PMM_DL_SWORD_GREAT_FAIRY_HILT);
+        PlayerModelManager_setDisplayList(h, PMM_DL_SWORD_GREAT_FAIRY_BLADE, sBiggoronSwordBlade);
+        REPOINT_SET_ADULT(OOT_LINK_ADULT_SHEATH, PMM_DL_SWORD5_SHEATH);
+        REPOINT_SET_ADULT(OOT_LINK_ADULT_LEFT_HAND_HOLDING_BGS, PMM_DL_SWORD_FIERCE_DEITY_HILT);
+        PlayerModelManager_setDisplayList(h, PMM_DL_SWORD_FIERCE_DEITY_BLADE, sBiggoronSwordBlade);
         PlayerModelManager_setMatrix(h, PMM_MTX_SHIELD_HERO_BACK, &shieldBack);
         PlayerModelManager_setMatrix(h, PMM_MTX_SHIELD_MIRROR_BACK, &shieldBack);
         PlayerModelManager_setMatrix(h, PMM_MTX_SWORD_GILDED_BACK, &swordBack);
         PlayerModelManager_setMatrix(h, PMM_MTX_SWORD_RAZOR_BACK, &swordBack);
         PlayerModelManager_setMatrix(h, PMM_MTX_SWORD_KOKIRI_BACK, &swordBack);
+        PlayerModelManager_setMatrix(h, PMM_MTX_SWORD4_BACK, &swordBack);
+        PlayerModelManager_setMatrix(h, PMM_MTX_SWORD5_BACK, &swordBack);
         PlayerModelManager_setMatrix(h, PMM_MTX_HOOKSHOT_CHAIN_AND_HOOK, &hookshotChainHookOffset);
 
 #undef REPOINT_SET_ADULT
