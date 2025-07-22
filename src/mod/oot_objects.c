@@ -132,6 +132,7 @@ void registerChildLink() {
 #define OOT_LINK_ADULT_RIGHT_HAND_HOLDING_BOW 0x22DA8
 #define OOT_LINK_ADULT_BOW_STRING 0x2B108
 #define OOT_LINK_ADULT_LEFT_HAND_HOLDING_BGS 0x238C8
+#define OOT_LINK_ADULT_BOTTLE 0x2AD58
 
 static Gfx sMasterSwordHilt[] = {
     gsDPPipeSync(),
@@ -274,6 +275,8 @@ void registerAdultLink() {
         REPOINT_SET_ADULT(OOT_LINK_ADULT_SHEATH, PMM_DL_SWORD5_SHEATH);
         REPOINT_SET_ADULT(OOT_LINK_ADULT_LEFT_HAND_HOLDING_BGS, PMM_DL_SWORD_FIERCE_DEITY_HILT);
         PlayerModelManager_setDisplayList(h, PMM_DL_SWORD_FIERCE_DEITY_BLADE, sBiggoronSwordBlade);
+        REPOINT_SET_ADULT(OOT_LINK_ADULT_BOTTLE, PMM_DL_BOTTLE_GLASS);
+        PlayerModelManager_setDisplayList(h, PMM_DL_BOTTLE_CONTENTS, gEmptyDL);
         PlayerModelManager_setMatrix(h, PMM_MTX_SHIELD_HERO_BACK, &shieldBack);
         PlayerModelManager_setMatrix(h, PMM_MTX_SHIELD_MIRROR_BACK, &shieldBack);
         PlayerModelManager_setMatrix(h, PMM_MTX_SWORD_GILDED_BACK, &swordBack);
@@ -321,6 +324,8 @@ void registerAdultLink() {
         REPOINT_SET_ADULT(OOT_LINK_ADULT_SHEATH, PMM_DL_SWORD5_SHEATH);
         REPOINT_SET_ADULT(OOT_LINK_ADULT_LEFT_HAND_HOLDING_BGS, PMM_DL_SWORD_FIERCE_DEITY_HILT);
         PlayerModelManager_setDisplayList(h, PMM_DL_SWORD_FIERCE_DEITY_BLADE, sBiggoronSwordBlade);
+        REPOINT_SET_ADULT(OOT_LINK_ADULT_BOTTLE, PMM_DL_BOTTLE_GLASS);
+        PlayerModelManager_setDisplayList(h, PMM_DL_BOTTLE_CONTENTS, gEmptyDL);
         PlayerModelManager_setMatrix(h, PMM_MTX_SHIELD_HERO_BACK, &shieldBack);
         PlayerModelManager_setMatrix(h, PMM_MTX_SHIELD_MIRROR_BACK, &shieldBack);
         PlayerModelManager_setMatrix(h, PMM_MTX_SWORD_GILDED_BACK, &swordBack);
