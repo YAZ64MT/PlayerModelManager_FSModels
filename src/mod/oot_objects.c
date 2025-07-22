@@ -123,6 +123,18 @@ void registerChildLink() {
 #define OOT_LINK_ADULT_RIGHT_HAND_AND_OCARINA 0x24698
 #define OOT_LINK_ADULT_RIGHT_HAND_AND_MIRROR_SHIELD 0x241C0
 #define OOT_LINK_ADULT_RIGHT_HAND_AND_HYLIAN_SHIELD 0x22970
+#define OOT_LINK_ADULT_LEFT_HAND_AND_MASTER_SWORD 0x21F78
+#define OOT_LINK_ADULT_SHEATH 0x249D8
+
+static Gfx sMasterSwordHilt[] = {
+    gsDPPipeSync(),
+    gsDPSetCombineLERP(TEXEL0, 0, SHADE, 0, 0, 0, 0, 1, COMBINED, 0, PRIMITIVE, 0, 0, 0, 0, COMBINED),
+    gsDPSetRenderMode(G_RM_FOG_SHADE_A, G_RM_AA_ZB_OPA_SURF2),
+    gsSPSetGeometryMode(G_FOG | G_LIGHTING),
+    gsSPDisplayList(0x0C000000),
+    gsDPPipeSync(),
+    gsSPNoOp(), // branch command goes here
+};
 
 void registerAdultLink() {
     gLinkAdultOOT = recomp_alloc(OOT_LINK_ADULT_SIZE);
@@ -150,30 +162,43 @@ void registerAdultLink() {
         setupFaceTextures(h, gLinkAdultOOT);
 
         // Unglue FPS right hand from bow
-        const int BOW_START_DRAW_OFFSET = 0x2A2C0;
-        const int HAND_START_DRAW_OFFSET = 0x2A3F8;
+        const uintptr_t BOW_START_DRAW_OFFSET = 0x2A2C0;
+        const uintptr_t HAND_START_DRAW_OFFSET = 0x2A3F8;
         gSPBranchList(gLinkAdultOOT + BOW_START_DRAW_OFFSET, SEGMENT_ADDR(6, HAND_START_DRAW_OFFSET));
 
         // Unglue Ocarina of Time from hand
-        const int OCARINA_HAND_START_DRAW_OFFSET = 0x24740;
-        const int OCARINA_START_DRAW_OFFSET = 0x248D8;
+        const uintptr_t OCARINA_HAND_START_DRAW_OFFSET = 0x24740;
+        const uintptr_t OCARINA_START_DRAW_OFFSET = 0x248D8;
         gSPBranchList(gLinkAdultOOT + OCARINA_HAND_START_DRAW_OFFSET, SEGMENT_ADDR(6, OCARINA_START_DRAW_OFFSET));
 
         // Unglue fist from Mirror Shield
-        const int MIRROR_SHIELD_HAND_START_DRAW_OFFSET = 0x24378;
-        const int MIRROR_SHIELD_BODY_START_DRAW_OFFSET = 0x245A8;
+        const uintptr_t MIRROR_SHIELD_HAND_START_DRAW_OFFSET = 0x24378;
+        const uintptr_t MIRROR_SHIELD_BODY_START_DRAW_OFFSET = 0x245A8;
         gSPBranchList(gLinkAdultOOT + MIRROR_SHIELD_HAND_START_DRAW_OFFSET, SEGMENT_ADDR(6, MIRROR_SHIELD_BODY_START_DRAW_OFFSET));
 
         // Unglue fist from Hylian Shield
-        const int HYLIAN_SHIELD_HAND_START_DRAW_OFFSET = 0x22AC8;
-        const int HYLIAN_SHIELD_BACK_START_DRAW_OFFSET = 0x22C28;
-        const int HYLIAN_SHIELD_HAND2_START_DRAW_OFFSET = 0x22CB8;
-
+        const uintptr_t HYLIAN_SHIELD_HAND_START_DRAW_OFFSET = 0x22AC8;
+        const uintptr_t HYLIAN_SHIELD_BACK_START_DRAW_OFFSET = 0x22C28;
+        const uintptr_t HYLIAN_SHIELD_HAND2_START_DRAW_OFFSET = 0x22CB8;
         gSPBranchList(gLinkAdultOOT + HYLIAN_SHIELD_HAND_START_DRAW_OFFSET, SEGMENT_ADDR(6, HYLIAN_SHIELD_BACK_START_DRAW_OFFSET));
         gSPEndDisplayList(gLinkAdultOOT + HYLIAN_SHIELD_HAND2_START_DRAW_OFFSET);
 
+        // Master Sword Blade
+        GlobalObjects_rebaseDL((Gfx *)(gLinkAdultOOT + OOT_LINK_ADULT_LEFT_HAND_AND_MASTER_SWORD), aLinkSegs);
+        const uintptr_t MASTER_SWORD_BLADE_END = 0x22060;
+        gSPEndDisplayList(gLinkAdultOOT + MASTER_SWORD_BLADE_END);
+
+        // Master Sword Hilt
+        const uintptr_t MASTER_SWORD_HILT_START = MASTER_SWORD_BLADE_END + sizeof(Gfx);
+        const uintptr_t MASTER_SWORD_HILT_END = 0x22248;
+        gSPBranchList(&sMasterSwordHilt[ARRAY_COUNT(sMasterSwordHilt) - 1], gLinkAdultOOT + MASTER_SWORD_HILT_START);
+        gSPEndDisplayList(gLinkAdultOOT + MASTER_SWORD_HILT_END);
+
         Mtx shieldBack;
         guPosition(&shieldBack, 0.f, 0.f, 180.f, 1.f, 935.f, 94.f, 29.f);
+
+        Mtx swordBack;
+        guPosition(&swordBack, 0.f, 0.f, 0.f, 1.f, -715.f, -310.f, 78.f);
 
 #define REPOINT_SET_ADULT(dloffset, pmmdl) REPOINT_AND_SET(h, pmmdl, gLinkAdultOOT, dloffset, aLinkSegs)
         REPOINT_SET_ADULT(OOT_LINK_ADULT_LFIST, PMM_DL_LFIST);
@@ -186,8 +211,20 @@ void registerAdultLink() {
         REPOINT_SET_ADULT(OOT_LINK_ADULT_RIGHT_HAND_AND_OCARINA, PMM_DL_OCARINA_TIME);
         REPOINT_SET_ADULT(OOT_LINK_ADULT_RIGHT_HAND_AND_HYLIAN_SHIELD, PMM_DL_SHIELD_HERO);
         REPOINT_SET_ADULT(OOT_LINK_ADULT_RIGHT_HAND_AND_MIRROR_SHIELD, PMM_DL_SHIELD_MIRROR);
+        REPOINT_SET_ADULT(OOT_LINK_ADULT_LEFT_HAND_AND_MASTER_SWORD, PMM_DL_SWORD_GILDED_BLADE);
+        REPOINT_SET_ADULT(OOT_LINK_ADULT_SHEATH, PMM_DL_SWORD_GILDED_SHEATH);
+        PlayerModelManager_setDisplayList(h, PMM_DL_SWORD_GILDED_HILT, sMasterSwordHilt);
+        REPOINT_SET_ADULT(OOT_LINK_ADULT_LEFT_HAND_AND_MASTER_SWORD, PMM_DL_SWORD_RAZOR_BLADE);
+        REPOINT_SET_ADULT(OOT_LINK_ADULT_SHEATH, PMM_DL_SWORD_RAZOR_SHEATH);
+        PlayerModelManager_setDisplayList(h, PMM_DL_SWORD_RAZOR_HILT, sMasterSwordHilt);
+        REPOINT_SET_ADULT(OOT_LINK_ADULT_LEFT_HAND_AND_MASTER_SWORD, PMM_DL_SWORD_KOKIRI_BLADE);
+        REPOINT_SET_ADULT(OOT_LINK_ADULT_SHEATH, PMM_DL_SWORD_KOKIRI_SHEATH);
+        PlayerModelManager_setDisplayList(h, PMM_DL_SWORD_KOKIRI_HILT, sMasterSwordHilt);
         PlayerModelManager_setMatrix(h, PMM_MTX_SHIELD_HERO_BACK, &shieldBack);
         PlayerModelManager_setMatrix(h, PMM_MTX_SHIELD_MIRROR_BACK, &shieldBack);
+        PlayerModelManager_setMatrix(h, PMM_MTX_SWORD_GILDED_BACK, &swordBack);
+        PlayerModelManager_setMatrix(h, PMM_MTX_SWORD_RAZOR_BACK, &swordBack);
+        PlayerModelManager_setMatrix(h, PMM_MTX_SWORD_KOKIRI_BACK, &swordBack);
 
         // Fierce Deity
         h = PLAYERMODELMANAGER_REGISTER_MODEL("oot_object_link_boy_fd", PMM_MODEL_TYPE_FIERCE_DEITY);
@@ -206,8 +243,20 @@ void registerAdultLink() {
         REPOINT_SET_ADULT(OOT_LINK_ADULT_RIGHT_HAND_AND_OCARINA, PMM_DL_OCARINA_TIME);
         REPOINT_SET_ADULT(OOT_LINK_ADULT_RIGHT_HAND_AND_HYLIAN_SHIELD, PMM_DL_SHIELD_HERO);
         REPOINT_SET_ADULT(OOT_LINK_ADULT_RIGHT_HAND_AND_MIRROR_SHIELD, PMM_DL_SHIELD_MIRROR);
+        REPOINT_SET_ADULT(OOT_LINK_ADULT_LEFT_HAND_AND_MASTER_SWORD, PMM_DL_SWORD_GILDED_BLADE);
+        REPOINT_SET_ADULT(OOT_LINK_ADULT_SHEATH, PMM_DL_SWORD_GILDED_SHEATH);
+        PlayerModelManager_setDisplayList(h, PMM_DL_SWORD_GILDED_HILT, sMasterSwordHilt);
+        REPOINT_SET_ADULT(OOT_LINK_ADULT_LEFT_HAND_AND_MASTER_SWORD, PMM_DL_SWORD_RAZOR_BLADE);
+        REPOINT_SET_ADULT(OOT_LINK_ADULT_SHEATH, PMM_DL_SWORD_RAZOR_SHEATH);
+        PlayerModelManager_setDisplayList(h, PMM_DL_SWORD_RAZOR_HILT, sMasterSwordHilt);
+        REPOINT_SET_ADULT(OOT_LINK_ADULT_LEFT_HAND_AND_MASTER_SWORD, PMM_DL_SWORD_KOKIRI_BLADE);
+        REPOINT_SET_ADULT(OOT_LINK_ADULT_SHEATH, PMM_DL_SWORD_KOKIRI_SHEATH);
+        PlayerModelManager_setDisplayList(h, PMM_DL_SWORD_KOKIRI_HILT, sMasterSwordHilt);
         PlayerModelManager_setMatrix(h, PMM_MTX_SHIELD_HERO_BACK, &shieldBack);
         PlayerModelManager_setMatrix(h, PMM_MTX_SHIELD_MIRROR_BACK, &shieldBack);
+        PlayerModelManager_setMatrix(h, PMM_MTX_SWORD_GILDED_BACK, &swordBack);
+        PlayerModelManager_setMatrix(h, PMM_MTX_SWORD_RAZOR_BACK, &swordBack);
+        PlayerModelManager_setMatrix(h, PMM_MTX_SWORD_KOKIRI_BACK, &swordBack);
 
 #undef REPOINT_SET_ADULT
     } else {
