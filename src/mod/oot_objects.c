@@ -125,6 +125,10 @@ void registerChildLink() {
 #define OOT_LINK_ADULT_RIGHT_HAND_AND_HYLIAN_SHIELD 0x22970
 #define OOT_LINK_ADULT_LEFT_HAND_AND_MASTER_SWORD 0x21F78
 #define OOT_LINK_ADULT_SHEATH 0x249D8
+#define OOT_LINK_ADULT_RIGHT_HAND_HOLDING_HOOKSHOT 0x24D70
+#define OOT_LINK_ADULT_HOOKSHOT_HOOK 0x2B288
+#define OOT_LINK_ADULT_HOOKSHOT_CHAIN 0x2AFF0
+#define OOT_LINK_ADULT_FPS_RIGHT_HAND_HOLDING_HOOKSHOT 0x2A738
 
 static Gfx sMasterSwordHilt[] = {
     gsDPPipeSync(),
@@ -194,6 +198,17 @@ void registerAdultLink() {
         gSPBranchList(&sMasterSwordHilt[ARRAY_COUNT(sMasterSwordHilt) - 1], gLinkAdultOOT + MASTER_SWORD_HILT_START);
         gSPEndDisplayList(gLinkAdultOOT + MASTER_SWORD_HILT_END);
 
+        // Hookshot (3rd Person)
+        const uintptr_t HOOKSHOT_HAND_START = 0x24FC0;
+        gSPEndDisplayList(gLinkAdultOOT + HOOKSHOT_HAND_START);
+
+        // Hookshot (1st Person)
+        const uintptr_t HOOKSHOT_FPS_HAND_START = 0x2AA28;
+        gSPEndDisplayList(gLinkAdultOOT + HOOKSHOT_FPS_HAND_START);
+
+        Mtx hookshotChainHookOffset;
+        guPosition(&hookshotChainHookOffset, 0, 0, 0, 1, 50, 840, 0);
+
         Mtx shieldBack;
         guPosition(&shieldBack, 0.f, 0.f, 180.f, 1.f, 935.f, 94.f, 29.f);
 
@@ -220,11 +235,16 @@ void registerAdultLink() {
         REPOINT_SET_ADULT(OOT_LINK_ADULT_LEFT_HAND_AND_MASTER_SWORD, PMM_DL_SWORD_KOKIRI_BLADE);
         REPOINT_SET_ADULT(OOT_LINK_ADULT_SHEATH, PMM_DL_SWORD_KOKIRI_SHEATH);
         PlayerModelManager_setDisplayList(h, PMM_DL_SWORD_KOKIRI_HILT, sMasterSwordHilt);
+        REPOINT_SET_ADULT(OOT_LINK_ADULT_FPS_RIGHT_HAND_HOLDING_HOOKSHOT, PMM_DL_FPS_HOOKSHOT);
+        REPOINT_SET_ADULT(OOT_LINK_ADULT_RIGHT_HAND_HOLDING_HOOKSHOT, PMM_DL_HOOKSHOT);
+        REPOINT_SET_ADULT(OOT_LINK_ADULT_HOOKSHOT_CHAIN, PMM_DL_HOOKSHOT_CHAIN);
+        REPOINT_SET_ADULT(OOT_LINK_ADULT_HOOKSHOT_HOOK, PMM_DL_HOOKSHOT_HOOK);
         PlayerModelManager_setMatrix(h, PMM_MTX_SHIELD_HERO_BACK, &shieldBack);
         PlayerModelManager_setMatrix(h, PMM_MTX_SHIELD_MIRROR_BACK, &shieldBack);
         PlayerModelManager_setMatrix(h, PMM_MTX_SWORD_GILDED_BACK, &swordBack);
         PlayerModelManager_setMatrix(h, PMM_MTX_SWORD_RAZOR_BACK, &swordBack);
         PlayerModelManager_setMatrix(h, PMM_MTX_SWORD_KOKIRI_BACK, &swordBack);
+        PlayerModelManager_setMatrix(h, PMM_MTX_HOOKSHOT_CHAIN_AND_HOOK, &hookshotChainHookOffset);
 
         // Fierce Deity
         h = PLAYERMODELMANAGER_REGISTER_MODEL("oot_object_link_boy_fd", PMM_MODEL_TYPE_FIERCE_DEITY);
@@ -252,11 +272,16 @@ void registerAdultLink() {
         REPOINT_SET_ADULT(OOT_LINK_ADULT_LEFT_HAND_AND_MASTER_SWORD, PMM_DL_SWORD_KOKIRI_BLADE);
         REPOINT_SET_ADULT(OOT_LINK_ADULT_SHEATH, PMM_DL_SWORD_KOKIRI_SHEATH);
         PlayerModelManager_setDisplayList(h, PMM_DL_SWORD_KOKIRI_HILT, sMasterSwordHilt);
+        REPOINT_SET_ADULT(OOT_LINK_ADULT_FPS_RIGHT_HAND_HOLDING_HOOKSHOT, PMM_DL_FPS_HOOKSHOT);
+        REPOINT_SET_ADULT(OOT_LINK_ADULT_RIGHT_HAND_HOLDING_HOOKSHOT, PMM_DL_HOOKSHOT);
+        REPOINT_SET_ADULT(OOT_LINK_ADULT_HOOKSHOT_CHAIN, PMM_DL_HOOKSHOT_CHAIN);
+        REPOINT_SET_ADULT(OOT_LINK_ADULT_HOOKSHOT_HOOK, PMM_DL_HOOKSHOT_HOOK);
         PlayerModelManager_setMatrix(h, PMM_MTX_SHIELD_HERO_BACK, &shieldBack);
         PlayerModelManager_setMatrix(h, PMM_MTX_SHIELD_MIRROR_BACK, &shieldBack);
         PlayerModelManager_setMatrix(h, PMM_MTX_SWORD_GILDED_BACK, &swordBack);
         PlayerModelManager_setMatrix(h, PMM_MTX_SWORD_RAZOR_BACK, &swordBack);
         PlayerModelManager_setMatrix(h, PMM_MTX_SWORD_KOKIRI_BACK, &swordBack);
+        PlayerModelManager_setMatrix(h, PMM_MTX_HOOKSHOT_CHAIN_AND_HOOK, &hookshotChainHookOffset);
 
 #undef REPOINT_SET_ADULT
     } else {

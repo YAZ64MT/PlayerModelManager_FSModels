@@ -175,15 +175,6 @@ void setupZobjOotoChild(PlayerModelManagerHandle h, u8 *zobj) {
     QSET_OOTO_CHILD_MODEL(FPS_RHAND);
 }
 
-// clang-format off
-static Mtx sHookshotHookMatrix = gdSPDefMtx(
-    1.0f, 0.0f, 0.0f, 0.0f,
-    0.0f, 1.0f, 0.0f, 0.0f,
-    0.0f, 0.0f, 1.0f, 800.0f,
-    0.0f, 0.0f, 0.0f, 1.0f
-);
-// clang-format on
-
 static bool sIsOotHookshotMtxInitialized = false;
 static Mtx sOotHookshotMtx;
 
