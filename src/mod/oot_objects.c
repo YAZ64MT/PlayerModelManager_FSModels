@@ -42,19 +42,34 @@ void loadGameplayKeepOOT() {
 void setupFaceTextures(PlayerModelManagerHandle h, u8 *zobj);
 
 #define OOT_LINK_CHILD_SKELETON 0x0602CF6C
-#define OOT_LINK_ADULT_SKELETON 0x060377F4
-
 #define OOT_LINK_CHILD_SIZE 0x2CF80
-#define OOT_LINK_ADULT_SIZE 0x37800
-
 #define OOT_LINK_CHILD_LFIST 0x13E18
-#define OOT_LINK_ADULT_LFIST 0x21CE8
-
 #define OOT_LINK_CHILD_RFIST 0x14320
-#define OOT_LINK_ADULT_RFIST 0x226E0
-
 #define OOT_LINK_CHILD_BOTTLE_HAND 0x15FD0
-#define OOT_LINK_ADULT_BOTTLE_HAND 0x24B58
+#define OOT_LINK_CHILD_LFIST_HOLDING_KOKIRI_SWORD 0x13F38
+#define OOT_LINK_CHILD_LFIST_HOLDING_KOKIRI_TLUT 0x06A118
+#define OOT_LINK_CHILD_SHEATH 0x15408
+
+Gfx sKokiriSwordHilt[] = {
+    gsDPPipeSync(),
+    gsDPSetTextureLUT(G_TT_RGBA16),
+    gsSPTexture(0xFFFF, 0xFFFF, 0, G_TX_RENDERTILE, G_ON),
+    gsDPSetCombineLERP(TEXEL0, 0, SHADE, 0, 0, 0, 0, 1, COMBINED, 0, PRIMITIVE, 0, 0, 0, 0, COMBINED),
+    gsDPSetRenderMode(G_RM_FOG_SHADE_A, G_RM_AA_ZB_OPA_SURF2),
+    gsSPClearGeometryMode(G_TEXTURE_GEN | G_TEXTURE_GEN_LINEAR),
+    gsSPSetGeometryMode(G_CULL_BACK | G_FOG | G_LIGHTING),
+    gsDPSetPrimColor(0, 0, 255, 255, 255, 255),
+    gsDPNoOp(), // branch goes here
+};
+
+Gfx sKokiriSwordBlade[] = {
+    gsDPPipeSync(),
+    gsDPSetCombineLERP(TEXEL0, 0, SHADE, 0, 0, 0, 0, 1, COMBINED, 0, PRIMITIVE, 0, 0, 0, 0, COMBINED),
+    gsDPSetRenderMode(G_RM_FOG_SHADE_A, G_RM_AA_ZB_OPA_SURF2),
+    gsSPSetGeometryMode(G_CULL_BACK | G_FOG | G_LIGHTING | G_TEXTURE_GEN | G_TEXTURE_GEN_LINEAR),
+    gsDPPipeSync(),
+    gsDPNoOp(), // branch goes here
+};
 
 void repointSkeletonAndDisableLOD(FlexSkeletonHeader *skel, GlobalObjectsSegmentMap segments) {
 
@@ -103,10 +118,28 @@ void registerChildLink() {
         PlayerModelManager_setSkeleton(h, skel);
         setupFaceTextures(h, gLinkChildOOT);
 
+        // Kokiri Sword (Hilt)
+        GlobalObjects_rebaseDL((Gfx *)(gLinkChildOOT + OOT_LINK_CHILD_LFIST_HOLDING_KOKIRI_SWORD), cLinkSegs);
+        const uintptr_t KOKIRI_SWORD_HILT_START = 0x14048;
+        const uintptr_t KOKIRI_SWORD_HILT_END = 0x14110;
+        gSPEndDisplayList(gLinkChildOOT + KOKIRI_SWORD_HILT_END);
+        gSPBranchList(&sKokiriSwordHilt[ARRAY_COUNT(sKokiriSwordHilt) - 1], gLinkChildOOT + KOKIRI_SWORD_HILT_START);
+
+        // Kokiri Sword (Blade)
+        const uintptr_t KOKIRI_SWORD_BLADE_START = KOKIRI_SWORD_HILT_END + sizeof(Gfx);
+        gSPBranchList(&sKokiriSwordBlade[ARRAY_COUNT(sKokiriSwordBlade) - 1], gLinkChildOOT + KOKIRI_SWORD_BLADE_START);
+
+        Mtx swordBack;
+        guPosition(&swordBack, 0.f, 0.f, 0.f, 1.f, -440.f, -211.f, 0.f);
+
 #define REPOINT_SET_CHILD(dloffset, pmmdl) REPOINT_AND_SET(h, pmmdl, gLinkChildOOT, dloffset, cLinkSegs)
         REPOINT_SET_CHILD(OOT_LINK_CHILD_LFIST, PMM_DL_LFIST);
         REPOINT_SET_CHILD(OOT_LINK_CHILD_RFIST, PMM_DL_RFIST);
         REPOINT_SET_CHILD(OOT_LINK_CHILD_BOTTLE_HAND, PMM_DL_LHAND_BOTTLE);
+        REPOINT_SET_CHILD(OOT_LINK_CHILD_SHEATH, PMM_DL_SWORD_KOKIRI_SHEATH);
+        PlayerModelManager_setDisplayList(h, PMM_DL_SWORD_KOKIRI_HILT, sKokiriSwordHilt);
+        PlayerModelManager_setDisplayList(h, PMM_DL_SWORD_KOKIRI_BLADE, sKokiriSwordBlade);
+        PlayerModelManager_setMatrix(h, PMM_MTX_SWORD_KOKIRI_BACK, &swordBack);
 
 #undef REPOINT_SET_CHILD
     } else {
@@ -116,6 +149,11 @@ void registerChildLink() {
     }
 }
 
+#define OOT_LINK_ADULT_SKELETON 0x060377F4
+#define OOT_LINK_ADULT_SIZE 0x37800
+#define OOT_LINK_ADULT_LFIST 0x21CE8
+#define OOT_LINK_ADULT_RFIST 0x226E0
+#define OOT_LINK_ADULT_BOTTLE_HAND 0x24B58
 #define OOT_LINK_ADULT_FPS_RIGHT_FOREARM 0x29FA0
 #define OOT_LINK_ADULT_FPS_LEFT_FOREARM 0x29918
 #define OOT_LINK_ADULT_FPS_LEFT_HAND 0x29C20
