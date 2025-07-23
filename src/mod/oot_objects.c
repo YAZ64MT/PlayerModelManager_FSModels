@@ -49,6 +49,7 @@ void setupFaceTextures(PlayerModelManagerHandle h, u8 *zobj);
 #define OOT_LINK_CHILD_LFIST_HOLDING_KOKIRI_SWORD 0x13F38
 #define OOT_LINK_CHILD_LFIST_HOLDING_KOKIRI_TLUT 0x06A118
 #define OOT_LINK_CHILD_SHEATH 0x15408
+#define OOT_LINK_CHILD_BOTTLE_GLASS 0x18478
 
 Gfx sKokiriSwordHilt[] = {
     gsDPPipeSync(),
@@ -143,6 +144,8 @@ void registerChildLink() {
         REPOINT_SET_CHILD(OOT_LINK_CHILD_LFIST, PMM_DL_LFIST);
         REPOINT_SET_CHILD(OOT_LINK_CHILD_RFIST, PMM_DL_RFIST);
         REPOINT_SET_CHILD(OOT_LINK_CHILD_BOTTLE_HAND, PMM_DL_LHAND_BOTTLE);
+        REPOINT_SET_CHILD(OOT_LINK_CHILD_BOTTLE_GLASS, PMM_DL_BOTTLE_GLASS);
+        PlayerModelManager_setDisplayList(h, PMM_DL_BOTTLE_CONTENTS, gEmptyDL);
         REPOINT_SET_CHILD(OOT_LINK_CHILD_SHEATH, PMM_DL_SWORD_KOKIRI_SHEATH);
         PlayerModelManager_setDisplayList(h, PMM_DL_SWORD_KOKIRI_HILT, sKokiriSwordHilt);
         PlayerModelManager_setDisplayList(h, PMM_DL_SWORD_KOKIRI_BLADE, sKokiriSwordBlade);
