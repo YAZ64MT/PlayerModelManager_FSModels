@@ -413,11 +413,14 @@ void registerAdultLink() {
     }                                                                   \
     (void)0
 
-            static Mtx sShieldShrinker;
-            guPosition(&sShieldShrinker, 0.f, 0.f, 0.f, 0.77f, 0.f, 0.f, 0.f);
+            static Mtx sHylianShieldResize;
+            guPosition(&sHylianShieldResize, 0.f, 0.f, 0.f, 0.8f, 0.f, 0.f, 0.f);
 
-            APPLY_SMALL_DL(PMM_DL_SHIELD_HERO, gLinkAdultOOT + OOT_LINK_ADULT_RIGHT_HAND_AND_HYLIAN_SHIELD, &sShieldShrinker);
-            APPLY_SMALL_DL(PMM_DL_SHIELD_MIRROR, gLinkAdultOOT + OOT_LINK_ADULT_RIGHT_HAND_AND_MIRROR_SHIELD, &sShieldShrinker);
+            static Mtx sMirrorShieldResize;
+            guPosition(&sMirrorShieldResize, 0.f, 0.f, 0.f, 0.77f, 0.f, 0.f, 0.f);
+
+            APPLY_SMALL_DL(PMM_DL_SHIELD_HERO, gLinkAdultOOT + OOT_LINK_ADULT_RIGHT_HAND_AND_HYLIAN_SHIELD, &sHylianShieldResize);
+            APPLY_SMALL_DL(PMM_DL_SHIELD_MIRROR, gLinkAdultOOT + OOT_LINK_ADULT_RIGHT_HAND_AND_MIRROR_SHIELD, &sMirrorShieldResize);
 
             static Mtx sHookshotShrinker;
             guPosition(&sHookshotShrinker, 0.f, 0.f, 0.f, 0.6f, 0.f, 0.f, 0.f);
@@ -427,7 +430,7 @@ void registerAdultLink() {
 
             APPLY_SMALL_DL(PMM_DL_HOOKSHOT, gLinkAdultOOT + OOT_LINK_ADULT_RIGHT_HAND_HOLDING_HOOKSHOT, &sHookshotShrinker);
             APPLY_SMALL_DL(PMM_DL_HOOKSHOT_HOOK, gLinkAdultOOT + OOT_LINK_ADULT_HOOKSHOT_HOOK, &sHookshotShrinker);
-            PlayerModelManager_setDisplayList(h, PMM_DL_HOOKSHOT_CHAIN, gLinkAdultOOT + OOT_LINK_ADULT_HOOKSHOT_CHAIN);
+            PlayerModelManager_setDisplayList(h, PMM_DL_HOOKSHOT_CHAIN, (Gfx *)(gLinkAdultOOT + OOT_LINK_ADULT_HOOKSHOT_CHAIN));
             APPLY_SMALL_DL(PMM_DL_FPS_HOOKSHOT, gLinkAdultOOT + OOT_LINK_ADULT_FPS_RIGHT_HAND_HOLDING_HOOKSHOT, &sHookshotShrinker);
             PlayerModelManager_setMatrix(h, PMM_MTX_HOOKSHOT_CHAIN_AND_HOOK, &hookshotChainHookOffsetChild);
 
