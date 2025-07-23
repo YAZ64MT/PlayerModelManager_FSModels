@@ -93,7 +93,13 @@ void repointSkeletonAndDisableLOD(FlexSkeletonHeader *skel, GlobalObjectsSegment
     }                                                               \
     (void)0
 
+static PlayerModelManagerHandle sOoTChildHumanHandle = 0;
+static bool sWasChildRegisterAttempted = false;
+
 void registerChildLink() {
+    if (sWasChildRegisterAttempted) {
+        return;
+    }
 
     gLinkChildOOT = recomp_alloc(OOT_LINK_CHILD_SIZE);
 
@@ -113,6 +119,7 @@ void registerChildLink() {
         repointSkeletonAndDisableLOD(skel, cLinkSegs);
 
         PlayerModelManagerHandle h = PLAYERMODELMANAGER_REGISTER_MODEL("oot_object_link_child", PMM_MODEL_TYPE_CHILD);
+        sOoTChildHumanHandle = h;
         PlayerModelManager_setDisplayName(h, "Young Link (OOT)");
         PlayerModelManager_setAuthor(h, "Nintendo");
         PlayerModelManager_setSkeleton(h, skel);
@@ -147,6 +154,8 @@ void registerChildLink() {
         recomp_free(gLinkChildOOT);
         gLinkChildOOT = NULL;
     }
+
+    sWasChildRegisterAttempted = true;
 }
 
 #define OOT_LINK_ADULT_SKELETON 0x060377F4
@@ -191,7 +200,15 @@ static Gfx sBiggoronSwordBlade[] = {
     gsSPNoOp(), // branch command goes here
 };
 
+static bool sWasAdultRegisterAttempted = false;
+static PlayerModelManagerHandle sOoTAdultHumanHandle = 0;
+static PlayerModelManagerHandle sOoTAdultFierceDeityHandle = 0;
+
 void registerAdultLink() {
+    if (sWasAdultRegisterAttempted) {
+        return;
+    }
+
     gLinkAdultOOT = recomp_alloc(OOT_LINK_ADULT_SIZE);
 
     loadGameplayKeepOOT();
@@ -211,6 +228,7 @@ void registerAdultLink() {
 
         // Human
         PlayerModelManagerHandle h = PLAYERMODELMANAGER_REGISTER_MODEL("oot_object_link_boy_adult", PMM_MODEL_TYPE_ADULT);
+        sOoTAdultHumanHandle = h;
         PlayerModelManager_setDisplayName(h, "Adult Link (OOT)");
         PlayerModelManager_setAuthor(h, "Nintendo");
         PlayerModelManager_setSkeleton(h, skel);
@@ -326,6 +344,7 @@ void registerAdultLink() {
 
         // Fierce Deity
         h = PLAYERMODELMANAGER_REGISTER_MODEL("oot_object_link_boy_fd", PMM_MODEL_TYPE_FIERCE_DEITY);
+        sOoTAdultFierceDeityHandle = h;
         PlayerModelManager_setDisplayName(h, "Adult Link (OOT)");
         PlayerModelManager_setAuthor(h, "Nintendo");
         PlayerModelManager_setSkeleton(h, skel);
@@ -373,10 +392,54 @@ void registerAdultLink() {
         PlayerModelManager_setMatrix(h, PMM_MTX_SWORD5_BACK, &swordBack);
         PlayerModelManager_setMatrix(h, PMM_MTX_HOOKSHOT_CHAIN_AND_HOOK, &hookshotChainHookOffset);
 
+        // Give child-sized adult equipment to child Link
+        if (!sWasAdultRegisterAttempted) {
+            registerChildLink();
+        }
+
+        if (sOoTChildHumanHandle) {
+            PlayerModelManagerHandle h = sOoTChildHumanHandle;
+
+#define APPLY_SMALL_DL(pmmDLId, adultDL, mtx)                           \
+    {                                                                   \
+        static Gfx _dl[] = {                                            \
+            gsSPMatrix(mtx, G_MTX_PUSH | G_MTX_MUL | G_MTX_MODELVIEW), \
+            gsDPNoOp(),                                                 \
+            gsSPPopMatrix(G_MTX_MODELVIEW),                             \
+            gsSPEndDisplayList(),                                       \
+        };                                                              \
+        gSPDisplayList(_dl + 1, adultDL);                               \
+        PlayerModelManager_setDisplayList(h, pmmDLId, _dl);             \
+    }                                                                   \
+    (void)0
+
+            static Mtx sShieldShrinker;
+            guPosition(&sShieldShrinker, 0.f, 0.f, 0.f, 0.77f, 0.f, 0.f, 0.f);
+
+            APPLY_SMALL_DL(PMM_DL_SHIELD_HERO, gLinkAdultOOT + OOT_LINK_ADULT_RIGHT_HAND_AND_HYLIAN_SHIELD, &sShieldShrinker);
+            APPLY_SMALL_DL(PMM_DL_SHIELD_MIRROR, gLinkAdultOOT + OOT_LINK_ADULT_RIGHT_HAND_AND_MIRROR_SHIELD, &sShieldShrinker);
+
+            static Mtx sHookshotShrinker;
+            guPosition(&sHookshotShrinker, 0.f, 0.f, 0.f, 0.6f, 0.f, 0.f, 0.f);
+
+            Mtx hookshotChainHookOffsetChild;
+            guPosition(&hookshotChainHookOffsetChild, 0, 0, 0, 1, 0, 100, 0);
+
+            APPLY_SMALL_DL(PMM_DL_HOOKSHOT, gLinkAdultOOT + OOT_LINK_ADULT_RIGHT_HAND_HOLDING_HOOKSHOT, &sHookshotShrinker);
+            APPLY_SMALL_DL(PMM_DL_HOOKSHOT_HOOK, gLinkAdultOOT + OOT_LINK_ADULT_HOOKSHOT_HOOK, &sHookshotShrinker);
+            PlayerModelManager_setDisplayList(h, PMM_DL_HOOKSHOT_CHAIN, gLinkAdultOOT + OOT_LINK_ADULT_HOOKSHOT_CHAIN);
+            APPLY_SMALL_DL(PMM_DL_FPS_HOOKSHOT, gLinkAdultOOT + OOT_LINK_ADULT_FPS_RIGHT_HAND_HOLDING_HOOKSHOT, &sHookshotShrinker);
+            PlayerModelManager_setMatrix(h, PMM_MTX_HOOKSHOT_CHAIN_AND_HOOK, &hookshotChainHookOffsetChild);
+
+#undef APPLY_SMALL_DL
+        }
+
 #undef REPOINT_SET_ADULT
     } else {
         recomp_printf("PMM_FS: Could not load OOT adult Link from file system!\n");
         recomp_free(gLinkAdultOOT);
         gLinkAdultOOT = NULL;
     }
+
+    sWasAdultRegisterAttempted = true;
 }
