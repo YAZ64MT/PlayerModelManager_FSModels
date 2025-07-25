@@ -210,16 +210,6 @@ void initAdultEquipment() {
     aLinkSegs[0x06] = gLinkAdultOOT;
     aLinkSegs[0x04] = gGameplayKeepOOT;
 
-    // Unglue FPS right hand from bow
-    const uintptr_t BOW_START_DRAW_OFFSET = 0x2A2C0;
-    const uintptr_t HAND_START_DRAW_OFFSET = 0x2A3F8;
-    gSPBranchList(gLinkAdultOOT + BOW_START_DRAW_OFFSET, SEGMENT_ADDR(6, HAND_START_DRAW_OFFSET));
-
-    // Unglue Ocarina of Time from hand
-    const uintptr_t OCARINA_HAND_START_DRAW_OFFSET = 0x24740;
-    const uintptr_t OCARINA_START_DRAW_OFFSET = 0x248D8;
-    gSPBranchList(gLinkAdultOOT + OCARINA_HAND_START_DRAW_OFFSET, SEGMENT_ADDR(6, OCARINA_START_DRAW_OFFSET));
-
     // Unglue fist from Mirror Shield
     const uintptr_t MIRROR_SHIELD_HAND_START_DRAW_OFFSET = 0x24378;
     const uintptr_t MIRROR_SHIELD_BODY_START_DRAW_OFFSET = 0x245A8;
