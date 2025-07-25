@@ -189,7 +189,7 @@ void initCrossAgeEquipment() {
     gOOTHookshotHookChild = sHookshotHookChild;
 
     gSPBranchList(sCallBow, gOOTBow);
-    guPosition(&sBowChildResizer, 0.f, 0.f, 0.f, 0.8f, 0.f, 0.f, 0.f);
+    guPosition(&sBowChildResizer, 0.f, 0.f, 0.f, 0.65f, 0.f, -100.f, 0.f);
     gOOTBowChild = sBowChild;
 
     gSPBranchList(sCallDekuShield, gOOTDekuShield);
@@ -631,7 +631,7 @@ ModConfigAgeEntry gModOptions[MOD_CFG_MAX] = {
     DECLARE_CONFIG_AGE_ENTRY("bottla_a", "bottle_c"),         // MOD_CFG_BOTTLE
     DECLARE_CONFIG_AGE_ENTRY("deku_stick_a", "deku_stick_c"), // MOD_CFG_DEKU_STICK
     DECLARE_CONFIG_AGE_ENTRY("hookshot_a", "hookshot_c"),     // MOD_CFG_HOOKSHOT
-    DECLARE_CONFIG_AGE_ENTRY("bow_a", "bow_c"),               // MOD_CFG_BOW
+    DECLARE_CONFIG_AGE_ENTRY("bow_a", ""),                    // MOD_CFG_BOW
 };
 
 typedef struct {

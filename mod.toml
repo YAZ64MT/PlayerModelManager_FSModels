@@ -302,15 +302,6 @@ options = [ "Hookshot (MM)", "Hookshot (OOT)" ]
 default = "Hookshot (OOT)"
 
 [[manifest.config_options]]
-id = "bow_c"
-name = "Bow (Child)"
-description = """Set bow model on OOT Young Link.
-"""
-type = "Enum"
-options = [ "Hero's Bow", "Fairy Bow" ]
-default = "Hero's Bow"
-
-[[manifest.config_options]]
 id = "bow_a"
 name = "Bow (Adult)"
 description = """Set bow model on OOT Adult Link.
