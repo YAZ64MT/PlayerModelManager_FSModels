@@ -50,7 +50,7 @@ dependencies = [
 # Example dependency:
 #    "modname:1.0.0"
    "yazmt_mm_playermodelmanager",
-   "yazmt_mm_corelib",
+   "yazmt_mm_corelib:0.1.1",
    "yazmt_mm_global_objects",
 ]
 
@@ -147,3 +147,174 @@ macos_release_build_preset = "zig-macos-aarch64-Release"
 
 linux_release_configure_preset = "zig-linux-x64-Release"
 linux_release_build_preset = "zig-linux-x64-Release"
+
+[[manifest.config_options]]
+id = "sword1_c"
+name = "Kokiri Sword (Child)"
+description = """Set Kokiri Sword model on OOT Young Link.
+"""
+type = "Enum"
+options = [ "Kokiri Sword (MM)", "Kokiri Sword (OOT)" ]
+default = "Kokiri Sword (OOT)"
+
+[[manifest.config_options]]
+id = "sword1_a"
+name = "Kokiri Sword (Adult)"
+description = """Set Kokiri Sword model on OOT Adult Link.
+"""
+type = "Enum"
+options = [ "Kokiri Sword (MM)", "Kokiri Sword (OOT)", "Master Sword" ]
+default = "Master Sword"
+
+[[manifest.config_options]]
+id = "sword2_a"
+name = "Razor Sword (Adult)"
+description = """Set Razor Sword model on OOT Adult Link.
+"""
+type = "Enum"
+options = [ "Razor Sword", "Master Sword" ]
+default = "Master Sword"
+
+[[manifest.config_options]]
+id = "sword3_a"
+name = "Gilded Sword (Adult)"
+description = """Set Gilded Sword model on OOT Adult Link.
+"""
+type = "Enum"
+options = [ "Gilded Sword", "Master Sword" ]
+default = "Master Sword"
+
+[[manifest.config_options]]
+id = "sword5_c"
+name = "Great Fairy Sword (Child)"
+description = """Set Great Fairy Sword model on OOT Young Link.
+"""
+type = "Enum"
+options = [ "Great Fairy Sword", "Biggoron Sword" ]
+default = "Great Fairy Sword"
+
+[[manifest.config_options]]
+id = "sword5_a"
+name = "Great Fairy Sword (Adult)"
+description = """Set Great Fairy Sword model on OOT Adult Link.
+"""
+type = "Enum"
+options = [ "Great Fairy Sword", "Biggoron Sword" ]
+default = "Biggoron Sword"
+
+[[manifest.config_options]]
+id = "sword4_a"
+name = "Fierce Deity's Sword (Adult)"
+description = """Set Fierce Deity's Sword model on OOT Adult Link.
+"""
+type = "Enum"
+options = [ "Fierce Deity's Sword", "Biggoron Sword" ]
+default = "Biggoron Sword"
+
+[[manifest.config_options]]
+id = "shield2_c"
+name = "Hero's Shield (Child)"
+description = """Set Hero's Shield model on OOT Young Link.
+"""
+type = "Enum"
+options = [ "Hero's Shield", "Deku Shield", "Hylian Shield" ]
+default = "Hylian Shield"
+
+[[manifest.config_options]]
+id = "shield2_a"
+name = "Hero's Shield (Adult)"
+description = """Set Hero's Shield model on OOT Adult Link.
+"""
+type = "Enum"
+options = [ "Hero's Shield", "Deku Shield", "Hylian Shield" ]
+default = "Hylian Shield"
+
+[[manifest.config_options]]
+id = "shield3_c"
+name = "Mirror Shield (Child)"
+description = """Set Mirror Shield model on OOT Young Link.
+"""
+type = "Enum"
+options = [ "Mirror Shield (MM)", "Mirror Shield (OOT)" ]
+default = "Mirror Shield (OOT)"
+
+[[manifest.config_options]]
+id = "shield3_a"
+name = "Mirror Shield (Adult)"
+description = """Set Mirror Shield model on OOT Adult Link.
+"""
+type = "Enum"
+options = [ "Mirror Shield (MM)", "Mirror Shield (OOT)" ]
+default = "Mirror Shield (OOT)"
+
+[[manifest.config_options]]
+id = "bottle_c"
+name = "Bottle (Child)"
+description = """Set Bottle model on OOT Young Link.
+"""
+type = "Enum"
+options = [ "Bottle (MM)", "Bottle (OOT)" ]
+default = "Bottle (MM)"
+
+[[manifest.config_options]]
+id = "bottle_a"
+name = "Bottle (Adult)"
+description = """Set Bottle model on OOT Adult Link.
+"""
+type = "Enum"
+options = [ "Bottle (MM)", "Bottle (OOT)" ]
+default = "Bottle (MM)"
+
+[[manifest.config_options]]
+id = "deku_stick_c"
+name = "Deku Stick (Child)"
+description = """Set Deku Stick model on OOT Young Link.
+"""
+type = "Enum"
+options = [ "Deku Stick (MM)", "Deku Stick (OOT)" ]
+default = "Deku Stick (OOT)"
+
+[[manifest.config_options]]
+id = "deku_stick_a"
+name = "Deku Stick (Adult)"
+description = """Set Deku Stick model on OOT Adult Link.
+"""
+type = "Enum"
+options = [ "Deku Stick (MM)", "Deku Stick (OOT)" ]
+default = "Deku Stick (OOT)"
+
+[[manifest.config_options]]
+id = "hookshot_c"
+name = "Hookshot (Child)"
+description = """Set Hookshot model on OOT Young Link.
+"""
+type = "Enum"
+options = [ "Hookshot (MM)", "Hookshot (OOT)" ]
+default = "Hookshot (MM)"
+
+[[manifest.config_options]]
+id = "hookshot_a"
+name = "Hookshot (Adult)"
+description = """Set Hookshot model on OOT Adult Link.
+"""
+type = "Enum"
+options = [ "Hookshot (MM)", "Hookshot (OOT)" ]
+default = "Hookshot (OOT)"
+
+[[manifest.config_options]]
+id = "bow_c"
+name = "Bow (Child)"
+description = """Set bow model on OOT Young Link.
+"""
+type = "Enum"
+options = [ "Hero's Bow", "Fairy Bow" ]
+default = "Hero's Bow"
+
+[[manifest.config_options]]
+id = "bow_a"
+name = "Bow (Adult)"
+description = """Set bow model on OOT Adult Link.
+"""
+type = "Enum"
+options = [ "Hero's Bow", "Fairy Bow" ]
+default = "Fairy Bow"
