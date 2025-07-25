@@ -196,7 +196,7 @@ void initCrossAgeEquipment() {
     guPosition(&sDekuShieldAdultResizer, 0.f, 0.f, 0.f, 1.35f, 0.f, 0.f, 0.f);
     gOOTDekuShieldAdult = sDekuShieldAdult;
 
-    guPosition(&gOOTHookshotHookAndChainChildMtx, 0.f, 0.f, 0.f, 1.f, 0.f, 100.f, 0.f);
+    guPosition(&gOOTHookshotHookAndChainChildMtx, 0.f, 0.f, 0.f, 1.f, 30.f, 150.f, 0.f);
 }
 
 void initAdultEquipment() {
