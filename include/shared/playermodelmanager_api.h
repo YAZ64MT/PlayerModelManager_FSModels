@@ -77,7 +77,7 @@ typedef enum {
     PMM_DL_OCARINA_FAIRY,
     PMM_DL_OCARINA_TIME,
     PMM_DL_DEKU_STICK,
-    PMM_DL_BOW,
+    PMM_DL_BOW, // Also has a first person variant
     PMM_DL_BOW_STRING,
     PMM_DL_BOW_ARROW,
     PMM_DL_SLINGSHOT,
@@ -122,13 +122,13 @@ typedef enum {
     PMM_DL_MASK_BLAST_COOLING_DOWN,
     PMM_DL_MASK_SCENTS,
     PMM_DL_MASK_GIANT,
-    PMM_DL_MASK_DEKU,
-    PMM_DL_MASK_GORON,
-    PMM_DL_MASK_ZORA,
-    PMM_DL_MASK_FIERCE_DEITY,
-    PMM_DL_MASK_DEKU_SCREAM,
-    PMM_DL_MASK_GORON_SCREAM,
-    PMM_DL_MASK_ZORA_SCREAM,
+    PMM_DL_MASK_DEKU,         // Only used if model is Deku
+    PMM_DL_MASK_GORON,        // Only used if model is Goron
+    PMM_DL_MASK_ZORA,         // Only used if model is Zora
+    PMM_DL_MASK_FIERCE_DEITY, // Only used if model is Fierce Deity
+    PMM_DL_MASK_DEKU_SCREAM,  // Only used if model is Deku
+    PMM_DL_MASK_GORON_SCREAM, // Only used if model is Goron
+    PMM_DL_MASK_ZORA_SCREAM,  // Only used if model is Zora
     PMM_DL_MASK_FIERCE_DEITY_SCREAM,
 
     // Elegy of Emptiness statues
@@ -309,6 +309,10 @@ typedef enum {
     // Deku Link flower propellers
     PMM_DL_SHIM_CENTER_FLOWER_PROPELLER_OPEN,
     PMM_DL_SHIM_CENTER_FLOWER_PROPELLER_CLOSED,
+
+    // First Person Bow
+    PMM_DL_FPS_BOW,
+
     PMM_DL_MAX
 } PlayerModelManagerDisplayListId;
 
@@ -419,7 +423,8 @@ RECOMP_IMPORT(YAZMT_PMM_MOD_NAME, bool PlayerModelManager_setSkeleton(PlayerMode
 
 // Sets the skeleton and any display lists attached to it on the shielding skeleton of a custom model.
 //
-// This is used for Goron Link's guard animation, so make sure to pass in a skeleton with the appropriaate amount of limbs.
+// This is used for Goron Link's guard animation, so make sure to pass in a skeleton with the appropriate
+// amount of limbs (4).
 //
 // Returns true if successfully set, false otherwise.
 RECOMP_IMPORT(YAZMT_PMM_MOD_NAME, bool PlayerModelManager_setShieldingSkeleton(PlayerModelManagerHandle h, FlexSkeletonHeader *skel));
@@ -462,6 +467,9 @@ RECOMP_IMPORT(YAZMT_PMM_MOD_NAME, Gfx *PlayerModelManager_getFormDisplayList(uns
 
 // Returns true if the model attached to the passed in handle is currently equipped, false otherwise.
 RECOMP_IMPORT(YAZMT_PMM_MOD_NAME, bool PlayerModelManager_isApplied(PlayerModelManagerHandle h));
+
+// Allows the tunic color to be set by other mods.
+RECOMP_IMPORT(YAZMT_PMM_MOD_NAME, void PlayerModelManager_requestOverrideTunicColor(u8 r, u8 g, u8 b, u8 a));
 
 #define PLAYERMODELMANAGER_CALLBACK_REGISTER_MODELS RECOMP_CALLBACK(YAZMT_PMM_MOD_NAME, onRegisterModels)
 

@@ -16,7 +16,9 @@ Gfx *gOOTHookshotChain = NULL;
 Gfx *gOOTHookshotHook = NULL;
 Gfx *gOOTHookshotHookChild = NULL;
 Gfx *gOOTBow = NULL;
+Gfx *gOOTBowFirstPerson = NULL;
 Gfx *gOOTBowChild = NULL;
+Gfx *gOOTBowFirstPersonChild = NULL;
 Gfx *gOOTBowString = NULL;
 Gfx *gOOTMirrorShield = NULL;
 Gfx *gOOTMirrorShieldChild = NULL;
@@ -59,6 +61,7 @@ static bool sIsCrossEquipmentInitialized = false;
 #define OOT_LINK_ADULT_HOOKSHOT_CHAIN 0x2AFF0
 #define OOT_LINK_ADULT_FPS_RIGHT_HAND_HOLDING_HOOKSHOT 0x2A738
 #define OOT_LINK_ADULT_RIGHT_HAND_HOLDING_BOW 0x22DA8
+#define OOT_LINK_ADULT_FPS_RIGHT_HAND_AND_BOW 0x2A248
 #define OOT_LINK_ADULT_BOW_STRING 0x2B108
 #define OOT_LINK_ADULT_LEFT_HAND_HOLDING_BGS 0x238C8
 #define OOT_LINK_ADULT_BOTTLE 0x2AD58
@@ -155,6 +158,12 @@ static Gfx sCallBow[] = {
 
 DECLARE_STATIC_MATRIX_WRAPPED_DL(sBowChild, sBowChildResizer, sCallBow);
 
+static Gfx sCallBowFirstPerson[] = {
+    gsSPEndDisplayList(),
+};
+
+DECLARE_STATIC_MATRIX_WRAPPED_DL(sBowFirstPersonChild, sBowFirstPersonChildResizer, sCallBowFirstPerson);
+
 static Gfx sCallDekuShield[] = {
     gsSPEndDisplayList(),
 };
@@ -191,6 +200,10 @@ void initCrossAgeEquipment() {
     gSPBranchList(sCallBow, gOOTBow);
     guPosition(&sBowChildResizer, 0.f, 0.f, 0.f, 0.65f, 0.f, -100.f, 0.f);
     gOOTBowChild = sBowChild;
+
+    gSPBranchList(sCallBowFirstPerson, gOOTBowFirstPerson);
+    guPosition(&sBowFirstPersonChildResizer, 0.f, 0.f, 0.f, 0.65f, 0.f, -100.f, 0.f);
+    gOOTBowFirstPersonChild = sBowFirstPersonChild;
 
     gSPBranchList(sCallDekuShield, gOOTDekuShield);
     guPosition(&sDekuShieldAdultResizer, 0.f, 0.f, 0.f, 1.35f, 0.f, 0.f, 0.f);
@@ -245,6 +258,10 @@ void initAdultEquipment() {
     const uintptr_t BOW_HAND_START = 0x22F00;
     gSPEndDisplayList(gLinkAdultOOT + BOW_HAND_START);
 
+    // Bow (First Person)
+    const uintptr_t BOW_FPS_HAND_START = 0x2A3F8;
+    gSPEndDisplayList(gLinkAdultOOT + BOW_FPS_HAND_START);
+
     // Biggoron Sword Hilt
     GlobalObjects_rebaseDL((Gfx *)(gLinkAdultOOT + OOT_LINK_ADULT_LEFT_HAND_HOLDING_BGS), aLinkSegs);
     const uintptr_t BIGGORON_SWORD_HILT_END = 0x23A28;
@@ -276,6 +293,7 @@ void initAdultEquipment() {
     REPOINT_SET_ADULT(gOOTHookshotChain, gLinkAdultOOT + OOT_LINK_ADULT_HOOKSHOT_CHAIN);
     REPOINT_SET_ADULT(gOOTHookshotHook, gLinkAdultOOT + OOT_LINK_ADULT_HOOKSHOT_HOOK);
     REPOINT_SET_ADULT(gOOTBow, gLinkAdultOOT + OOT_LINK_ADULT_RIGHT_HAND_HOLDING_BOW);
+    REPOINT_SET_ADULT(gOOTBowFirstPerson, gLinkAdultOOT + OOT_LINK_ADULT_FPS_RIGHT_HAND_AND_BOW);
     REPOINT_SET_ADULT(gOOTBowString, gLinkAdultOOT + OOT_LINK_ADULT_BOW_STRING);
     REPOINT_SET_ADULT(gOOTBiggoronSwordHilt, gLinkAdultOOT + OOT_LINK_ADULT_LEFT_HAND_HOLDING_BGS);
     REPOINT_SET_ADULT(gOOTBiggoronSwordBlade, sBiggoronSwordBlade);
@@ -535,6 +553,11 @@ AgeDisplayList sBowDLs[OPT_BOW_MAX] = {
     {{&gOOTBow, &gOOTBowChild}},
 };
 
+AgeDisplayList sBowFirstPersonDLs[OPT_BOW_MAX] = {
+    {{NULL, NULL}},
+    {{&gOOTBowFirstPerson, &gOOTBowFirstPersonChild}},
+};
+
 AgeDisplayList sBowStringDLs[OPT_BOW_MAX] = {
     {{NULL, NULL}},
     {{&gOOTBowString, NULL}},
@@ -670,6 +693,7 @@ DLConfigEntry gOptionsToDLs[] = {
     {PMM_DL_HOOKSHOT_CHAIN, NO_MTX, sHookshotChainDLs, NULL, &gModOptions[MOD_CFG_HOOKSHOT]},
     {PMM_DL_HOOKSHOT_HOOK, NO_MTX, sHookshotHookDLs, NULL, &gModOptions[MOD_CFG_HOOKSHOT]},
     {PMM_DL_BOW, NO_MTX, sBowDLs, NULL, &gModOptions[MOD_CFG_BOW]},
+    {PMM_DL_FPS_BOW, NO_MTX, sBowFirstPersonDLs, NULL, &gModOptions[MOD_CFG_BOW]},
     {PMM_DL_BOW_STRING, NO_MTX, sBowStringDLs, NULL, &gModOptions[MOD_CFG_BOW]},
 };
 

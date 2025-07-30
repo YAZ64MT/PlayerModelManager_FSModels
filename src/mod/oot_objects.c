@@ -134,6 +134,18 @@ static bool sWasAdultRegisterAttempted = false;
 static PlayerModelManagerHandle sOoTAdultHumanHandle = 0;
 static PlayerModelManagerHandle sOoTAdultFierceDeityHandle = 0;
 
+static Gfx sLinkAdultFirstPersonHand[] = {
+    gsDPPipeSync(),
+    gsSPTexture(0xFFFF, 0xFFFF, 0, G_TX_RENDERTILE, G_ON),
+    gsDPSetCombineLERP(TEXEL0, 0, SHADE, 0, 0, 0, 0, 1, COMBINED, 0, PRIMITIVE, 0, 0, 0, 0, COMBINED),
+    gsDPSetRenderMode(G_RM_FOG_SHADE_A, G_RM_AA_ZB_OPA_SURF2),
+    gsSPClearGeometryMode(G_TEXTURE_GEN | G_TEXTURE_GEN_LINEAR),
+    gsSPSetGeometryMode(G_FOG | G_LIGHTING),
+    gsSPDisplayList(0x0C000000),
+    gsDPPipeSync(),
+    gsSPEndDisplayList(),
+};
+
 void registerAdultLink() {
     if (sWasAdultRegisterAttempted) {
         return;
@@ -168,8 +180,9 @@ void registerAdultLink() {
 
         // Unglue FPS right hand from bow
         const uintptr_t BOW_START_DRAW_OFFSET = 0x2A2C8;
-        const uintptr_t BOW_HAND_START_DRAW_OFFSET = 0x2A3F8;
-        gSPBranchList(gLinkAdultOOT + BOW_START_DRAW_OFFSET, SEGMENT_ADDR(6, BOW_HAND_START_DRAW_OFFSET));
+        const uintptr_t BOW_HAND_START_DRAW_OFFSET = 0x2A3F8 + sizeof(Gfx);
+        gSPBranchList(sLinkAdultFirstPersonHand + (ARRAY_COUNT(sLinkAdultFirstPersonHand) - 1), gLinkAdultOOT + BOW_HAND_START_DRAW_OFFSET);
+        GlobalObjects_rebaseDL((Gfx *)(gLinkAdultOOT + OOT_LINK_ADULT_FPS_RIGHT_HAND_AND_BOW), aLinkSegs);
 
         // Unglue Ocarina of Time from hand
         const uintptr_t OCARINA_HAND_START_DRAW_OFFSET = 0x24748;
@@ -181,7 +194,7 @@ void registerAdultLink() {
         REPOINT_SET_ADULT(OOT_LINK_ADULT_RFIST, PMM_DL_RFIST);
         REPOINT_SET_ADULT(OOT_LINK_ADULT_BOTTLE_HAND, PMM_DL_LHAND_BOTTLE);
         REPOINT_SET_ADULT(OOT_LINK_ADULT_FPS_LEFT_HAND, PMM_DL_FPS_LHAND);
-        REPOINT_SET_ADULT(OOT_LINK_ADULT_FPS_RIGHT_HAND_AND_BOW, PMM_DL_FPS_RHAND);
+        PlayerModelManager_setDisplayList(h, PMM_DL_FPS_RHAND, sLinkAdultFirstPersonHand);
         REPOINT_SET_ADULT(OOT_LINK_ADULT_FPS_RIGHT_FOREARM, PMM_DL_FPS_RFOREARM);
         REPOINT_SET_ADULT(OOT_LINK_ADULT_FPS_LEFT_FOREARM, PMM_DL_FPS_LFOREARM);
         REPOINT_SET_ADULT(OOT_LINK_ADULT_RIGHT_HAND_AND_OCARINA, PMM_DL_OCARINA_TIME);
@@ -198,7 +211,7 @@ void registerAdultLink() {
         REPOINT_SET_ADULT(OOT_LINK_ADULT_RFIST, PMM_DL_RFIST);
         REPOINT_SET_ADULT(OOT_LINK_ADULT_BOTTLE_HAND, PMM_DL_LHAND_BOTTLE);
         REPOINT_SET_ADULT(OOT_LINK_ADULT_FPS_LEFT_HAND, PMM_DL_FPS_LHAND);
-        REPOINT_SET_ADULT(OOT_LINK_ADULT_FPS_RIGHT_HAND_AND_BOW, PMM_DL_FPS_RHAND);
+        PlayerModelManager_setDisplayList(h, PMM_DL_FPS_RHAND, sLinkAdultFirstPersonHand);
         REPOINT_SET_ADULT(OOT_LINK_ADULT_FPS_RIGHT_FOREARM, PMM_DL_FPS_RFOREARM);
         REPOINT_SET_ADULT(OOT_LINK_ADULT_FPS_LEFT_FOREARM, PMM_DL_FPS_LFOREARM);
         REPOINT_SET_ADULT(OOT_LINK_ADULT_RIGHT_HAND_AND_OCARINA, PMM_DL_OCARINA_TIME);
