@@ -1,12 +1,16 @@
-# LTSchmiddy's Majora's Mask: Recompiled Mod Template
+# PlayerModelManager Filesystem Models
 
-This my custom version of the Majora's Mask: Recompiled mod template. It offers a number of features that the base template doesn't have, including:
+An addon for [PlayerModelManager](https://github.com/YAZ64MT/PlayerModelManager) that allows Link models to be loaded from the file system.
 
-* Optional building of external libraries (referred to as extlibs) alongside the mod nrm, and keeping the code for both in the same repository.
-* Cross-compilation of extlibs using Zig (extlib code is still written in C/C++).
-* Dedicated testing environment for mods in the form of the `runtime` directory.
-* Automatic creation of Thunderstore packages via a script, or by running `make thunderstore`.
-* Easy integration of non-standard clang versions (such the MIPS-only `clang` package I maintain), in case your system `clang` doesn't support MIPS.
+It has the following dependencies:
+* [YAZMT Core](https://github.com/YAZ64MT/CoreLib)
+* [YAZMT GlobalObjects](https://github.com/YAZ64MT/GlobalObjects)
+* [YAZMT PlayerModelManager](https://github.com/YAZ64MT/PlayerModelManager)
+
+## Usage
+This mod can currently only load models that were compiled with OoTO/MMO zzplayas/z64playas manifests. The largest repository of such models can be found (here)[https://github.com/hylian-modding/Z64-CustomPlayerModels/tree/master/manifests]. Do NOT report model issues to the HylianModding repository. These models are commonly found with the file extension `.zobj`, but not all `.zobj` files are valid models. Most models with the ASCII `MODLOADER64` at off
+
+Drag the zip containing this mod and any dependencies into the mod menu of Zelda64: Recompiled and enable them.
 
 ## Writing mods
 
