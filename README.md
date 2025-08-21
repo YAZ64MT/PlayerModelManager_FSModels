@@ -1,12 +1,32 @@
-# LTSchmiddy's Majora's Mask: Recompiled Mod Template
+# PlayerModelManager Filesystem Models
 
-This my custom version of the Majora's Mask: Recompiled mod template. It offers a number of features that the base template doesn't have, including:
+An addon for [PlayerModelManager](https://github.com/YAZ64MT/PlayerModelManager) that allows Link models to be loaded from the file system.
 
-* Optional building of external libraries (referred to as extlibs) alongside the mod nrm, and keeping the code for both in the same repository.
-* Cross-compilation of extlibs using Zig (extlib code is still written in C/C++).
-* Dedicated testing environment for mods in the form of the `runtime` directory.
-* Automatic creation of Thunderstore packages via a script, or by running `make thunderstore`.
-* Easy integration of non-standard clang versions (such the MIPS-only `clang` package I maintain), in case your system `clang` doesn't support MIPS.
+It has the following dependencies:
+* [YAZMT Core](https://github.com/YAZ64MT/CoreLib)
+* [YAZMT GlobalObjects](https://github.com/YAZ64MT/GlobalObjects)
+* [YAZMT PlayerModelManager](https://github.com/YAZ64MT/PlayerModelManager)
+
+## Usage
+This mod can currently only load models that were compiled with OoTO/MMO zzplayas/z64playas manifests. The largest repository of such models can be found [here](https://github.com/hylian-modding/Z64-CustomPlayerModels/tree/master/manifests). Do NOT report model issues to the HylianModding repository UNLESS you can verify the issue also appears in ModLoader64—compatibility is not perfect between PMM and the models from that repository.
+
+Models are commonly found with the file extension `.zobj`, but not all `.zobj` files are valid models. Most models with the ASCII `MODLOADER64` at offset 0x5000 are compatible though.
+
+For first time setup, first drag the zip containing this mod and any dependencies into the mod menu of Zelda64: Recompiled and enable them. Then, run the game, let it get to the title screen. Hit the "Open Mods Folder" button in the mods menu. If you go up one level in the file system, you should see the folders `mods`, `saves`, and the newly-created `mod_data` folder. Within the `mod_data` folder, you will find a folder named `yazmt_z64_playermodelmanager`. You must place models in the `models` folder within `yazmt_z64_playermodelmanager`. Models will only be loaded when the game boots up, so if you add new models to the folder, make sure to restart the game.
+
+You may notice incorrect textures or missing equipment on certain models, particularly models made for Ocarina of Time. This is because those models rely on assets from OoT. If you wish to correct these errors, place a supported OoT ROM named `oot.z64`, `oot.n64`, or `oot.v64` into the `yazmt_z64_playermodelmanager` folder. If you want to check if your ROM is supported before placing it in the folder, make sure it is in big endian (.z64) format by using a tool such as [this online swapper provided by Hack64](https://hack64.net/tools/swapper.php) or [Tool64](https://gbatemp.net/download/tool-64.32494/). Just changing the file extension does NOT make it big endian. After converting your ROM to big endian if needed, you can manually check if its SHA1 hash matches with the list of supported versions below.
+
+The following OoT ROMs are supported:
+```
+Version | Region |                  SHA-1
+  1.0   |   US   | ad69c91157f6705e8ab06c79fe08aad47bb57ba7
+  1.1   |   US   | d3ecb253776cd847a5aa63d859d8c89a2f37b364
+  1.2   |   US   | 41b3bdc48d98c48529219919015a1af22f5057c2
+  1.0   |   JP   | c892bbda3993e66bd0d56a10ecd30b1ee612210f
+  1.1   |   JP   | dbfc81f655187dc6fefd93fa6798face770d579d
+  1.2   |   JP   | fa5f5942b27480d60243c2d52c0e93e26b9e6b86
+```
+
 
 ## Writing mods
 
