@@ -91,8 +91,10 @@ RECOMP_DLL_FUNC(PMMZobj_setPMMDir) {
 
     sPMMDir = sPMMDir.parent_path() / "mod_data" / "yazmt_z64_playermodelmanager";
 
-    if (!fs::is_directory(sPMMDir)) {
-        fs::create_directories(sPMMDir);
+    fs::path modelDir = sPMMDir / "models";
+
+    if (!fs::is_directory(modelDir)) {
+        fs::create_directories(modelDir);
     }
 
     RECOMP_RETURN(bool, true);
