@@ -3,5 +3,6 @@
 
 void initChildEquipment();
 void initAdultEquipment();
+void addEquipmentToModelManager();
 
 #endif

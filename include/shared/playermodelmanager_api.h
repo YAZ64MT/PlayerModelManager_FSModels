@@ -5,7 +5,7 @@ typedef unsigned long PlayerModelManagerHandle;
 
 // Used for keeping compatibility between versions
 // DO NOT EDIT
-#define PMM_API_VERSION 1UL
+#define PMM_API_VERSION 3UL
 
 #define YAZMT_PMM_MOD_NAME "yazmt_mm_playermodelmanager"
 
@@ -136,6 +136,7 @@ typedef enum {
     PMM_DL_ELEGY_OF_EMPTINESS_SHELL_DEKU,  // Only used if model is Deku
     PMM_DL_ELEGY_OF_EMPTINESS_SHELL_GORON, // Only used if model is Goron
     PMM_DL_ELEGY_OF_EMPTINESS_SHELL_ZORA,  // Only used if model is Zora
+    // PMM_DL_ELEGY_OF_EMPTINESS_SHELL_FIERCE_DEITY also exists
 
     // Strength Upgrades (OoT)
     PMM_DL_BRACELET_LFOREARM,
@@ -313,6 +314,12 @@ typedef enum {
     // First Person Bow
     PMM_DL_FPS_BOW,
 
+    // First Person Slingshot
+    PMM_DL_FPS_SLINGSHOT,
+
+    // Elegy of Emptiness Statue (Fierce Deity)
+    PMM_DL_ELEGY_OF_EMPTINESS_SHELL_FIERCE_DEITY, // Only used if model is Fierce Deity
+
     PMM_DL_MAX
 } PlayerModelManagerDisplayListId;
 
@@ -334,7 +341,10 @@ typedef enum {
 #define PMM_DL_SWORD_FIERCE_DEITY_HILT PMM_DL_SWORD4_HILT
 #define PMM_DL_SWORD_FIERCE_DEITY_BLADE PMM_DL_SWORD4_BLADE
 
+#define PMM_DL_SHIELD_DEKU PMM_DL_SHIELD1
+
 #define PMM_DL_SHIELD_HERO PMM_DL_SHIELD2
+#define PMM_DL_SHIELD_HYLIAN PMM_DL_SHIELD2
 
 #define PMM_DL_SHIELD_MIRROR PMM_DL_SHIELD3
 #define PMM_DL_SHIELD_MIRROR_RAY PMM_DL_SHIELD3_RAY
@@ -361,7 +371,9 @@ typedef enum {
 #define PMM_MTX_SWORD_RAZOR_BACK PMM_MTX_SWORD2_BACK
 #define PMM_MTX_SWORD_GILDED_BACK PMM_MTX_SWORD3_BACK
 
+#define PMM_MTX_SHIELD_DEKU_BACK PMM_MTX_SHIELD1_BACK
 #define PMM_MTX_SHIELD_HERO_BACK PMM_MTX_SHIELD2_BACK
+#define PMM_MTX_SHIELD_HYLIAN_BACK PMM_MTX_SHIELD2_BACK
 #define PMM_MTX_SHIELD_MIRROR_BACK PMM_MTX_SHIELD3_BACK
 
 typedef enum {
@@ -372,8 +384,65 @@ typedef enum {
     PMM_MODEL_TYPE_GORON,
     PMM_MODEL_TYPE_ZORA,
     PMM_MODEL_TYPE_FIERCE_DEITY,
+    PMM_MODEL_TYPE_SWORD1,
+    PMM_MODEL_TYPE_SWORD2,
+    PMM_MODEL_TYPE_SWORD3,
+    PMM_MODEL_TYPE_SWORD4,
+    PMM_MODEL_TYPE_SWORD5,
+    PMM_MODEL_TYPE_SHIELD1,
+    PMM_MODEL_TYPE_SHIELD2,
+    PMM_MODEL_TYPE_SHIELD3,
+    PMM_MODEL_TYPE_HOOKSHOT,
+    PMM_MODEL_TYPE_BOW,
+    PMM_MODEL_TYPE_SLINGSHOT,
+    PMM_MODEL_TYPE_BOTTLE,
+    PMM_MODEL_TYPE_OCARINA_FAIRY,
+    PMM_MODEL_TYPE_OCARINA_TIME,
+    PMM_MODEL_TYPE_BOOMERANG,
+    PMM_MODEL_TYPE_HAMMER,
+    PMM_MODEL_TYPE_DEKU_STICK,
+    PMM_MODEL_TYPE_PIPES,
+    PMM_MODEL_TYPE_DRUMS,
+    PMM_MODEL_TYPE_GUITAR,
+    PMM_MODEL_TYPE_MASK_SKULL,
+    PMM_MODEL_TYPE_MASK_SPOOKY,
+    PMM_MODEL_TYPE_MASK_GERUDO,
+    PMM_MODEL_TYPE_MASK_TRUTH,
+    PMM_MODEL_TYPE_MASK_KAFEIS_MASK,
+    PMM_MODEL_TYPE_MASK_ALL_NIGHT,
+    PMM_MODEL_TYPE_MASK_BUNNY,
+    PMM_MODEL_TYPE_MASK_KEATON,
+    PMM_MODEL_TYPE_MASK_GARO,
+    PMM_MODEL_TYPE_MASK_ROMANI,
+    PMM_MODEL_TYPE_MASK_CIRCUS_LEADER,
+    PMM_MODEL_TYPE_MASK_COUPLE,
+    PMM_MODEL_TYPE_MASK_POSTMAN,
+    PMM_MODEL_TYPE_MASK_GREAT_FAIRY,
+    PMM_MODEL_TYPE_MASK_GIBDO,
+    PMM_MODEL_TYPE_MASK_DON_GERO,
+    PMM_MODEL_TYPE_MASK_KAMARO,
+    PMM_MODEL_TYPE_MASK_CAPTAIN,
+    PMM_MODEL_TYPE_MASK_STONE,
+    PMM_MODEL_TYPE_MASK_BREMEN,
+    PMM_MODEL_TYPE_MASK_BLAST,
+    PMM_MODEL_TYPE_MASK_SCENTS,
+    PMM_MODEL_TYPE_MASK_GIANT,
+    PMM_MODEL_TYPE_MASK_DEKU,
+    PMM_MODEL_TYPE_MASK_GORON,
+    PMM_MODEL_TYPE_MASK_ZORA,
+    PMM_MODEL_TYPE_MASK_FIERCE_DEITY,
     PMM_MODEL_TYPE_MAX
 } PlayerModelManagerModelType;
+
+#define PMM_MODEL_TYPE_SWORD_KOKIRI PMM_MODEL_TYPE_SWORD1
+#define PMM_MODEL_TYPE_SWORD_RAZOR PMM_MODEL_TYPE_SWORD2
+#define PMM_MODEL_TYPE_SWORD_GILDED PMM_MODEL_TYPE_SWORD3
+#define PMM_MODEL_TYPE_SWORD_FIERCE_DIETY PMM_MODEL_TYPE_SWORD4
+#define PMM_MODEL_TYPE_SWORD_GREAT_FAIRY PMM_MODEL_TYPE_SWORD5
+#define PMM_MODEL_TYPE_SHIELD_DEKU PMM_MODEL_TYPE_SHIELD1
+#define PMM_MODEL_TYPE_SHIELD_HYLIAN PMM_MODEL_TYPE_SHIELD2
+#define PMM_MODEL_TYPE_SHIELD_HERO PMM_MODEL_TYPE_SHIELD2
+#define PMM_MODEL_TYPE_SHIELD_MIRROR PMM_MODEL_TYPE_SHIELD3
 
 typedef enum {
     PMM_EVENT_MODEL_APPLIED,
@@ -468,9 +537,42 @@ RECOMP_IMPORT(YAZMT_PMM_MOD_NAME, Gfx *PlayerModelManager_getFormDisplayList(uns
 // Returns true if the model attached to the passed in handle is currently equipped, false otherwise.
 RECOMP_IMPORT(YAZMT_PMM_MOD_NAME, bool PlayerModelManager_isApplied(PlayerModelManagerHandle h));
 
-// Allows the tunic color to be set by other mods.
+// Set tunic color of a specific form.
+RECOMP_IMPORT(YAZMT_PMM_MOD_NAME, void PlayerModelManager_requestOverrideFormTunicColor(PlayerTransformation form, u8 r, u8 g, u8 b, u8 a));
+
+// Set tunic color for all forms. Replaces any form-specific tunic colors.
 RECOMP_IMPORT(YAZMT_PMM_MOD_NAME, void PlayerModelManager_requestOverrideTunicColor(u8 r, u8 g, u8 b, u8 a));
 
+// Allows mods to override display lists used by the models used when no custom model is found.
+// This should be used sparingly, but there are some use cases, like if you are exchanging
+// the first person models for non-human forms.
+//
+// Attempts to override shim DLs will be ignored.
+//
+// This function can only be used during the PlayerModelManager_onRegisterModels event.
+//
+// This returns true on successful override, false otherwise.
+RECOMP_IMPORT(YAZMT_PMM_MOD_NAME, bool PlayerModelManager_overrideVanillaDisplayList(unsigned long apiVersion, PlayerTransformation form, PlayerModelManagerDisplayListId displayListId, Gfx *displayList));
+
+// Helper define for PlayerModelManager_overrideVanillaDisplayList. See PlayerModelManager_overrideVanillaDisplayList description for functionality.
+#define PLAYERMODELMANAGER_OVERRIDE_VANILLA_DISPLAY_LIST(form, displayListId, displayList) PlayerModelManager_overrideVanillaDisplayList(PMM_API_VERSION, form, displayListId, displayList)
+
+// Allows mods to override matrixes used by the models used when no custom matrix is found.
+// This should be used sparingly, but there are some use cases, like if you are exchanging
+// equipment models with PlayerModelManager_overrideVanillaDisplayList.
+//
+// This function can only be used during the PlayerModelManager_onRegisterModels event.
+//
+// This returns true on successful override, false otherwise.
+RECOMP_IMPORT(YAZMT_PMM_MOD_NAME, bool PlayerModelManager_overrideVanillaMatrix(unsigned long apiVersion, PlayerTransformation form, PlayerModelManagerMatrixId displayListId, Mtx *mtx));
+
+// Helper define for PlayerModelManager_overrideVanillaDisplayList. See PlayerModelManager_overrideVanillaDisplayList description for functionality.
+#define PLAYERMODELMANAGER_OVERRIDE_VANILLA_MATRIX(form, matrixId, matrix) PlayerModelManager_overrideVanillaMatrix(PMM_API_VERSION, form, matrixId, matrix)
+
+// Returns true if there is a custom player model applied to the passed in form, false otherwise.
+RECOMP_IMPORT(YAZMT_PMM_MOD_NAME, bool PlayerModelManager_isCustomModelApplied(PlayerTransformation form));
+
+// Helper define for register models event.
 #define PLAYERMODELMANAGER_CALLBACK_REGISTER_MODELS RECOMP_CALLBACK(YAZMT_PMM_MOD_NAME, onRegisterModels)
 
 #endif
