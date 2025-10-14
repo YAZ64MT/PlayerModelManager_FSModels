@@ -94,7 +94,7 @@ static Gfx sBiggoronSwordBlade[] = {
     gsSPNoOp(), // branch command goes here
 };
 
-Gfx sKokiriSwordHilt[] = {
+static Gfx sKokiriSwordHilt[] = {
     gsDPPipeSync(),
     gsDPSetTextureLUT(G_TT_RGBA16),
     gsSPTexture(0xFFFF, 0xFFFF, 0, G_TX_RENDERTILE, G_ON),
@@ -106,7 +106,7 @@ Gfx sKokiriSwordHilt[] = {
     gsDPNoOp(), // branch goes here
 };
 
-Gfx sKokiriSwordBlade[] = {
+static Gfx sKokiriSwordBlade[] = {
     gsDPPipeSync(),
     gsDPSetCombineLERP(TEXEL0, 0, SHADE, 0, 0, 0, 0, 1, COMBINED, 0, PRIMITIVE, 0, 0, 0, 0, COMBINED),
     gsDPSetRenderMode(G_RM_FOG_SHADE_A, G_RM_AA_ZB_OPA_SURF2),
@@ -277,7 +277,7 @@ void initAdultEquipment() {
     gSPBranchList(&sBiggoronSwordBlade[ARRAY_COUNT(sBiggoronSwordBlade) - 1], gLinkAdultOOT + BIGGORON_SWORD_BLADE_START);
     gSPEndDisplayList(gLinkAdultOOT + BIGGORON_SWORD_HAND_START);
 
-    guPosition(&gOOTHookshotHookAndChainMtx, 0, 0, 0, 1, 50, 840, 0);
+    guPosition(&gOOTHookshotHookAndChainMtx, 0.f, 0.f, 0.f, 1.f, 50.f, 840.f, 0.f);
 
     guPosition(&gOOTAdultShieldMtx, 0.f, 0.f, 180.f, 1.f, 935.f, 94.f, 29.f);
 
@@ -362,13 +362,13 @@ void addEquipmentToModelManager() {
     PlayerModelManagerHandle h;
     
     // Mirror Shield (OOT)
-    h = PLAYERMODELMANAGER_REGISTER_MODEL("oot_mirror_shield_a", PMM_MODEL_TYPE_SHIELD_MIRROR);
+    h = PLAYERMODELMANAGER_REGISTER_MODEL("oot_mirror_shield3_a", PMM_MODEL_TYPE_SHIELD_MIRROR);
     PlayerModelManager_setDisplayName(h, "Mirror Shield (OOT)");
     PlayerModelManager_setAuthor(h, "Nintendo");
     PlayerModelManager_setMatrix(h, PMM_MTX_SHIELD_MIRROR_BACK, &gOOTAdultShieldMtx);
     PlayerModelManager_setDisplayList(h, PMM_DL_SHIELD_MIRROR, gOOTMirrorShield);
 
-    h = PLAYERMODELMANAGER_REGISTER_MODEL("oot_mirror_shield_c", PMM_MODEL_TYPE_SHIELD_MIRROR);
+    h = PLAYERMODELMANAGER_REGISTER_MODEL("oot_mirror_shield3_c", PMM_MODEL_TYPE_SHIELD_MIRROR);
     PlayerModelManager_setDisplayName(h, "Mirror Shield (OOT) (Child)");
     PlayerModelManager_setAuthor(h, "Nintendo");
     PlayerModelManager_setMatrix(h, PMM_MTX_SHIELD_MIRROR_BACK, SEGMENTED_TO_GLOBAL_PTR(GlobalObjects_getGlobalObject(OBJECT_LINK_CHILD), &gLinkHumanMirrorShieldMtx));
@@ -389,7 +389,7 @@ void addEquipmentToModelManager() {
 
     // Deku Shield
     h = PLAYERMODELMANAGER_REGISTER_MODEL("oot_deku_shield2_a", PMM_MODEL_TYPE_SHIELD_HERO);
-    PlayerModelManager_setDisplayName(h, "Deku Shield (OoT) (Adult)");
+    PlayerModelManager_setDisplayName(h, "Deku Shield (Adult)");
     PlayerModelManager_setAuthor(h, "Nintendo");
     PlayerModelManager_setMatrix(h, PMM_MTX_SHIELD_HERO_BACK, &gOOTAdultShieldMtx);
     PlayerModelManager_setDisplayList(h, PMM_DL_SHIELD_HERO, gOOTDekuShieldAdult);
@@ -513,4 +513,10 @@ void addEquipmentToModelManager() {
     PlayerModelManager_setDisplayName(h, "Fairy Ocarina");
     PlayerModelManager_setAuthor(h, "Nintendo");
     PlayerModelManager_setDisplayList(h, PMM_DL_OCARINA_TIME, gOOTFairyOcarina);
+
+    // Deku Stick (OOT)
+    h = PLAYERMODELMANAGER_REGISTER_MODEL("oot_deku_stick_c", PMM_MODEL_TYPE_DEKU_STICK);
+    PlayerModelManager_setDisplayName(h, "Deku Stick (OoT)");
+    PlayerModelManager_setAuthor(h, "Nintendo");
+    PlayerModelManager_setDisplayList(h, PMM_DL_DEKU_STICK, gOOTDekuStick);
 }
