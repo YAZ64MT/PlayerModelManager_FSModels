@@ -14,6 +14,7 @@ void registerAdultLink();
 extern u8 *gGameplayKeepOOT;
 extern u8 *gLinkAdultOOT;
 extern u8 *gLinkChildOOT;
+extern u8 *gMirRayOOT;
 
 PlayerModelManagerHandle getAdultLinkHumanHandle();
 

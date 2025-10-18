@@ -181,6 +181,9 @@ static Mtx sOotHookshotMtx;
 #define SET_OOTO_ADULT_MODEL(dest, src) SET_Z64O_MODEL(dest, src, OOTO_ADULT)
 #define QSET_OOTO_ADULT_MODEL(dlName) SET_OOTO_ADULT_MODEL(dlName, dlName)
 
+extern Gfx *gOOTMirrorShieldRayBeamAdjusted;
+extern Gfx *gOOTMirrorShieldRay;
+
 void setupZobjOotoAdult(PlayerModelManagerHandle h, u8 *zobj) {
     if (!sIsOotHookshotMtxInitialized) {
         guPosition(&sOotHookshotMtx, 0, 0, 0, 1, 50, 840, 0);
@@ -235,6 +238,8 @@ void setupZobjOotoAdult(PlayerModelManagerHandle h, u8 *zobj) {
     QSET_OOTO_ADULT_MODEL(FPS_RFOREARM);
     QSET_OOTO_ADULT_MODEL(FPS_RHAND);
     QSET_OOTO_ADULT_MODEL(FPS_HOOKSHOT);
+    PlayerModelManager_setDisplayList(h, PMM_DL_SHIELD_MIRROR_RAY, gOOTMirrorShieldRay);
+    PlayerModelManager_setDisplayList(h, PMM_DL_SHIELD_MIRROR_RAY_BEAM, gOOTMirrorShieldRayBeamAdjusted);
 }
 
 void setupZobjZ64O(PlayerModelManagerHandle h, u8 *zobj) {

@@ -79,6 +79,7 @@ native_libraries = [
       "PMMZobj_extractGameplayKeep",
       "PMMZobj_extractChildLink",
       "PMMZobj_extractAdultLink",
+      "PMMZobj_extractMirrorShieldRay",
       "PMMZobj_tryLoadOOTROM",
       "PMMZobj_unloadOOTROM",
       "PMMZobj_isOOTRomLoaded"

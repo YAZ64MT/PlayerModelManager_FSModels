@@ -22,6 +22,11 @@ Gfx *gOOTBowFirstPersonChild = NULL;
 Gfx *gOOTBowString = NULL;
 Gfx *gOOTMirrorShield = NULL;
 Gfx *gOOTMirrorShieldChild = NULL;
+Gfx *gOOTMirrorShieldRay = NULL;
+Gfx *gOOTMirrorShieldRayChild = NULL;
+Gfx *gOOTMirrorShieldRayBeam = NULL;
+Gfx *gOOTMirrorShieldRayBeamAdjusted = NULL;
+Gfx *gOOTMirrorShieldRayBeamChild = NULL;
 Gfx *gOOTHylianShield = NULL;
 Gfx *gOOTHylianShieldChild = NULL;
 Gfx *gOOTDekuShield = NULL;
@@ -136,6 +141,21 @@ static Gfx sCallMirrorShield[] = {
 
 DECLARE_STATIC_MATRIX_WRAPPED_DL(sMirrorShieldChild, sMirrorShieldResizer, sCallMirrorShield);
 
+static Gfx sCallMirrorShieldRay[] = {
+    gsSPEndDisplayList(),
+};
+
+DECLARE_STATIC_MATRIX_WRAPPED_DL(sMirrorShieldRayChild, sMirrorShieldRayResizer, sCallMirrorShieldRay);
+
+static Gfx sCallMirrorShieldRayBeam[] = {
+    gsSPEndDisplayList(),
+    gsSPEndDisplayList(),
+    gsSPEndDisplayList(),
+    gsSPEndDisplayList(),
+};
+
+DECLARE_STATIC_MATRIX_WRAPPED_DL(sMirrorShieldRayBeamChild, sMirrorShieldRayBeamResizer, sCallMirrorShieldRayBeam);
+
 static Gfx sCallHookshot[] = {
     gsSPEndDisplayList(),
 };
@@ -187,6 +207,24 @@ void initCrossAgeEquipment() {
     guPosition(&sMirrorShieldResizer, 0.f, 0.f, 0.f, 0.77f, 0.f, 0.f, 0.f);
     gOOTMirrorShieldChild = sMirrorShieldChild;
 
+    if (gMirRayOOT) {
+        gSPBranchList(sCallMirrorShieldRay, gOOTMirrorShieldRay);
+        guPosition(&sMirrorShieldRayResizer, 0.f, 0.f, 0.f, 0.77f, 0.f, 0.f, 0.f);
+        gOOTMirrorShieldRayChild = sMirrorShieldRayChild;
+
+        // Beam is always scaled by 5 in OoT
+        static Mtx beamAdjuster;
+        guMtxIdent(&beamAdjuster);
+        guScale(&beamAdjuster, 1.f, 1.f, 5.f);
+        gSPMatrix(&sCallMirrorShieldRayBeam[0], &beamAdjuster, G_MTX_PUSH | G_MTX_MUL | G_MTX_MODELVIEW);
+        gSPDisplayList(&sCallMirrorShieldRayBeam[1], gOOTMirrorShieldRayBeam);
+        gSPPopMatrix(&sCallMirrorShieldRayBeam[2], G_MTX_MODELVIEW);
+        gOOTMirrorShieldRayBeamAdjusted = sCallMirrorShieldRayBeam;
+
+        guPosition(&sMirrorShieldRayBeamResizer, 0.f, 0.f, 0.f, 0.77f, 0.f, 0.f, 0.f);
+        gOOTMirrorShieldRayBeamChild = sMirrorShieldRayBeamChild;
+    }
+
     gSPBranchList(sCallHookshot, gOOTHookshot);
     guPosition(&sHookshotResizer, 0.f, 0.f, 0.f, 0.6f, 0.f, 0.f, 0.f);
     gOOTHookshotChild = sHookshotChild;
@@ -231,6 +269,21 @@ void initAdultEquipment() {
     const uintptr_t MIRROR_SHIELD_HAND_START_DRAW_OFFSET = 0x24378;
     const uintptr_t MIRROR_SHIELD_BODY_START_DRAW_OFFSET = 0x245A8;
     gSPBranchList(gLinkAdultOOT + MIRROR_SHIELD_HAND_START_DRAW_OFFSET, SEGMENT_ADDR(6, MIRROR_SHIELD_BODY_START_DRAW_OFFSET));
+
+    // Mirror shield beam DLs
+    if (gMirRayOOT) {
+        GlobalObjectsSegmentMap mirRaySegs = {0};
+        mirRaySegs[0x06] = gMirRayOOT;
+        mirRaySegs[0x04] = gGameplayKeepOOT;
+        const uintptr_t MIRROR_SHIELD_IMAGE_START_DRAW_OFFSET = 0xB0;
+        const uintptr_t MIRROR_SHIELD_BEAM_START_DRAW_OFFSET = 0xC50;
+
+        gOOTMirrorShieldRay = (Gfx *)(gMirRayOOT + MIRROR_SHIELD_IMAGE_START_DRAW_OFFSET);
+        gOOTMirrorShieldRayBeam = (Gfx *)(gMirRayOOT + MIRROR_SHIELD_BEAM_START_DRAW_OFFSET);
+
+        GlobalObjects_rebaseDL(gOOTMirrorShieldRay, mirRaySegs);
+        GlobalObjects_rebaseDL(gOOTMirrorShieldRayBeam, mirRaySegs);
+    }
 
     // Unglue fist from Hylian Shield
     const uintptr_t HYLIAN_SHIELD_HAND_START_DRAW_OFFSET = 0x22AC8;
@@ -367,12 +420,16 @@ void addEquipmentToModelManager() {
     PlayerModelManager_setAuthor(h, "Nintendo");
     PlayerModelManager_setMatrix(h, PMM_MTX_SHIELD_MIRROR_BACK, &gOOTAdultShieldMtx);
     PlayerModelManager_setDisplayList(h, PMM_DL_SHIELD_MIRROR, gOOTMirrorShield);
+    PlayerModelManager_setDisplayList(h, PMM_DL_SHIELD_MIRROR_RAY, gOOTMirrorShieldRay);
+    PlayerModelManager_setDisplayList(h, PMM_DL_SHIELD_MIRROR_RAY_BEAM, gOOTMirrorShieldRayBeamAdjusted);
 
     h = PLAYERMODELMANAGER_REGISTER_MODEL("oot_mirror_shield3_c", PMM_MODEL_TYPE_SHIELD_MIRROR);
     PlayerModelManager_setDisplayName(h, "Mirror Shield (OOT) (Child)");
     PlayerModelManager_setAuthor(h, "Nintendo");
     PlayerModelManager_setMatrix(h, PMM_MTX_SHIELD_MIRROR_BACK, SEGMENTED_TO_GLOBAL_PTR(GlobalObjects_getGlobalObject(OBJECT_LINK_CHILD), &gLinkHumanMirrorShieldMtx));
     PlayerModelManager_setDisplayList(h, PMM_DL_SHIELD_MIRROR, gOOTMirrorShieldChild);
+    PlayerModelManager_setDisplayList(h, PMM_DL_SHIELD_MIRROR_RAY, gOOTMirrorShieldRayChild);
+    PlayerModelManager_setDisplayList(h, PMM_DL_SHIELD_MIRROR_RAY_BEAM, gOOTMirrorShieldRayBeamChild);
 
     // Hylian Shield
     h = PLAYERMODELMANAGER_REGISTER_MODEL("oot_hylian_shield2_a", PMM_MODEL_TYPE_SHIELD_HERO);

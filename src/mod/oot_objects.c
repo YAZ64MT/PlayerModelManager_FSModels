@@ -9,12 +9,15 @@
 RECOMP_IMPORT(".", bool PMMZobj_extractGameplayKeep(void *buffer, int bufferSize));
 RECOMP_IMPORT(".", bool PMMZobj_extractChildLink(void *buffer, int bufferSize));
 RECOMP_IMPORT(".", bool PMMZobj_extractAdultLink(void *buffer, int bufferSize));
+RECOMP_IMPORT(".", bool PMMZobj_extractMirrorShieldRay(void *buffer, int bufferSize));
 
 u8 *gGameplayKeepOOT = NULL;
 
 u8 *gLinkChildOOT = NULL;
 
 u8 *gLinkAdultOOT = NULL;
+
+u8 *gMirRayOOT = NULL;
 
 static bool sIsGameplayKeepHandled = false;
 static bool sIsRealGameplayKeepLoaded = false;
@@ -38,6 +41,24 @@ void loadGameplayKeepOOT() {
         }
 
         sIsGameplayKeepHandled = true;
+    }
+}
+
+static bool sIsMirRayHandled = false;
+
+#define OOT_NTSC_OBJ_MIR_RAY_SIZE 0x001D00
+
+void loadMirRayOOT() {
+    if (!sIsMirRayHandled) {
+
+        gMirRayOOT = recomp_alloc(OOT_NTSC_OBJ_MIR_RAY_SIZE);
+
+        if (!PMMZobj_extractMirrorShieldRay(gMirRayOOT, OOT_NTSC_OBJ_MIR_RAY_SIZE)) {
+            recomp_free(gMirRayOOT);
+            gMirRayOOT = NULL;
+        }
+
+        sIsMirRayHandled = true;
     }
 }
 
@@ -86,8 +107,6 @@ void registerChildLink() {
     loadGameplayKeepOOT();
 
     if (sIsRealGameplayKeepLoaded && PMMZobj_extractChildLink(gLinkChildOOT, OOT_LINK_CHILD_SIZE)) {
-        // PMMZobj_extractChildLink(gLinkChildOOT, OOT_LINK_CHILD_SIZE);
-
         GlobalObjectsSegmentMap cLinkSegs = {0};
         cLinkSegs[0x06] = gLinkChildOOT;
         cLinkSegs[0x04] = gGameplayKeepOOT;
@@ -158,7 +177,7 @@ void registerAdultLink() {
     loadGameplayKeepOOT();
 
     if (sIsRealGameplayKeepLoaded && PMMZobj_extractAdultLink(gLinkAdultOOT, OOT_LINK_ADULT_SIZE)) {
-        // PMMZobj_extractAdultLink(gLinkAdultOOT, OOT_LINK_ADULT_SIZE);
+        loadMirRayOOT();
 
         GlobalObjectsSegmentMap aLinkSegs = {0};
         aLinkSegs[0x06] = gLinkAdultOOT;
