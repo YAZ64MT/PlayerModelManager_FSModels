@@ -119,7 +119,7 @@ void registerChildLink() {
 
         PlayerModelManagerHandle h = PLAYERMODELMANAGER_REGISTER_MODEL("oot_object_link_child", PMM_MODEL_TYPE_CHILD);
         sOoTChildHumanHandle = h;
-        PlayerModelManager_setDisplayName(h, "Young Link (OOT)");
+        PlayerModelManager_setDisplayName(h, "Young Link (OoT)");
         PlayerModelManager_setAuthor(h, "Nintendo");
         PlayerModelManager_setSkeleton(h, skel);
         setupFaceTextures(h, gLinkChildOOT);
@@ -192,7 +192,7 @@ void registerAdultLink() {
         // Human
         PlayerModelManagerHandle h = PLAYERMODELMANAGER_REGISTER_MODEL("oot_object_link_boy_adult", PMM_MODEL_TYPE_ADULT);
         sOoTAdultHumanHandle = h;
-        PlayerModelManager_setDisplayName(h, "Adult Link (OOT)");
+        PlayerModelManager_setDisplayName(h, "Adult Link (OoT)");
         PlayerModelManager_setAuthor(h, "Nintendo");
         PlayerModelManager_setSkeleton(h, skel);
         setupFaceTextures(h, gLinkAdultOOT);
@@ -221,7 +221,7 @@ void registerAdultLink() {
         // Fierce Deity
         h = PLAYERMODELMANAGER_REGISTER_MODEL("oot_object_link_boy_fd", PMM_MODEL_TYPE_FIERCE_DEITY);
         sOoTAdultFierceDeityHandle = h;
-        PlayerModelManager_setDisplayName(h, "Adult Link (OOT)");
+        PlayerModelManager_setDisplayName(h, "Adult Link (OoT)");
         PlayerModelManager_setAuthor(h, "Nintendo");
         PlayerModelManager_setSkeleton(h, skel);
         setupFaceTextures(h, gLinkAdultOOT);

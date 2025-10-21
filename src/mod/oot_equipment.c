@@ -416,7 +416,7 @@ void addEquipmentToModelManager() {
     
     // Mirror Shield (OOT)
     h = PLAYERMODELMANAGER_REGISTER_MODEL("oot_mirror_shield3_a", PMM_MODEL_TYPE_SHIELD_MIRROR);
-    PlayerModelManager_setDisplayName(h, "Mirror Shield (OOT)");
+    PlayerModelManager_setDisplayName(h, "Mirror Shield (OoT)");
     PlayerModelManager_setAuthor(h, "Nintendo");
     PlayerModelManager_setMatrix(h, PMM_MTX_SHIELD_MIRROR_BACK, &gOOTAdultShieldMtx);
     PlayerModelManager_setDisplayList(h, PMM_DL_SHIELD_MIRROR, gOOTMirrorShield);
@@ -424,7 +424,7 @@ void addEquipmentToModelManager() {
     PlayerModelManager_setDisplayList(h, PMM_DL_SHIELD_MIRROR_RAY_BEAM, gOOTMirrorShieldRayBeamAdjusted);
 
     h = PLAYERMODELMANAGER_REGISTER_MODEL("oot_mirror_shield3_c", PMM_MODEL_TYPE_SHIELD_MIRROR);
-    PlayerModelManager_setDisplayName(h, "Mirror Shield (OOT) (Child)");
+    PlayerModelManager_setDisplayName(h, "Mirror Shield (OoT) (Child)");
     PlayerModelManager_setAuthor(h, "Nintendo");
     PlayerModelManager_setMatrix(h, PMM_MTX_SHIELD_MIRROR_BACK, SEGMENTED_TO_GLOBAL_PTR(GlobalObjects_getGlobalObject(OBJECT_LINK_CHILD), &gLinkHumanMirrorShieldMtx));
     PlayerModelManager_setDisplayList(h, PMM_DL_SHIELD_MIRROR, gOOTMirrorShieldChild);
@@ -433,13 +433,13 @@ void addEquipmentToModelManager() {
 
     // Hylian Shield
     h = PLAYERMODELMANAGER_REGISTER_MODEL("oot_hylian_shield2_a", PMM_MODEL_TYPE_SHIELD_HERO);
-    PlayerModelManager_setDisplayName(h, "Hylian Shield (OOT)");
+    PlayerModelManager_setDisplayName(h, "Hylian Shield (OoT)");
     PlayerModelManager_setAuthor(h, "Nintendo");
     PlayerModelManager_setMatrix(h, PMM_MTX_SHIELD_HERO_BACK, &gOOTAdultShieldMtx);
     PlayerModelManager_setDisplayList(h, PMM_DL_SHIELD_HERO, gOOTHylianShield);
 
     h = PLAYERMODELMANAGER_REGISTER_MODEL("oot_hylian_shield2_c", PMM_MODEL_TYPE_SHIELD_HERO);
-    PlayerModelManager_setDisplayName(h, "Hylian Shield (OOT) (Child)");
+    PlayerModelManager_setDisplayName(h, "Hylian Shield (OoT) (Child)");
     PlayerModelManager_setAuthor(h, "Nintendo");
     PlayerModelManager_setMatrix(h, PMM_MTX_SHIELD_HERO_BACK, SEGMENTED_TO_GLOBAL_PTR(GlobalObjects_getGlobalObject(OBJECT_LINK_CHILD), &gLinkHumanHerosShieldMtx));
     PlayerModelManager_setDisplayList(h, PMM_DL_SHIELD_HERO, gOOTHylianShieldChild);
