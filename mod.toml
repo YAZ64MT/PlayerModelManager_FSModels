@@ -49,8 +49,8 @@ minimum_recomp_version = "1.2.1"
 dependencies = [
 # Example dependency:
 #    "modname:1.0.0"
-   "yazmt_mm_playermodelmanager",
-   "yazmt_mm_corelib",
+   "yazmt_mm_playermodelmanager:0.5.0",
+   "yazmt_mm_corelib:0.1.1",
    "yazmt_mm_global_objects",
 ]
 
@@ -79,6 +79,7 @@ native_libraries = [
       "PMMZobj_extractGameplayKeep",
       "PMMZobj_extractChildLink",
       "PMMZobj_extractAdultLink",
+      "PMMZobj_extractMirrorShieldRay",
       "PMMZobj_tryLoadOOTROM",
       "PMMZobj_unloadOOTROM",
       "PMMZobj_isOOTRomLoaded"

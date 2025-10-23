@@ -12,7 +12,7 @@
 #include "ml64compat_mm.h"
 #include "oot_objects.h"
 
-RECOMP_IMPORT(".", bool PMMZobj_setPMMDir(const char *str));
+RECOMP_IMPORT(".", bool PMMZobj_setPMMDir(const unsigned char *str));
 RECOMP_IMPORT(".", int PMMZobj_scanForDiskEntries());
 RECOMP_IMPORT(".", int PMMZobj_getNumDiskEntries());
 RECOMP_IMPORT(".", int PMMZobj_entryInternalNameLength(int i));
@@ -148,7 +148,7 @@ PLAYERMODELMANAGER_CALLBACK_REGISTER_MODELS void registerDiskModels() {
     }
 
     {
-        char *modDir = (char *)recomp_get_mod_folder_path();
+        unsigned char *modDir = recomp_get_mod_folder_path();
 
         PMMZobj_setPMMDir(modDir);
 

@@ -40,7 +40,7 @@ extern "C" {
 }
 
 // Check if zobj is standalone.
-// Moodifies stream input position.
+// Modifies stream input position.
 bool isValidStandaloneZobj(std::ifstream &f) {
     if (!f) {
         return false;
@@ -87,7 +87,7 @@ bool isValidStandaloneZobj(std::ifstream &f) {
 }
 
 RECOMP_DLL_FUNC(PMMZobj_setPMMDir) {
-    sPMMDir = RECOMP_ARG_STR(0);
+    sPMMDir = RECOMP_ARG_U8STR(0);
 
     sPMMDir = sPMMDir.parent_path() / "mod_data" / "yazmt_z64_playermodelmanager";
 
@@ -226,6 +226,10 @@ RECOMP_DLL_FUNC(PMMZobj_scanForDiskEntries) {
             }
         }
     }
+
+    std::sort(sModelDiskEntries.begin(), sModelDiskEntries.end(), [](const ModelDiskEntry &a, const ModelDiskEntry &b) {
+        return a.displayName < b.displayName;
+    });
 
     RECOMP_RETURN(int, sModelDiskEntries.size());
 }
@@ -754,7 +758,6 @@ bool extractOrLoadCachedOOTObject(uint8_t *rdram, recomp_context *ctx, unsigned 
     }
 
     if (isRomLoaded()) {
-
         auto obj = extractZ64Object(sZ64Rom.rom.data(), sZ64Rom.dmaStart, dmaIndex, assetChecksum, assetPath);
         if (obj.size() > 0) {
             return writeDataToRecompBuffer(rdram, ctx, rdramBuf, rdramBufSize, obj.data(), obj.size());
@@ -774,4 +777,8 @@ RECOMP_DLL_FUNC(PMMZobj_extractAdultLink) {
 
 RECOMP_DLL_FUNC(PMMZobj_extractChildLink) {
     RECOMP_RETURN(bool, extractOrLoadCachedOOTObject(rdram, ctx, 503, sPMMDir / OOT_ASSET_DIR / "object_link_child.zobj", "30f0d604b60d3c11ba7f8821e08964d6a640d225"));
+}
+
+RECOMP_DLL_FUNC(PMMZobj_extractMirrorShieldRay) {
+    RECOMP_RETURN(bool, extractOrLoadCachedOOTObject(rdram, ctx, 651, sPMMDir / OOT_ASSET_DIR / "object_mir_ray.zobj", "0ff156e2b37a6252037906599afe2533f1d9dcf7"));
 }
