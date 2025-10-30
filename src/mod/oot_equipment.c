@@ -412,168 +412,217 @@ extern Mtx gLinkHumanMirrorShieldMtx;
 extern Mtx gLinkHumanHerosShieldMtx;
 
 void addEquipmentToModelManager() {
-    PlayerModelManagerHandle h;
-    
     // Mirror Shield (OOT)
-    h = PLAYERMODELMANAGER_REGISTER_MODEL("oot_mirror_shield3_a", PMM_MODEL_TYPE_SHIELD_MIRROR);
-    PlayerModelManager_setDisplayName(h, "Mirror Shield (OoT)");
-    PlayerModelManager_setAuthor(h, "Nintendo");
-    PlayerModelManager_setMatrix(h, PMM_MTX_SHIELD_MIRROR_BACK, &gOOTAdultShieldMtx);
-    PlayerModelManager_setDisplayList(h, PMM_DL_SHIELD_MIRROR, gOOTMirrorShield);
-    PlayerModelManager_setDisplayList(h, PMM_DL_SHIELD_MIRROR_RAY, gOOTMirrorShieldRay);
-    PlayerModelManager_setDisplayList(h, PMM_DL_SHIELD_MIRROR_RAY_BEAM, gOOTMirrorShieldRayBeamAdjusted);
+    {
+        PlayerModelManagerHandle h = PLAYERMODELMANAGER_REGISTER_MODEL("oot_mirror_shield3_a", PMM_MODEL_TYPE_SHIELD_MIRROR);
+        PlayerModelManager_setDisplayName(h, "Mirror Shield (OoT)");
+        PlayerModelManager_setAuthor(h, "Nintendo");
+        PlayerModelManager_setMatrix(h, PMM_MTX_SHIELD_MIRROR_BACK, &gOOTAdultShieldMtx);
+        PlayerModelManager_setDisplayList(h, PMM_DL_SHIELD_MIRROR, gOOTMirrorShield);
+        PlayerModelManager_setDisplayList(h, PMM_DL_SHIELD_MIRROR_RAY, gOOTMirrorShieldRay);
+        PlayerModelManager_setDisplayList(h, PMM_DL_SHIELD_MIRROR_RAY_BEAM, gOOTMirrorShieldRayBeamAdjusted);
+    }
 
-    h = PLAYERMODELMANAGER_REGISTER_MODEL("oot_mirror_shield3_c", PMM_MODEL_TYPE_SHIELD_MIRROR);
-    PlayerModelManager_setDisplayName(h, "Mirror Shield (OoT) (Child)");
-    PlayerModelManager_setAuthor(h, "Nintendo");
-    PlayerModelManager_setMatrix(h, PMM_MTX_SHIELD_MIRROR_BACK, SEGMENTED_TO_GLOBAL_PTR(GlobalObjects_getGlobalObject(OBJECT_LINK_CHILD), &gLinkHumanMirrorShieldMtx));
-    PlayerModelManager_setDisplayList(h, PMM_DL_SHIELD_MIRROR, gOOTMirrorShieldChild);
-    PlayerModelManager_setDisplayList(h, PMM_DL_SHIELD_MIRROR_RAY, gOOTMirrorShieldRayChild);
-    PlayerModelManager_setDisplayList(h, PMM_DL_SHIELD_MIRROR_RAY_BEAM, gOOTMirrorShieldRayBeamChild);
+    {
+        PlayerModelManagerHandle h = PLAYERMODELMANAGER_REGISTER_MODEL("oot_mirror_shield3_c", PMM_MODEL_TYPE_SHIELD_MIRROR);
+        PlayerModelManager_setDisplayName(h, "Mirror Shield (OoT) (Child)");
+        PlayerModelManager_setAuthor(h, "Nintendo");
+        PlayerModelManager_setMatrix(h, PMM_MTX_SHIELD_MIRROR_BACK, SEGMENTED_TO_GLOBAL_PTR(GlobalObjects_getGlobalObject(OBJECT_LINK_CHILD), &gLinkHumanMirrorShieldMtx));
+        PlayerModelManager_setDisplayList(h, PMM_DL_SHIELD_MIRROR, gOOTMirrorShieldChild);
+        PlayerModelManager_setDisplayList(h, PMM_DL_SHIELD_MIRROR_RAY, gOOTMirrorShieldRayChild);
+        PlayerModelManager_setDisplayList(h, PMM_DL_SHIELD_MIRROR_RAY_BEAM, gOOTMirrorShieldRayBeamChild);
+    }
 
     // Hylian Shield
-    h = PLAYERMODELMANAGER_REGISTER_MODEL("oot_hylian_shield2_a", PMM_MODEL_TYPE_SHIELD_HERO);
-    PlayerModelManager_setDisplayName(h, "Hylian Shield (OoT)");
-    PlayerModelManager_setAuthor(h, "Nintendo");
-    PlayerModelManager_setMatrix(h, PMM_MTX_SHIELD_HERO_BACK, &gOOTAdultShieldMtx);
-    PlayerModelManager_setDisplayList(h, PMM_DL_SHIELD_HERO, gOOTHylianShield);
+    {
+        PlayerModelManagerHandle h = PLAYERMODELMANAGER_REGISTER_MODEL("oot_hylian_shield2_a", PMM_MODEL_TYPE_SHIELD_HERO);
+        PlayerModelManager_setDisplayName(h, "Hylian Shield (OoT)");
+        PlayerModelManager_setAuthor(h, "Nintendo");
+        PlayerModelManager_setMatrix(h, PMM_MTX_SHIELD_HERO_BACK, &gOOTAdultShieldMtx);
+        PlayerModelManager_setDisplayList(h, PMM_DL_SHIELD_HERO, gOOTHylianShield);
+    }
 
-    h = PLAYERMODELMANAGER_REGISTER_MODEL("oot_hylian_shield2_c", PMM_MODEL_TYPE_SHIELD_HERO);
-    PlayerModelManager_setDisplayName(h, "Hylian Shield (OoT) (Child)");
-    PlayerModelManager_setAuthor(h, "Nintendo");
-    PlayerModelManager_setMatrix(h, PMM_MTX_SHIELD_HERO_BACK, SEGMENTED_TO_GLOBAL_PTR(GlobalObjects_getGlobalObject(OBJECT_LINK_CHILD), &gLinkHumanHerosShieldMtx));
-    PlayerModelManager_setDisplayList(h, PMM_DL_SHIELD_HERO, gOOTHylianShieldChild);
+    {
+        PlayerModelManagerHandle h = PLAYERMODELMANAGER_REGISTER_MODEL("oot_hylian_shield2_c", PMM_MODEL_TYPE_SHIELD_HERO);
+        PlayerModelManager_setDisplayName(h, "Hylian Shield (OoT) (Child)");
+        PlayerModelManager_setAuthor(h, "Nintendo");
+        PlayerModelManager_setMatrix(h, PMM_MTX_SHIELD_HERO_BACK, SEGMENTED_TO_GLOBAL_PTR(GlobalObjects_getGlobalObject(OBJECT_LINK_CHILD), &gLinkHumanHerosShieldMtx));
+        PlayerModelManager_setDisplayList(h, PMM_DL_SHIELD_HERO, gOOTHylianShieldChild);
+    }
 
     // Deku Shield
-    h = PLAYERMODELMANAGER_REGISTER_MODEL("oot_deku_shield2_a", PMM_MODEL_TYPE_SHIELD_HERO);
-    PlayerModelManager_setDisplayName(h, "Deku Shield (Adult)");
-    PlayerModelManager_setAuthor(h, "Nintendo");
-    PlayerModelManager_setMatrix(h, PMM_MTX_SHIELD_HERO_BACK, &gOOTAdultShieldMtx);
-    PlayerModelManager_setDisplayList(h, PMM_DL_SHIELD_HERO, gOOTDekuShieldAdult);
+    {
+        PlayerModelManagerHandle h = PLAYERMODELMANAGER_REGISTER_MODEL("oot_deku_shield2_a", PMM_MODEL_TYPE_SHIELD_HERO);
+        PlayerModelManager_setDisplayName(h, "Deku Shield (Adult)");
+        PlayerModelManager_setAuthor(h, "Nintendo");
+        PlayerModelManager_setMatrix(h, PMM_MTX_SHIELD_HERO_BACK, &gOOTAdultShieldMtx);
+        PlayerModelManager_setDisplayList(h, PMM_DL_SHIELD_HERO, gOOTDekuShieldAdult);
+    }
 
-    h = PLAYERMODELMANAGER_REGISTER_MODEL("oot_deku_shield2_c", PMM_MODEL_TYPE_SHIELD_HERO);
-    PlayerModelManager_setDisplayName(h, "Deku Shield");
-    PlayerModelManager_setAuthor(h, "Nintendo");
-    PlayerModelManager_setMatrix(h, PMM_MTX_SHIELD_HERO_BACK, &gOOTDekuShieldMtx);
-    PlayerModelManager_setDisplayList(h, PMM_DL_SHIELD_HERO, gOOTDekuShield);
+    {
+        PlayerModelManagerHandle h = PLAYERMODELMANAGER_REGISTER_MODEL("oot_deku_shield2_c", PMM_MODEL_TYPE_SHIELD_HERO);
+        PlayerModelManager_setDisplayName(h, "Deku Shield");
+        PlayerModelManager_setAuthor(h, "Nintendo");
+        PlayerModelManager_setMatrix(h, PMM_MTX_SHIELD_HERO_BACK, &gOOTDekuShieldMtx);
+        PlayerModelManager_setDisplayList(h, PMM_DL_SHIELD_HERO, gOOTDekuShield);
+    }
 
-    h = PLAYERMODELMANAGER_REGISTER_MODEL("oot_deku_shield1_a", PMM_MODEL_TYPE_SHIELD_DEKU);
-    PlayerModelManager_setDisplayName(h, "Deku Shield (Adult)");
-    PlayerModelManager_setAuthor(h, "Nintendo");
-    PlayerModelManager_setMatrix(h, PMM_MTX_SHIELD_DEKU_BACK, &gOOTAdultShieldMtx);
-    PlayerModelManager_setDisplayList(h, PMM_DL_SHIELD_DEKU, gOOTDekuShieldAdult);
+    {
+        PlayerModelManagerHandle h = PLAYERMODELMANAGER_REGISTER_MODEL("oot_deku_shield1_a", PMM_MODEL_TYPE_SHIELD_DEKU);
+        PlayerModelManager_setDisplayName(h, "Deku Shield (Adult)");
+        PlayerModelManager_setAuthor(h, "Nintendo");
+        PlayerModelManager_setMatrix(h, PMM_MTX_SHIELD_DEKU_BACK, &gOOTAdultShieldMtx);
+        PlayerModelManager_setDisplayList(h, PMM_DL_SHIELD_DEKU, gOOTDekuShieldAdult);
+    }
 
-    h = PLAYERMODELMANAGER_REGISTER_MODEL("oot_deku_shield1_c", PMM_MODEL_TYPE_SHIELD_DEKU);
-    PlayerModelManager_setDisplayName(h, "Deku Shield");
-    PlayerModelManager_setAuthor(h, "Nintendo");
-    PlayerModelManager_setMatrix(h, PMM_MTX_SHIELD_DEKU_BACK, &gOOTDekuShieldMtx);
-    PlayerModelManager_setDisplayList(h, PMM_DL_SHIELD_DEKU, gOOTDekuShield);
+    {
+        PlayerModelManagerHandle h = PLAYERMODELMANAGER_REGISTER_MODEL("oot_deku_shield1_c", PMM_MODEL_TYPE_SHIELD_DEKU);
+        PlayerModelManager_setDisplayName(h, "Deku Shield");
+        PlayerModelManager_setAuthor(h, "Nintendo");
+        PlayerModelManager_setMatrix(h, PMM_MTX_SHIELD_DEKU_BACK, &gOOTDekuShieldMtx);
+        PlayerModelManager_setDisplayList(h, PMM_DL_SHIELD_DEKU, gOOTDekuShield);
+    }
 
     // Master Sword
-    h = PLAYERMODELMANAGER_REGISTER_MODEL("oot_master_sword1_a", PMM_MODEL_TYPE_SWORD_KOKIRI);
-    PlayerModelManager_setDisplayName(h, "Master Sword");
-    PlayerModelManager_setAuthor(h, "Nintendo");
-    PlayerModelManager_setMatrix(h, PMM_MTX_SWORD_KOKIRI_BACK, &gOOTMasterSwordHiltMtx);
-    PlayerModelManager_setDisplayList(h, PMM_DL_SWORD_KOKIRI_BLADE, gOOTMasterSwordBlade);
-    PlayerModelManager_setDisplayList(h, PMM_DL_SWORD_KOKIRI_HILT, gOOTMasterSwordHilt);
-    PlayerModelManager_setDisplayList(h, PMM_DL_SWORD_KOKIRI_SHEATH, gOOTMasterSwordSheath);
+    {
+        PlayerModelManagerHandle h = PLAYERMODELMANAGER_REGISTER_MODEL("oot_master_sword1_a", PMM_MODEL_TYPE_SWORD_KOKIRI);
+        PlayerModelManager_setDisplayName(h, "Master Sword");
+        PlayerModelManager_setAuthor(h, "Nintendo");
+        PlayerModelManager_setMatrix(h, PMM_MTX_SWORD_KOKIRI_BACK, &gOOTMasterSwordHiltMtx);
+        PlayerModelManager_setDisplayList(h, PMM_DL_SWORD_KOKIRI_BLADE, gOOTMasterSwordBlade);
+        PlayerModelManager_setDisplayList(h, PMM_DL_SWORD_KOKIRI_HILT, gOOTMasterSwordHilt);
+        PlayerModelManager_setDisplayList(h, PMM_DL_SWORD_KOKIRI_SHEATH, gOOTMasterSwordSheath);
+    }
 
-    h = PLAYERMODELMANAGER_REGISTER_MODEL("oot_master_sword2_a", PMM_MODEL_TYPE_SWORD_RAZOR);
-    PlayerModelManager_setDisplayName(h, "Master Sword");
-    PlayerModelManager_setAuthor(h, "Nintendo");
-    PlayerModelManager_setMatrix(h, PMM_MTX_SWORD_RAZOR_BACK, &gOOTMasterSwordHiltMtx);
-    PlayerModelManager_setDisplayList(h, PMM_DL_SWORD_RAZOR_BLADE, gOOTMasterSwordBlade);
-    PlayerModelManager_setDisplayList(h, PMM_DL_SWORD_RAZOR_HILT, gOOTMasterSwordHilt);
-    PlayerModelManager_setDisplayList(h, PMM_DL_SWORD_RAZOR_SHEATH, gOOTMasterSwordSheath);
+    {
+        PlayerModelManagerHandle h = PLAYERMODELMANAGER_REGISTER_MODEL("oot_master_sword2_a", PMM_MODEL_TYPE_SWORD_RAZOR);
+        PlayerModelManager_setDisplayName(h, "Master Sword");
+        PlayerModelManager_setAuthor(h, "Nintendo");
+        PlayerModelManager_setMatrix(h, PMM_MTX_SWORD_RAZOR_BACK, &gOOTMasterSwordHiltMtx);
+        PlayerModelManager_setDisplayList(h, PMM_DL_SWORD_RAZOR_BLADE, gOOTMasterSwordBlade);
+        PlayerModelManager_setDisplayList(h, PMM_DL_SWORD_RAZOR_HILT, gOOTMasterSwordHilt);
+        PlayerModelManager_setDisplayList(h, PMM_DL_SWORD_RAZOR_SHEATH, gOOTMasterSwordSheath);
+    }
 
-    h = PLAYERMODELMANAGER_REGISTER_MODEL("oot_master_sword3_a", PMM_MODEL_TYPE_SWORD_GILDED);
-    PlayerModelManager_setDisplayName(h, "Master Sword");
-    PlayerModelManager_setAuthor(h, "Nintendo");
-    PlayerModelManager_setMatrix(h, PMM_MTX_SWORD_GILDED_BACK, &gOOTMasterSwordHiltMtx);
-    PlayerModelManager_setDisplayList(h, PMM_DL_SWORD_GILDED_BLADE, gOOTMasterSwordBlade);
-    PlayerModelManager_setDisplayList(h, PMM_DL_SWORD_GILDED_HILT, gOOTMasterSwordHilt);
-    PlayerModelManager_setDisplayList(h, PMM_DL_SWORD_GILDED_SHEATH, gOOTMasterSwordSheath);
+    {
+        PlayerModelManagerHandle h = PLAYERMODELMANAGER_REGISTER_MODEL("oot_master_sword3_a", PMM_MODEL_TYPE_SWORD_GILDED);
+        PlayerModelManager_setDisplayName(h, "Master Sword");
+        PlayerModelManager_setAuthor(h, "Nintendo");
+        PlayerModelManager_setMatrix(h, PMM_MTX_SWORD_GILDED_BACK, &gOOTMasterSwordHiltMtx);
+        PlayerModelManager_setDisplayList(h, PMM_DL_SWORD_GILDED_BLADE, gOOTMasterSwordBlade);
+        PlayerModelManager_setDisplayList(h, PMM_DL_SWORD_GILDED_HILT, gOOTMasterSwordHilt);
+        PlayerModelManager_setDisplayList(h, PMM_DL_SWORD_GILDED_SHEATH, gOOTMasterSwordSheath);
+    }
 
     // Kokiri Sword (OOT)
-    h = PLAYERMODELMANAGER_REGISTER_MODEL("oot_kokiri_sword1_c", PMM_MODEL_TYPE_SWORD_KOKIRI);
-    PlayerModelManager_setDisplayName(h, "Kokiri Sword (OoT)");
-    PlayerModelManager_setAuthor(h, "Nintendo");
-    PlayerModelManager_setMatrix(h, PMM_MTX_SWORD_KOKIRI_BACK, &gOOTKokiriSwordHiltMtx);
-    PlayerModelManager_setDisplayList(h, PMM_DL_SWORD_KOKIRI_BLADE, gOOTKokiriSwordBlade);
-    PlayerModelManager_setDisplayList(h, PMM_DL_SWORD_KOKIRI_HILT, gOOTKokiriSwordHilt);
-    PlayerModelManager_setDisplayList(h, PMM_DL_SWORD_KOKIRI_SHEATH, gOOTKokiriSwordSheath);
+    {
+        PlayerModelManagerHandle h = PLAYERMODELMANAGER_REGISTER_MODEL("oot_kokiri_sword1_c", PMM_MODEL_TYPE_SWORD_KOKIRI);
+        PlayerModelManager_setDisplayName(h, "Kokiri Sword (OoT)");
+        PlayerModelManager_setAuthor(h, "Nintendo");
+        PlayerModelManager_setMatrix(h, PMM_MTX_SWORD_KOKIRI_BACK, &gOOTKokiriSwordHiltMtx);
+        PlayerModelManager_setDisplayList(h, PMM_DL_SWORD_KOKIRI_BLADE, gOOTKokiriSwordBlade);
+        PlayerModelManager_setDisplayList(h, PMM_DL_SWORD_KOKIRI_HILT, gOOTKokiriSwordHilt);
+        PlayerModelManager_setDisplayList(h, PMM_DL_SWORD_KOKIRI_SHEATH, gOOTKokiriSwordSheath);
+    }
+
 
     // Biggoron Sword
-    h = PLAYERMODELMANAGER_REGISTER_MODEL("oot_biggoron_sword5_a", PMM_MODEL_TYPE_SWORD_GREAT_FAIRY);
-    PlayerModelManager_setDisplayName(h, "Biggoron Sword");
-    PlayerModelManager_setAuthor(h, "Nintendo");
-    PlayerModelManager_setMatrix(h, PMM_MTX_SWORD5_BACK, &gOOTMasterSwordHiltMtx);
-    PlayerModelManager_setDisplayList(h, PMM_DL_SWORD_GREAT_FAIRY_BLADE, gOOTBiggoronSwordBlade);
-    PlayerModelManager_setDisplayList(h, PMM_DL_SWORD_GREAT_FAIRY_HILT, gOOTBiggoronSwordHilt);
-    PlayerModelManager_setDisplayList(h, PMM_DL_SWORD5_SHEATH, gOOTMasterSwordSheath);
+    {
+        PlayerModelManagerHandle h = PLAYERMODELMANAGER_REGISTER_MODEL("oot_biggoron_sword5_a", PMM_MODEL_TYPE_SWORD_GREAT_FAIRY);
+        PlayerModelManager_setDisplayName(h, "Biggoron Sword");
+        PlayerModelManager_setAuthor(h, "Nintendo");
+        PlayerModelManager_setMatrix(h, PMM_MTX_SWORD5_BACK, &gOOTMasterSwordHiltMtx);
+        PlayerModelManager_setDisplayList(h, PMM_DL_SWORD_GREAT_FAIRY_BLADE, gOOTBiggoronSwordBlade);
+        PlayerModelManager_setDisplayList(h, PMM_DL_SWORD_GREAT_FAIRY_HILT, gOOTBiggoronSwordHilt);
+        PlayerModelManager_setDisplayList(h, PMM_DL_SWORD5_SHEATH, gOOTMasterSwordSheath);
+    }
 
-    h = PLAYERMODELMANAGER_REGISTER_MODEL("oot_biggoron_sword4_a", PMM_MODEL_TYPE_SWORD_FIERCE_DIETY);
-    PlayerModelManager_setDisplayName(h, "Biggoron Sword");
-    PlayerModelManager_setAuthor(h, "Nintendo");
-    PlayerModelManager_setMatrix(h, PMM_MTX_SWORD4_BACK, &gOOTMasterSwordHiltMtx);
-    PlayerModelManager_setDisplayList(h, PMM_DL_SWORD_FIERCE_DEITY_BLADE, gOOTBiggoronSwordBlade);
-    PlayerModelManager_setDisplayList(h, PMM_DL_SWORD_FIERCE_DEITY_HILT, gOOTBiggoronSwordHilt);
-    PlayerModelManager_setDisplayList(h, PMM_DL_SWORD4_SHEATH, gOOTMasterSwordSheath);
+    {
+        PlayerModelManagerHandle h = PLAYERMODELMANAGER_REGISTER_MODEL("oot_biggoron_sword4_a", PMM_MODEL_TYPE_SWORD_FIERCE_DIETY);
+        PlayerModelManager_setDisplayName(h, "Biggoron Sword");
+        PlayerModelManager_setAuthor(h, "Nintendo");
+        PlayerModelManager_setMatrix(h, PMM_MTX_SWORD4_BACK, &gOOTMasterSwordHiltMtx);
+        PlayerModelManager_setDisplayList(h, PMM_DL_SWORD_FIERCE_DEITY_BLADE, gOOTBiggoronSwordBlade);
+        PlayerModelManager_setDisplayList(h, PMM_DL_SWORD_FIERCE_DEITY_HILT, gOOTBiggoronSwordHilt);
+        PlayerModelManager_setDisplayList(h, PMM_DL_SWORD4_SHEATH, gOOTMasterSwordSheath);
+    }
+
 
     // Hookshot (OOT)
-    h = PLAYERMODELMANAGER_REGISTER_MODEL("oot_hookshot_a", PMM_MODEL_TYPE_HOOKSHOT);
-    PlayerModelManager_setDisplayName(h, "Hookshot (OoT)");
-    PlayerModelManager_setAuthor(h, "Nintendo");
-    PlayerModelManager_setMatrix(h, PMM_MTX_HOOKSHOT_CHAIN_AND_HOOK, &gOOTHookshotHookAndChainMtx);
-    PlayerModelManager_setDisplayList(h, PMM_DL_HOOKSHOT, gOOTHookshot);
-    PlayerModelManager_setDisplayList(h, PMM_DL_FPS_HOOKSHOT, gOOTHookshotFirstPerson);
-    PlayerModelManager_setDisplayList(h, PMM_DL_HOOKSHOT_CHAIN, gOOTHookshotChain);
-    PlayerModelManager_setDisplayList(h, PMM_DL_HOOKSHOT_HOOK, gOOTHookshotHook);
+    {
+        PlayerModelManagerHandle h = PLAYERMODELMANAGER_REGISTER_MODEL("oot_hookshot_a", PMM_MODEL_TYPE_HOOKSHOT);
+        PlayerModelManager_setDisplayName(h, "Hookshot (OoT)");
+        PlayerModelManager_setAuthor(h, "Nintendo");
+        PlayerModelManager_setMatrix(h, PMM_MTX_HOOKSHOT_CHAIN_AND_HOOK, &gOOTHookshotHookAndChainMtx);
+        PlayerModelManager_setDisplayList(h, PMM_DL_HOOKSHOT, gOOTHookshot);
+        PlayerModelManager_setDisplayList(h, PMM_DL_FPS_HOOKSHOT, gOOTHookshotFirstPerson);
+        PlayerModelManager_setDisplayList(h, PMM_DL_HOOKSHOT_CHAIN, gOOTHookshotChain);
+        PlayerModelManager_setDisplayList(h, PMM_DL_HOOKSHOT_HOOK, gOOTHookshotHook);
+    }
 
-    h = PLAYERMODELMANAGER_REGISTER_MODEL("oot_hookshot_c", PMM_MODEL_TYPE_HOOKSHOT);
-    PlayerModelManager_setDisplayName(h, "Hookshot (OoT) (Child)");
-    PlayerModelManager_setAuthor(h, "Nintendo");
-    PlayerModelManager_setMatrix(h, PMM_MTX_HOOKSHOT_CHAIN_AND_HOOK, &gOOTHookshotHookAndChainChildMtx);
-    PlayerModelManager_setDisplayList(h, PMM_DL_HOOKSHOT, gOOTHookshotChild);
-    PlayerModelManager_setDisplayList(h, PMM_DL_FPS_HOOKSHOT, gOOTHookshotFirstPersonChild);
-    PlayerModelManager_setDisplayList(h, PMM_DL_HOOKSHOT_CHAIN, gOOTHookshotChain);
-    PlayerModelManager_setDisplayList(h, PMM_DL_HOOKSHOT_HOOK, gOOTHookshotHookChild);
+    {
+        PlayerModelManagerHandle h = PLAYERMODELMANAGER_REGISTER_MODEL("oot_hookshot_c", PMM_MODEL_TYPE_HOOKSHOT);
+        PlayerModelManager_setDisplayName(h, "Hookshot (OoT) (Child)");
+        PlayerModelManager_setAuthor(h, "Nintendo");
+        PlayerModelManager_setMatrix(h, PMM_MTX_HOOKSHOT_CHAIN_AND_HOOK, &gOOTHookshotHookAndChainChildMtx);
+        PlayerModelManager_setDisplayList(h, PMM_DL_HOOKSHOT, gOOTHookshotChild);
+        PlayerModelManager_setDisplayList(h, PMM_DL_FPS_HOOKSHOT, gOOTHookshotFirstPersonChild);
+        PlayerModelManager_setDisplayList(h, PMM_DL_HOOKSHOT_CHAIN, gOOTHookshotChain);
+        PlayerModelManager_setDisplayList(h, PMM_DL_HOOKSHOT_HOOK, gOOTHookshotHookChild);
+    }
+
 
     // Bottle (OOT)
-    h = PLAYERMODELMANAGER_REGISTER_MODEL("oot_bottle_a", PMM_MODEL_TYPE_BOTTLE);
-    PlayerModelManager_setDisplayName(h, "Bottle (OoT) (Adult)");
-    PlayerModelManager_setAuthor(h, "Nintendo");
-    PlayerModelManager_setDisplayList(h, PMM_DL_BOTTLE_GLASS, gOOTBottleAdult);
-    PlayerModelManager_setDisplayList(h, PMM_DL_BOTTLE_CONTENTS, gEmptyDL);
+    {
+        PlayerModelManagerHandle h = PLAYERMODELMANAGER_REGISTER_MODEL("oot_bottle_a", PMM_MODEL_TYPE_BOTTLE);
+        PlayerModelManager_setDisplayName(h, "Bottle (OoT) (Adult)");
+        PlayerModelManager_setAuthor(h, "Nintendo");
+        PlayerModelManager_setDisplayList(h, PMM_DL_BOTTLE_GLASS, gOOTBottleAdult);
+        PlayerModelManager_setDisplayList(h, PMM_DL_BOTTLE_CONTENTS, gEmptyDL);
+    }
 
-    h = PLAYERMODELMANAGER_REGISTER_MODEL("oot_bottle_c", PMM_MODEL_TYPE_BOTTLE);
-    PlayerModelManager_setDisplayName(h, "Bottle (OoT) (Child)");
-    PlayerModelManager_setAuthor(h, "Nintendo");
-    PlayerModelManager_setDisplayList(h, PMM_DL_BOTTLE_GLASS, gOOTBottleChild);
-    PlayerModelManager_setDisplayList(h, PMM_DL_BOTTLE_CONTENTS, gEmptyDL);
+    {
+        PlayerModelManagerHandle h = PLAYERMODELMANAGER_REGISTER_MODEL("oot_bottle_c", PMM_MODEL_TYPE_BOTTLE);
+        PlayerModelManager_setDisplayName(h, "Bottle (OoT) (Child)");
+        PlayerModelManager_setAuthor(h, "Nintendo");
+        PlayerModelManager_setDisplayList(h, PMM_DL_BOTTLE_GLASS, gOOTBottleChild);
+        PlayerModelManager_setDisplayList(h, PMM_DL_BOTTLE_CONTENTS, gEmptyDL);
+    }
+
 
     // Bow (OOT)
-    h = PLAYERMODELMANAGER_REGISTER_MODEL("oot_bow_a", PMM_MODEL_TYPE_BOW);
-    PlayerModelManager_setDisplayName(h, "Bow (OoT)");
-    PlayerModelManager_setAuthor(h, "Nintendo");
-    PlayerModelManager_setDisplayList(h, PMM_DL_BOW, gOOTBow);
-    PlayerModelManager_setDisplayList(h, PMM_DL_FPS_BOW, gOOTBowFirstPerson);
-    PlayerModelManager_setDisplayList(h, PMM_DL_BOW_STRING, gOOTBowString);
+    {
+        PlayerModelManagerHandle h = PLAYERMODELMANAGER_REGISTER_MODEL("oot_bow_a", PMM_MODEL_TYPE_BOW);
+        PlayerModelManager_setDisplayName(h, "Bow (OoT)");
+        PlayerModelManager_setAuthor(h, "Nintendo");
+        PlayerModelManager_setDisplayList(h, PMM_DL_BOW, gOOTBow);
+        PlayerModelManager_setDisplayList(h, PMM_DL_FPS_BOW, gOOTBowFirstPerson);
+        PlayerModelManager_setDisplayList(h, PMM_DL_BOW_STRING, gOOTBowString);
+    }
+
 
     // Fairy Ocarina
-    h = PLAYERMODELMANAGER_REGISTER_MODEL("oot_ocarina1_fairy_c", PMM_MODEL_TYPE_OCARINA_FAIRY);
-    PlayerModelManager_setDisplayName(h, "Fairy Ocarina");
-    PlayerModelManager_setAuthor(h, "Nintendo");
-    PlayerModelManager_setDisplayList(h, PMM_DL_OCARINA_FAIRY, gOOTFairyOcarina);
+    {
+        PlayerModelManagerHandle h = PLAYERMODELMANAGER_REGISTER_MODEL("oot_ocarina1_fairy_c", PMM_MODEL_TYPE_OCARINA_FAIRY);
+        PlayerModelManager_setDisplayName(h, "Fairy Ocarina");
+        PlayerModelManager_setAuthor(h, "Nintendo");
+        PlayerModelManager_setDisplayList(h, PMM_DL_OCARINA_FAIRY, gOOTFairyOcarina);
+    }
 
-    h = PLAYERMODELMANAGER_REGISTER_MODEL("oot_ocarina2_fairy_c", PMM_MODEL_TYPE_OCARINA_TIME);
-    PlayerModelManager_setDisplayName(h, "Fairy Ocarina");
-    PlayerModelManager_setAuthor(h, "Nintendo");
-    PlayerModelManager_setDisplayList(h, PMM_DL_OCARINA_TIME, gOOTFairyOcarina);
+    {
+        PlayerModelManagerHandle h = PLAYERMODELMANAGER_REGISTER_MODEL("oot_ocarina2_fairy_c", PMM_MODEL_TYPE_OCARINA_TIME);
+        PlayerModelManager_setDisplayName(h, "Fairy Ocarina");
+        PlayerModelManager_setAuthor(h, "Nintendo");
+        PlayerModelManager_setDisplayList(h, PMM_DL_OCARINA_TIME, gOOTFairyOcarina);
+    }
+
 
     // Deku Stick (OOT)
-    h = PLAYERMODELMANAGER_REGISTER_MODEL("oot_deku_stick_c", PMM_MODEL_TYPE_DEKU_STICK);
-    PlayerModelManager_setDisplayName(h, "Deku Stick (OoT)");
-    PlayerModelManager_setAuthor(h, "Nintendo");
-    PlayerModelManager_setDisplayList(h, PMM_DL_DEKU_STICK, gOOTDekuStick);
+    {
+        PlayerModelManagerHandle h = PLAYERMODELMANAGER_REGISTER_MODEL("oot_deku_stick_c", PMM_MODEL_TYPE_DEKU_STICK);
+        PlayerModelManager_setDisplayName(h, "Deku Stick (OoT)");
+        PlayerModelManager_setAuthor(h, "Nintendo");
+        PlayerModelManager_setDisplayList(h, PMM_DL_DEKU_STICK, gOOTDekuStick);
+    }
+
 }
