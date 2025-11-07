@@ -584,7 +584,7 @@ bool unloadOOTRom() {
 
 bool tryLoadOOTRom() {
     if (sPMMDir == "") {
-        std::cout << "PlayerModelManager_FSAddon: Called tryLoadOOTRom before setting PMM directory!\n";
+        std::cout << "[INFO] PlayerModelManager_FSAddon: Called tryLoadOOTRom before setting PMM directory!\n";
         return false;
     }
 
@@ -602,7 +602,7 @@ bool tryLoadOOTRom() {
     }
 
     if (romPath) {
-        std::cout << "PlayerModelManager_FSAddon: Found OoT ROM at " << romPath->string() << '\n';
+        std::cout << "[INFO] PlayerModelManager_FSAddon: Found OoT ROM at " << romPath->string() << '\n';
 
         std::string rom;
 
@@ -613,10 +613,10 @@ bool tryLoadOOTRom() {
 
         if (rom.size() > 0) {
             if (rom[0] == ROM_LITTLE_ENDIAN) {
-                std::cout << "PlayerModelManager_FSAddon: ROM is little endian (.v64)! Converting to big endian (.z64)...\n";
+                std::cout << "[INFO] PlayerModelManager_FSAddon: ROM is little endian (.v64)! Converting to big endian (.z64)...\n";
                 doLE2BE(rom);
             } else if (rom[0] == ROM_BYTESWAPPED) {
-                std::cout << "PlayerModelManager_FSAddon: ROM is byte-swapped (.n64)! Converting to big endian (.z64)...\n";
+                std::cout << "[INFO] PlayerModelManager_FSAddon: ROM is byte-swapped (.n64)! Converting to big endian (.z64)...\n";
                 doBS2BE(rom);
             }
 
@@ -628,7 +628,7 @@ bool tryLoadOOTRom() {
             auto dmaIt = DMA_DATA_OFFSETS.find(checksumStr);
 
             if (dmaIt != DMA_DATA_OFFSETS.end()) {
-                std::cout << "PlayerModelManager_FSAddon: ROM identified as " << dmaIt->second.first << '\n';
+                std::cout << "[INFO] PlayerModelManager_FSAddon: ROM identified as " << dmaIt->second.first << '\n';
 
                 sZ64Rom.dmaStart = dmaIt->second.second;
                 sZ64Rom.rom.clear();
@@ -670,7 +670,7 @@ std::vector<u8> extractZ64Object(const void *romData, unsigned dmaOffset, int dm
     size_t entrySize = entry.getUncompressedSize();
 
     if (entrySize > SIZE_OF_YAZ0_HEADER) {
-        std::cout << "PlayerModelManager_FSAddon: Extracting " << outPath.filename() << " from 0x" << std::hex << entry.physicalAddr.first << std::endl;
+        std::cout << "[INFO] PlayerModelManager_FSAddon: Extracting " << outPath.filename() << " from 0x" << std::hex << entry.physicalAddr.first << std::endl;
 
         bool isExtracted = false;
 
@@ -679,7 +679,7 @@ std::vector<u8> extractZ64Object(const void *romData, unsigned dmaOffset, int dm
         std::unique_ptr<u8> buf(new u8[entrySize]);
 
         if (entry.isCompressed()) {
-            std::cout << "PlayerModelManager_FSAddon: Extracting compressed file..." << std::endl;
+            std::cout << "[INFO] PlayerModelManager_FSAddon: Extracting compressed file..." << std::endl;
 
             size_t entrySizeCompressed = entry.getCompressedSize();
 
@@ -701,11 +701,11 @@ std::vector<u8> extractZ64Object(const void *romData, unsigned dmaOffset, int dm
                     fs::create_directories(outPath.parent_path());
                 }
 
-                std::cout << "PlayerModelManager_FSAddon: Writing DMA entry " << std::dec << dmaIndex << " to " << outPath.string() << std::endl;
+                std::cout << "[INFO] PlayerModelManager_FSAddon: Writing DMA entry " << std::dec << dmaIndex << " to " << outPath.string() << std::endl;
                 std::ofstream fsOut(outPath, std::ios::binary);
                 fsOut.write(reinterpret_cast<char *>(buf.get()), entrySize);
                 fsOut.flush();
-                std::cout << "PlayerModelManager_FSAddon: Finished writing DMA entry " << std::dec << dmaIndex << " to " << outPath.string() << std::endl;
+                std::cout << "[INFO] PlayerModelManager_FSAddon: Finished writing DMA entry " << std::dec << dmaIndex << " to " << outPath.string() << std::endl;
 
                 std::vector<u8> ret;
 
@@ -715,7 +715,7 @@ std::vector<u8> extractZ64Object(const void *romData, unsigned dmaOffset, int dm
                 }
                 return ret;
             } else {
-                std::cout << "PlayerModelManager_FSAddon: Checksum of " << outPath.filename() << " extracted from ROM did not match!" << std::endl;
+                std::cout << "[INFO] PlayerModelManager_FSAddon: Checksum of " << outPath.filename() << " extracted from ROM did not match!" << std::endl;
             }
         }
     }
@@ -729,7 +729,7 @@ bool extractOrLoadCachedOOTObject(uint8_t *rdram, recomp_context *ctx, unsigned 
     // clang-format on
 
     if (!rdramBuf) {
-        std::cout << "PlayerModelManager_FSAddon: Cannot load OOT object " << assetPath.filename() << " into NULL pointer!" << std::endl;
+        std::cout << "[INFO] PlayerModelManager_FSAddon: Cannot load OOT object " << assetPath.filename() << " into NULL pointer!" << std::endl;
         return false;
     }
 
@@ -739,7 +739,7 @@ bool extractOrLoadCachedOOTObject(uint8_t *rdram, recomp_context *ctx, unsigned 
         fs::directory_entry assetDirEnt(assetPath);
 
         if (assetDirEnt.exists() && !assetDirEnt.is_directory()) {
-            std::cout << "PlayerModelManager_FSAddon: Found cached OOT object " << assetPath.filename() << "!" << std::endl;
+            std::cout << "[INFO] PlayerModelManager_FSAddon: Found cached OOT object " << assetPath.filename() << "!" << std::endl;
 
             std::ifstream file(assetPath, std::ios::binary);
 
@@ -751,7 +751,7 @@ bool extractOrLoadCachedOOTObject(uint8_t *rdram, recomp_context *ctx, unsigned 
             if (candidateChecksum.final() == assetChecksum && writeDataToRecompBuffer(rdram, ctx, rdramBuf, rdramBufSize, assetCandidate.data(), assetCandidate.size())) {
                 return true;
             } else {
-                std::cout << "PlayerModelManager_FSAddon: Cached OOT object " << assetPath.filename() << " checksum did not match! Deleting and re-extracting..." << std::endl;
+                std::cout << "[INFO] PlayerModelManager_FSAddon: Cached OOT object " << assetPath.filename() << " checksum did not match! Deleting and re-extracting..." << std::endl;
                 file.close();
             }
         }

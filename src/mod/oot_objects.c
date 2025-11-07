@@ -132,7 +132,7 @@ void registerChildLink() {
 
         initChildEquipment();
     } else {
-        recomp_printf("PMM_FS: Could not load OOT child Link from file system!\n");
+        recomp_printf("[INFO] PMM_FS: Could not load OOT child Link from file system!\n");
         recomp_free(gLinkChildOOT);
         gLinkChildOOT = NULL;
     }
@@ -238,7 +238,7 @@ void registerAdultLink() {
 
         initAdultEquipment();
     } else {
-        recomp_printf("PMM_FS: Could not load OOT adult Link from file system!\n");
+        recomp_printf("[INFO] PMM_FS: Could not load OOT adult Link from file system!\n");
         recomp_free(gLinkAdultOOT);
         gLinkAdultOOT = NULL;
     }
