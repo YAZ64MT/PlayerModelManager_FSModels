@@ -95,6 +95,8 @@ void repointSkeletonAndDisableLOD(FlexSkeletonHeader *skel, GlobalObjectsSegment
 static PlayerModelManagerHandle sOoTChildHumanHandle = 0;
 static bool sWasChildRegisterAttempted = false;
 
+#define OOT_LINK_CHILD_RFIST_HOLDING_FAIRY_OCARINA 0x15BA8
+
 void registerChildLink() {
     if (sWasChildRegisterAttempted) {
         return;
@@ -123,6 +125,18 @@ void registerChildLink() {
         PlayerModelManager_setAuthor(h, "Nintendo");
         PlayerModelManager_setSkeleton(h, skel);
         setupFaceTextures(h, gLinkChildOOT);
+
+        // Fairy Ocarina
+        static Gfx rightHandOcarina[] = {
+            gsDPPipeSync(),
+            gsSPEndDisplayList(),
+        };
+        const uintptr_t FAIRY_OCARINA_HAND_START_PLUS_ONE = 0x15CB8 + sizeof(Gfx);
+        gSPBranchList(&rightHandOcarina[1], gLinkChildOOT + FAIRY_OCARINA_HAND_START_PLUS_ONE);
+
+        // right hand holding ocarina copy
+        GlobalObjects_rebaseDL((Gfx *)(gLinkChildOOT + FAIRY_OCARINA_HAND_START_PLUS_ONE), cLinkSegs);
+        PlayerModelManager_setDisplayList(h, PMM_DL_RHAND_OCARINA, rightHandOcarina);
 
 #define REPOINT_SET_CHILD(dloffset, pmmdl) REPOINT_AND_SET(h, pmmdl, gLinkChildOOT, dloffset, cLinkSegs)
         REPOINT_SET_CHILD(OOT_LINK_CHILD_LFIST, PMM_DL_LFIST);
