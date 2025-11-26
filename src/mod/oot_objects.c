@@ -206,12 +206,21 @@ void registerAdultLink() {
         // Unglue Ocarina of Time from hand
         const uintptr_t OCARINA_HAND_START_DRAW_OFFSET = 0x24748;
         const uintptr_t OCARINA_START_DRAW_OFFSET = 0x248D8;
+
+        // right hand holding ocarina copy
+        size_t ocarinaHandDLSize = OCARINA_START_DRAW_OFFSET - OOT_LINK_ADULT_RIGHT_HAND_AND_OCARINA + sizeof(Gfx);
+        Gfx *rightHandOcarina = recomp_alloc(ocarinaHandDLSize);
+        Lib_MemCpy(rightHandOcarina, gLinkAdultOOT + OOT_LINK_ADULT_RIGHT_HAND_AND_OCARINA, ocarinaHandDLSize);
+        gSPEndDisplayList(&rightHandOcarina[(ocarinaHandDLSize / sizeof(Gfx)) - 1]);
+        GlobalObjects_rebaseDL(rightHandOcarina, aLinkSegs);
+
         gSPBranchList(gLinkAdultOOT + OCARINA_HAND_START_DRAW_OFFSET, SEGMENT_ADDR(6, OCARINA_START_DRAW_OFFSET));
 
 #define REPOINT_SET_ADULT(dloffset, pmmdl) REPOINT_AND_SET(h, pmmdl, gLinkAdultOOT, dloffset, aLinkSegs)
         REPOINT_SET_ADULT(OOT_LINK_ADULT_LFIST, PMM_DL_LFIST);
         REPOINT_SET_ADULT(OOT_LINK_ADULT_RFIST, PMM_DL_RFIST);
         REPOINT_SET_ADULT(OOT_LINK_ADULT_BOTTLE_HAND, PMM_DL_LHAND_BOTTLE);
+        PlayerModelManager_setDisplayList(h, PMM_DL_RHAND_OCARINA, rightHandOcarina);
         REPOINT_SET_ADULT(OOT_LINK_ADULT_FPS_LEFT_HAND, PMM_DL_FPS_LHAND);
         PlayerModelManager_setDisplayList(h, PMM_DL_FPS_RHAND, sLinkAdultFirstPersonHand);
         REPOINT_SET_ADULT(OOT_LINK_ADULT_FPS_RIGHT_FOREARM, PMM_DL_FPS_RFOREARM);
