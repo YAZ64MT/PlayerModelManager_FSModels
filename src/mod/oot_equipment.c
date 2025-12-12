@@ -6,52 +6,50 @@
 #include "playermodelmanager_api.h"
 #include "oot_equipment.h"
 
-Gfx *gEmptyDLPtr = gEmptyDL;
-
-Gfx *gOOTHookshot;
-Gfx *gOOTHookshotChild;
-Gfx *gOOTHookshotFirstPerson;
-Gfx *gOOTHookshotFirstPersonChild;
-Gfx *gOOTHookshotChain;
-Gfx *gOOTHookshotHook;
-Gfx *gOOTHookshotHookChild;
-Gfx *gOOTBow;
-Gfx *gOOTBowFirstPerson;
-Gfx *gOOTBowChild;
-Gfx *gOOTBowFirstPersonChild;
-Gfx *gOOTBowStringChild;
-Gfx *gOOTBowString;
-Gfx *gOOTMirrorShield;
-Gfx *gOOTMirrorShieldChild;
-Gfx *gOOTMirrorShieldRay;
-Gfx *gOOTMirrorShieldRayChild;
-Gfx *gOOTMirrorShieldRayBeam;
-Gfx *gOOTMirrorShieldRayBeamAdjusted;
-Gfx *gOOTMirrorShieldRayBeamChild;
-Gfx *gOOTHylianShield;
-Gfx *gOOTHylianShieldChild;
-Gfx *gOOTDekuShield;
-Gfx *gOOTDekuShieldAdult;
-Gfx *gOOTMasterSwordHilt;
-Gfx *gOOTMasterSwordHiltChild;
-Gfx *gOOTMasterSwordBlade;
-Gfx *gOOTMasterSwordBladeChild;
-Gfx *gOOTMasterSwordSheath;
-Gfx *gOOTMasterSwordSheathChild;
-Gfx *gOOTKokiriSwordHilt;
-Gfx *gOOTKokiriSwordHiltAdult;
-Gfx *gOOTKokiriSwordBlade;
-Gfx *gOOTKokiriSwordBladeAdult;
-Gfx *gOOTKokiriSwordSheath;
-Gfx *gOOTKokiriSwordSheathAdult;
-Gfx *gOOTBiggoronSwordHilt;
-Gfx *gOOTBiggoronSwordHiltChild;
-Gfx *gOOTBiggoronSwordBlade;
-Gfx *gOOTBiggoronSwordBladeChild;
-Gfx *gOOTBottleAdult;
-Gfx *gOOTBottleChild;
-Gfx *gOOTDekuStick;
-Gfx *gOOTFairyOcarina;
+Gfx *gOOTHookshotDL;
+Gfx *gOOTHookshotChildDL;
+Gfx *gOOTHookshotFirstPersonDL;
+Gfx *gOOTHookshotFirstPersonChildDL;
+Gfx *gOOTHookshotChainDL;
+Gfx *gOOTHookshotHookDL;
+Gfx *gOOTHookshotHookChildDL;
+Gfx *gOOTBowDL;
+Gfx *gOOTBowFirstPersonDL;
+Gfx *gOOTBowChildDL;
+Gfx *gOOTBowFirstPersonChildDL;
+Gfx *gOOTBowStringChildDL;
+Gfx *gOOTBowStringDL;
+Gfx *gOOTMirrorShieldDL;
+Gfx *gOOTMirrorShieldChildDL;
+Gfx *gOOTMirrorShieldRayDL;
+Gfx *gOOTMirrorShieldRayChildDL;
+Gfx *gOOTMirrorShieldRayBeamDL;
+Gfx *gOOTMirrorShieldRayBeamAdjustedDL;
+Gfx *gOOTMirrorShieldRayBeamChildDL;
+Gfx *gOOTHylianShieldDL;
+Gfx *gOOTHylianShieldChildDL;
+Gfx *gOOTDekuShieldDL;
+Gfx *gOOTDekuShieldAdultDL;
+Gfx *gOOTMasterSwordHiltDL;
+Gfx *gOOTMasterSwordHiltChildDL;
+Gfx *gOOTMasterSwordBladeDL;
+Gfx *gOOTMasterSwordBladeChildDL;
+Gfx *gOOTMasterSwordSheathDL;
+Gfx *gOOTMasterSwordSheathChildDL;
+Gfx *gOOTKokiriSwordHiltDL;
+Gfx *gOOTKokiriSwordHiltAdultDL;
+Gfx *gOOTKokiriSwordBladeDL;
+Gfx *gOOTKokiriSwordBladeAdultDL;
+Gfx *gOOTKokiriSwordSheathDL;
+Gfx *gOOTKokiriSwordSheathAdultDL;
+Gfx *gOOTBiggoronSwordHiltDL;
+Gfx *gOOTBiggoronSwordHiltChildDL;
+Gfx *gOOTBiggoronSwordBladeDL;
+Gfx *gOOTBiggoronSwordBladeChildDL;
+Gfx *gOOTBottleAdultDL;
+Gfx *gOOTBottleChildDL;
+Gfx *gOOTDekuStickDL;
+Gfx *gOOTFairyOcarinaDL;
 
 Mtx gOOTAdultShieldMtx;
 Mtx gOOTHookshotHookAndChainMtx;
@@ -92,7 +90,7 @@ static bool sIsCrossEquipmentInitialized;
 #define OOT_LINK_CHILD_RFIST_HOLDING_DEKU_SHIELD 0x14440
 #define OOT_LINK_CHILD_RFIST_HOLDING_FAIRY_OCARINA 0x15BA8
 
-static Gfx sMasterSwordHilt[] = {
+static Gfx sMasterSwordHiltDL[] = {
     gsDPPipeSync(),
     gsDPSetCombineLERP(TEXEL0, 0, SHADE, 0, 0, 0, 0, 1, COMBINED, 0, PRIMITIVE, 0, 0, 0, 0, COMBINED),
     gsDPSetRenderMode(G_RM_FOG_SHADE_A, G_RM_AA_ZB_OPA_SURF2),
@@ -102,7 +100,7 @@ static Gfx sMasterSwordHilt[] = {
     gsSPNoOp(), // branch command goes here
 };
 
-static Gfx sBiggoronSwordBlade[] = {
+static Gfx sBiggoronSwordBladeDL[] = {
     gsDPPipeSync(),
     gsDPSetCombineLERP(TEXEL0, 0, SHADE, 0, 0, 0, 0, 1, COMBINED, 0, PRIMITIVE, 0, 0, 0, 0, COMBINED),
     gsDPSetRenderMode(G_RM_FOG_SHADE_A, G_RM_AA_ZB_OPA_SURF2),
@@ -111,7 +109,7 @@ static Gfx sBiggoronSwordBlade[] = {
     gsSPNoOp(), // branch command goes here
 };
 
-static Gfx sKokiriSwordHilt[] = {
+static Gfx sKokiriSwordHiltDL[] = {
     gsDPPipeSync(),
     gsDPSetTextureLUT(G_TT_RGBA16),
     gsSPTexture(0xFFFF, 0xFFFF, 0, G_TX_RENDERTILE, G_ON),
@@ -123,7 +121,7 @@ static Gfx sKokiriSwordHilt[] = {
     gsDPNoOp(), // branch goes here
 };
 
-static Gfx sKokiriSwordBlade[] = {
+static Gfx sKokiriSwordBladeDL[] = {
     gsDPPipeSync(),
     gsDPSetCombineLERP(TEXEL0, 0, SHADE, 0, 0, 0, 0, 1, COMBINED, 0, PRIMITIVE, 0, 0, 0, 0, COMBINED),
     gsDPSetRenderMode(G_RM_FOG_SHADE_A, G_RM_AA_ZB_OPA_SURF2),
@@ -141,122 +139,122 @@ static Gfx sKokiriSwordBlade[] = {
         gsSPEndDisplayList(),                                           \
     }
 
-static Gfx sCallMasterSwordHilt[] = {
+static Gfx sCallMasterSwordHiltDL[] = {
     gsSPEndDisplayList(),
 };
 
-DECLARE_STATIC_MATRIX_WRAPPED_DL(sMasterSwordHiltChild, sMasterSwordHiltChildResizer, sCallMasterSwordHilt);
+DECLARE_STATIC_MATRIX_WRAPPED_DL(sMasterSwordHiltChildDL, sMasterSwordHiltChildResizerMtx, sCallMasterSwordHiltDL);
 
-static Gfx sCallMasterSwordBlade[] = {
+static Gfx sCallMasterSwordBladeDL[] = {
     gsSPEndDisplayList(),
 };
 
-DECLARE_STATIC_MATRIX_WRAPPED_DL(sMasterSwordBladeChild, sMasterSwordBladeChildResizer, sCallMasterSwordBlade);
+DECLARE_STATIC_MATRIX_WRAPPED_DL(sMasterSwordBladeChildDL, sMasterSwordBladeChildResizerMtx, sCallMasterSwordBladeDL);
 
-static Gfx sCallMasterSwordSheath[] = {
+static Gfx sCallMasterSwordSheathDL[] = {
     gsSPEndDisplayList(),
 };
 
-DECLARE_STATIC_MATRIX_WRAPPED_DL(sMasterSwordSheathChild, sMasterSwordSheathChildResizer, sCallMasterSwordSheath);
+DECLARE_STATIC_MATRIX_WRAPPED_DL(sMasterSwordSheathChildDL, sMasterSwordSheathChildResizerMtx, sCallMasterSwordSheathDL);
 
-static Gfx sCallKokiriSwordHilt[] = {
+static Gfx sCallKokiriSwordHiltDL[] = {
     gsSPEndDisplayList(),
 };
 
-DECLARE_STATIC_MATRIX_WRAPPED_DL(sKokiriSwordHiltAdult, sKokiriSwordHiltAdultResizer, sCallKokiriSwordHilt);
+DECLARE_STATIC_MATRIX_WRAPPED_DL(sKokiriSwordHiltAdultDL, sKokiriSwordHiltAdultResizerMtx, sCallKokiriSwordHiltDL);
 
-static Gfx sCallKokiriSwordBlade[] = {
+static Gfx sCallKokiriSwordBladeDL[] = {
     gsSPEndDisplayList(),
 };
 
-DECLARE_STATIC_MATRIX_WRAPPED_DL(sKokiriSwordBladeAdult, sKokiriSwordBladeAdultResizer, sCallKokiriSwordBlade);
+DECLARE_STATIC_MATRIX_WRAPPED_DL(sKokiriSwordBladeAdultDL, sKokiriSwordBladeAdultResizerMtx, sCallKokiriSwordBladeDL);
 
-static Gfx sCallKokiriSwordSheath[] = {
+static Gfx sCallKokiriSwordSheathDL[] = {
     gsSPEndDisplayList(),
 };
 
-DECLARE_STATIC_MATRIX_WRAPPED_DL(sKokiriSwordSheathAdult, sKokiriSwordSheathAdultResizer, sCallKokiriSwordSheath);
+DECLARE_STATIC_MATRIX_WRAPPED_DL(sKokiriSwordSheathAdultDL, sKokiriSwordSheathAdultResizerMtx, sCallKokiriSwordSheathDL);
 
-static Gfx sCallBiggoronSwordHilt[] = {
+static Gfx sCallBiggoronSwordHiltDL[] = {
     gsSPEndDisplayList(),
 };
 
-DECLARE_STATIC_MATRIX_WRAPPED_DL(sBiggoronSwordHiltChild, sBiggoronSwordHiltChildResizer, sCallBiggoronSwordHilt);
+DECLARE_STATIC_MATRIX_WRAPPED_DL(sBiggoronSwordHiltChildDL, sBiggoronSwordHiltChildResizerMtx, sCallBiggoronSwordHiltDL);
 
-static Gfx sCallBiggoronSwordBlade[] = {
+static Gfx sCallBiggoronSwordBladeDL[] = {
     gsSPEndDisplayList(),
 };
 
-DECLARE_STATIC_MATRIX_WRAPPED_DL(sBiggoronSwordBladeChild, sBiggoronSwordBladeChildResizer, sCallBiggoronSwordBlade);
+DECLARE_STATIC_MATRIX_WRAPPED_DL(sBiggoronSwordBladeChildDL, sBiggoronSwordBladeChildResizerMtx, sCallBiggoronSwordBladeDL);
 
-static Gfx sCallHylianShield[] = {
+static Gfx sCallHylianShieldDL[] = {
     gsSPEndDisplayList(),
 };
 
-DECLARE_STATIC_MATRIX_WRAPPED_DL(sHylianShieldChild, sHylianShieldResizer, sCallHylianShield);
+DECLARE_STATIC_MATRIX_WRAPPED_DL(sHylianShieldChildDL, sHylianShieldResizerMtx, sCallHylianShieldDL);
 
-static Gfx sCallMirrorShield[] = {
+static Gfx sCallMirrorShieldDL[] = {
     gsSPEndDisplayList(),
 };
 
-DECLARE_STATIC_MATRIX_WRAPPED_DL(sMirrorShieldChild, sMirrorShieldResizer, sCallMirrorShield);
+DECLARE_STATIC_MATRIX_WRAPPED_DL(sMirrorShieldChildDL, sMirrorShieldResizerMtx, sCallMirrorShieldDL);
 
-static Gfx sCallMirrorShieldRay[] = {
+static Gfx sCallMirrorShieldRayDL[] = {
     gsSPEndDisplayList(),
 };
 
-DECLARE_STATIC_MATRIX_WRAPPED_DL(sMirrorShieldRayChild, sMirrorShieldRayResizer, sCallMirrorShieldRay);
+DECLARE_STATIC_MATRIX_WRAPPED_DL(sMirrorShieldRayChildDL, sMirrorShieldRayResizerMtx, sCallMirrorShieldRayDL);
 
-static Gfx sCallMirrorShieldRayBeam[] = {
+static Gfx sCallMirrorShieldRayBeamDL[] = {
     gsSPEndDisplayList(),
     gsSPEndDisplayList(),
     gsSPEndDisplayList(),
     gsSPEndDisplayList(),
 };
 
-DECLARE_STATIC_MATRIX_WRAPPED_DL(sMirrorShieldRayBeamChild, sMirrorShieldRayBeamResizer, sCallMirrorShieldRayBeam);
+DECLARE_STATIC_MATRIX_WRAPPED_DL(sMirrorShieldRayBeamChildDL, sMirrorShieldRayBeamResizerMtx, sCallMirrorShieldRayBeamDL);
 
-static Gfx sCallHookshot[] = {
+static Gfx sCallHookshotDL[] = {
     gsSPEndDisplayList(),
 };
 
-DECLARE_STATIC_MATRIX_WRAPPED_DL(sHookshotChild, sHookshotResizer, sCallHookshot);
+DECLARE_STATIC_MATRIX_WRAPPED_DL(sHookshotChildDL, sHookshotResizerMtx, sCallHookshotDL);
 
-static Gfx sCallHookshotHook[] = {
+static Gfx sCallHookshotHookDL[] = {
     gsSPEndDisplayList(),
 };
 
-DECLARE_STATIC_MATRIX_WRAPPED_DL(sHookshotHookChild, sHookshotHookResizer, sCallHookshotHook);
+DECLARE_STATIC_MATRIX_WRAPPED_DL(sHookshotHookChildDL, sHookshotHookResizerMtx, sCallHookshotHookDL);
 
-static Gfx sCallHookshotFirstPerson[] = {
+static Gfx sCallHookshotFirstPersonDL[] = {
     gsSPEndDisplayList(),
 };
 
-DECLARE_STATIC_MATRIX_WRAPPED_DL(sHookshotFirstPersonChild, sHookshotFirstPersonResizer, sCallHookshotFirstPerson);
+DECLARE_STATIC_MATRIX_WRAPPED_DL(sHookshotFirstPersonChildDL, sHookshotFirstPersonResizerMtx, sCallHookshotFirstPersonDL);
 
-static Gfx sCallBow[] = {
+static Gfx sCallBowDL[] = {
     gsSPEndDisplayList(),
 };
 
-DECLARE_STATIC_MATRIX_WRAPPED_DL(sBowChild, sBowChildResizer, sCallBow);
+DECLARE_STATIC_MATRIX_WRAPPED_DL(sBowChildDL, sBowChildResizerMtx, sCallBowDL);
 
-static Gfx sCallBowFirstPerson[] = {
+static Gfx sCallBowFirstPersonDL[] = {
     gsSPEndDisplayList(),
 };
 
-DECLARE_STATIC_MATRIX_WRAPPED_DL(sBowFirstPersonChild, sBowFirstPersonChildResizer, sCallBowFirstPerson);
+DECLARE_STATIC_MATRIX_WRAPPED_DL(sBowFirstPersonChildDL, sBowFirstPersonChildResizerMtx, sCallBowFirstPersonDL);
 
-static Gfx sCallBowString[] = {
+static Gfx sCallBowStringDL[] = {
     gsSPEndDisplayList(),
 };
 
-DECLARE_STATIC_MATRIX_WRAPPED_DL(sBowStringChild, sBowStringChildResizer, sCallBowString);
+DECLARE_STATIC_MATRIX_WRAPPED_DL(sBowStringChildDL, sBowStringChildResizerMtx, sCallBowStringDL);
 
-static Gfx sCallDekuShield[] = {
+static Gfx sCallDekuShieldDL[] = {
     gsSPEndDisplayList(),
 };
 
-DECLARE_STATIC_MATRIX_WRAPPED_DL(sDekuShieldAdult, sDekuShieldAdultResizer, sCallDekuShield);
+DECLARE_STATIC_MATRIX_WRAPPED_DL(sDekuShieldAdult, sDekuShieldAdultResizer, sCallDekuShieldDL);
 
 #define ADULT_SWORD_TO_CHILD_SCALE 0.9f
 #define ADULT_SWORD_TO_CHILD_X 30.f
@@ -273,102 +271,102 @@ void initCrossAgeEquipment() {
     sIsCrossEquipmentInitialized = true;
 
     // Child Hylian Shield
-    gSPBranchList(sCallHylianShield, gOOTHylianShield);
-    guPosition(&sHylianShieldResizer, 0.f, 0.f, 0.f, 0.8f, 0.f, 0.f, 0.f);
-    gOOTHylianShieldChild = sHylianShieldChild;
+    gSPBranchList(sCallHylianShieldDL, gOOTHylianShieldDL);
+    guPosition(&sHylianShieldResizerMtx, 0.f, 0.f, 0.f, 0.8f, 0.f, 0.f, 0.f);
+    gOOTHylianShieldChildDL = sHylianShieldChildDL;
 
     // Child Mirror Shield
-    gSPBranchList(sCallMirrorShield, gOOTMirrorShield);
-    guPosition(&sMirrorShieldResizer, 0.f, 0.f, 0.f, 0.77f, 0.f, 0.f, 0.f);
-    gOOTMirrorShieldChild = sMirrorShieldChild;
+    gSPBranchList(sCallMirrorShieldDL, gOOTMirrorShieldDL);
+    guPosition(&sMirrorShieldResizerMtx, 0.f, 0.f, 0.f, 0.77f, 0.f, 0.f, 0.f);
+    gOOTMirrorShieldChildDL = sMirrorShieldChildDL;
 
     if (gMirRayOOT) {
-        gSPBranchList(sCallMirrorShieldRay, gOOTMirrorShieldRay);
-        guPosition(&sMirrorShieldRayResizer, 0.f, 0.f, 0.f, 0.77f, 0.f, 0.f, 0.f);
-        gOOTMirrorShieldRayChild = sMirrorShieldRayChild;
+        gSPBranchList(sCallMirrorShieldRayDL, gOOTMirrorShieldRayDL);
+        guPosition(&sMirrorShieldRayResizerMtx, 0.f, 0.f, 0.f, 0.77f, 0.f, 0.f, 0.f);
+        gOOTMirrorShieldRayChildDL = sMirrorShieldRayChildDL;
 
         // Beam is always scaled by 5 in OoT
         static Mtx beamAdjuster;
         guMtxIdent(&beamAdjuster);
         guScale(&beamAdjuster, 1.f, 1.f, 5.f);
-        gSPMatrix(&sCallMirrorShieldRayBeam[0], &beamAdjuster, G_MTX_PUSH | G_MTX_MUL | G_MTX_MODELVIEW);
-        gSPDisplayList(&sCallMirrorShieldRayBeam[1], gOOTMirrorShieldRayBeam);
-        gSPPopMatrix(&sCallMirrorShieldRayBeam[2], G_MTX_MODELVIEW);
-        gOOTMirrorShieldRayBeamAdjusted = sCallMirrorShieldRayBeam;
+        gSPMatrix(&sCallMirrorShieldRayBeamDL[0], &beamAdjuster, G_MTX_PUSH | G_MTX_MUL | G_MTX_MODELVIEW);
+        gSPDisplayList(&sCallMirrorShieldRayBeamDL[1], gOOTMirrorShieldRayBeamDL);
+        gSPPopMatrix(&sCallMirrorShieldRayBeamDL[2], G_MTX_MODELVIEW);
+        gOOTMirrorShieldRayBeamAdjustedDL = sCallMirrorShieldRayBeamDL;
 
-        guPosition(&sMirrorShieldRayBeamResizer, 0.f, 0.f, 0.f, 0.77f, 0.f, 0.f, 0.f);
-        gOOTMirrorShieldRayBeamChild = sMirrorShieldRayBeamChild;
+        guPosition(&sMirrorShieldRayBeamResizerMtx, 0.f, 0.f, 0.f, 0.77f, 0.f, 0.f, 0.f);
+        gOOTMirrorShieldRayBeamChildDL = sMirrorShieldRayBeamChildDL;
     }
 
     // Child Master Sword
-    gSPBranchList(sCallMasterSwordHilt, gOOTMasterSwordHilt);
-    guPosition(&sMasterSwordHiltChildResizer, 0.f, 0.f, 0.f, ADULT_SWORD_TO_CHILD_SCALE, ADULT_SWORD_TO_CHILD_X, ADULT_SWORD_TO_CHILD_Y, ADULT_SWORD_TO_CHILD_Z);
-    gOOTMasterSwordHiltChild = sMasterSwordHiltChild;
+    gSPBranchList(sCallMasterSwordHiltDL, gOOTMasterSwordHiltDL);
+    guPosition(&sMasterSwordHiltChildResizerMtx, 0.f, 0.f, 0.f, ADULT_SWORD_TO_CHILD_SCALE, ADULT_SWORD_TO_CHILD_X, ADULT_SWORD_TO_CHILD_Y, ADULT_SWORD_TO_CHILD_Z);
+    gOOTMasterSwordHiltChildDL = sMasterSwordHiltChildDL;
 
-    gSPBranchList(sCallMasterSwordBlade, gOOTMasterSwordBlade);
-    guPosition(&sMasterSwordBladeChildResizer, 0.f, 0.f, 0.f, ADULT_SWORD_TO_CHILD_SCALE, ADULT_SWORD_TO_CHILD_X, ADULT_SWORD_TO_CHILD_Y, ADULT_SWORD_TO_CHILD_Z);
-    gOOTMasterSwordBladeChild = sMasterSwordBladeChild;
+    gSPBranchList(sCallMasterSwordBladeDL, gOOTMasterSwordBladeDL);
+    guPosition(&sMasterSwordBladeChildResizerMtx, 0.f, 0.f, 0.f, ADULT_SWORD_TO_CHILD_SCALE, ADULT_SWORD_TO_CHILD_X, ADULT_SWORD_TO_CHILD_Y, ADULT_SWORD_TO_CHILD_Z);
+    gOOTMasterSwordBladeChildDL = sMasterSwordBladeChildDL;
 
-    gSPBranchList(sCallMasterSwordSheath, gOOTMasterSwordSheath);
-    guPosition(&sMasterSwordSheathChildResizer, 0.f, 0.f, 0.f, ADULT_SWORD_TO_CHILD_SCALE, 0.f, 0.f, 0.f);
-    gOOTMasterSwordSheathChild = sMasterSwordSheathChild;
+    gSPBranchList(sCallMasterSwordSheathDL, gOOTMasterSwordSheathDL);
+    guPosition(&sMasterSwordSheathChildResizerMtx, 0.f, 0.f, 0.f, ADULT_SWORD_TO_CHILD_SCALE, 0.f, 0.f, 0.f);
+    gOOTMasterSwordSheathChildDL = sMasterSwordSheathChildDL;
 
     guPosition(&gMasterSwordBackChildMtx, 0.f, 0.f, 0.f, 1.f, -715.f * ADULT_SWORD_TO_CHILD_SCALE - ADULT_SWORD_TO_CHILD_X, -310.f * ADULT_SWORD_TO_CHILD_SCALE - ADULT_SWORD_TO_CHILD_Y, 78.f * ADULT_SWORD_TO_CHILD_SCALE - ADULT_SWORD_TO_CHILD_Z);
 
     // Adult Kokiri Sword
-    gSPBranchList(sCallKokiriSwordHilt, gOOTKokiriSwordHilt);
-    guPosition(&sKokiriSwordHiltAdultResizer, 0.f, 0.f, 0.f, CHILD_SWORD_TO_ADULT_SCALE, 0.f, 0.f, 0.f);
-    gOOTKokiriSwordHiltAdult = sKokiriSwordHiltAdult;
+    gSPBranchList(sCallKokiriSwordHiltDL, gOOTKokiriSwordHiltDL);
+    guPosition(&sKokiriSwordHiltAdultResizerMtx, 0.f, 0.f, 0.f, CHILD_SWORD_TO_ADULT_SCALE, 0.f, 0.f, 0.f);
+    gOOTKokiriSwordHiltAdultDL = sKokiriSwordHiltAdultDL;
 
-    gSPBranchList(sCallKokiriSwordBlade, gOOTKokiriSwordBlade);
-    guPosition(&sKokiriSwordBladeAdultResizer, 0.f, 0.f, 0.f, CHILD_SWORD_TO_ADULT_SCALE, 0.f, 0.f, 0.f);
-    gOOTKokiriSwordBladeAdult = sKokiriSwordBladeAdult;
+    gSPBranchList(sCallKokiriSwordBladeDL, gOOTKokiriSwordBladeDL);
+    guPosition(&sKokiriSwordBladeAdultResizerMtx, 0.f, 0.f, 0.f, CHILD_SWORD_TO_ADULT_SCALE, 0.f, 0.f, 0.f);
+    gOOTKokiriSwordBladeAdultDL = sKokiriSwordBladeAdultDL;
 
-    gSPBranchList(sCallKokiriSwordSheath, gOOTKokiriSwordSheath);
-    guPosition(&sKokiriSwordSheathAdultResizer, 0.f, 0.f, 0.f, CHILD_SWORD_TO_ADULT_SCALE, 0.f, 0.f, 0.f);
-    gOOTKokiriSwordSheathAdult = sKokiriSwordSheathAdult;
+    gSPBranchList(sCallKokiriSwordSheathDL, gOOTKokiriSwordSheathDL);
+    guPosition(&sKokiriSwordSheathAdultResizerMtx, 0.f, 0.f, 0.f, CHILD_SWORD_TO_ADULT_SCALE, 0.f, 0.f, 0.f);
+    gOOTKokiriSwordSheathAdultDL = sKokiriSwordSheathAdultDL;
 
     guPosition(&gKokiriSwordBackAdultMtx, 0.f, 0.f, 0.f, 1.f, -440.f * CHILD_SWORD_TO_ADULT_SCALE, -211.f * CHILD_SWORD_TO_ADULT_SCALE, 0.f);
 
     // Child Biggoron Sword
-    gSPBranchList(sCallBiggoronSwordHilt, gOOTBiggoronSwordHilt);
-    guPosition(&sBiggoronSwordHiltChildResizer, 0.f, 0.f, 0.f, ADULT_SWORD_TO_CHILD_SCALE, ADULT_SWORD_TO_CHILD_X, ADULT_SWORD_TO_CHILD_Y, ADULT_SWORD_TO_CHILD_Z);
-    gOOTBiggoronSwordHiltChild = sBiggoronSwordHiltChild;
+    gSPBranchList(sCallBiggoronSwordHiltDL, gOOTBiggoronSwordHiltDL);
+    guPosition(&sBiggoronSwordHiltChildResizerMtx, 0.f, 0.f, 0.f, ADULT_SWORD_TO_CHILD_SCALE, ADULT_SWORD_TO_CHILD_X, ADULT_SWORD_TO_CHILD_Y, ADULT_SWORD_TO_CHILD_Z);
+    gOOTBiggoronSwordHiltChildDL = sBiggoronSwordHiltChildDL;
 
-    gSPBranchList(sCallBiggoronSwordBlade, gOOTBiggoronSwordBlade);
-    guPosition(&sBiggoronSwordBladeChildResizer, 0.f, 0.f, 0.f, ADULT_SWORD_TO_CHILD_SCALE, ADULT_SWORD_TO_CHILD_X, ADULT_SWORD_TO_CHILD_Y, ADULT_SWORD_TO_CHILD_Z);
-    gOOTBiggoronSwordBladeChild = sBiggoronSwordBladeChild;
+    gSPBranchList(sCallBiggoronSwordBladeDL, gOOTBiggoronSwordBladeDL);
+    guPosition(&sBiggoronSwordBladeChildResizerMtx, 0.f, 0.f, 0.f, ADULT_SWORD_TO_CHILD_SCALE, ADULT_SWORD_TO_CHILD_X, ADULT_SWORD_TO_CHILD_Y, ADULT_SWORD_TO_CHILD_Z);
+    gOOTBiggoronSwordBladeChildDL = sBiggoronSwordBladeChildDL;
 
     // Child Hookshot
-    gSPBranchList(sCallHookshot, gOOTHookshot);
-    guPosition(&sHookshotResizer, 0.f, 0.f, 0.f, 0.6f, 0.f, 0.f, 0.f);
-    gOOTHookshotChild = sHookshotChild;
+    gSPBranchList(sCallHookshotDL, gOOTHookshotDL);
+    guPosition(&sHookshotResizerMtx, 0.f, 0.f, 0.f, 0.6f, 0.f, 0.f, 0.f);
+    gOOTHookshotChildDL = sHookshotChildDL;
 
-    gSPBranchList(sCallHookshotFirstPerson, gOOTHookshotFirstPerson);
-    guPosition(&sHookshotFirstPersonResizer, 0.f, 0.f, 0.f, 0.6f, 0.f, 0.f, 0.f);
-    gOOTHookshotFirstPersonChild = sHookshotFirstPersonChild;
+    gSPBranchList(sCallHookshotFirstPersonDL, gOOTHookshotFirstPersonDL);
+    guPosition(&sHookshotFirstPersonResizerMtx, 0.f, 0.f, 0.f, 0.6f, 0.f, 0.f, 0.f);
+    gOOTHookshotFirstPersonChildDL = sHookshotFirstPersonChildDL;
 
-    gSPBranchList(sCallHookshotHook, gOOTHookshotHook);
-    guPosition(&sHookshotHookResizer, 0.f, 0.f, 0.f, 0.6f, 0.f, 0.f, 0.f);
-    gOOTHookshotHookChild = sHookshotHookChild;
+    gSPBranchList(sCallHookshotHookDL, gOOTHookshotHookDL);
+    guPosition(&sHookshotHookResizerMtx, 0.f, 0.f, 0.f, 0.6f, 0.f, 0.f, 0.f);
+    gOOTHookshotHookChildDL = sHookshotHookChildDL;
 
     // Child Bow
-    gSPBranchList(sCallBow, gOOTBow);
-    guPosition(&sBowChildResizer, 0.f, 0.f, 0.f, 0.7f, 0.f, 0.f, 0.f);
-    gOOTBowChild = sBowChild;
+    gSPBranchList(sCallBowDL, gOOTBowDL);
+    guPosition(&sBowChildResizerMtx, 0.f, 0.f, 0.f, 0.7f, 0.f, 0.f, 0.f);
+    gOOTBowChildDL = sBowChildDL;
 
-    gSPBranchList(sCallBowFirstPerson, gOOTBowFirstPerson);
-    guPosition(&sBowFirstPersonChildResizer, 0.f, 0.f, 0.f, 0.7f, 0.f, 0.f, 0.f);
-    gOOTBowFirstPersonChild = sBowFirstPersonChild;
+    gSPBranchList(sCallBowFirstPersonDL, gOOTBowFirstPersonDL);
+    guPosition(&sBowFirstPersonChildResizerMtx, 0.f, 0.f, 0.f, 0.7f, 0.f, 0.f, 0.f);
+    gOOTBowFirstPersonChildDL = sBowFirstPersonChildDL;
 
-    gSPBranchList(sCallBowString, gOOTBowString);
-    guPosition(&sBowStringChildResizer, 0.f, 0.f, 0.f, 0.7f, 0.f, 0.f, 0.f);
-    gOOTBowStringChild = sBowStringChild;
+    gSPBranchList(sCallBowStringDL, gOOTBowStringDL);
+    guPosition(&sBowStringChildResizerMtx, 0.f, 0.f, 0.f, 0.7f, 0.f, 0.f, 0.f);
+    gOOTBowStringChildDL = sBowStringChildDL;
 
     // Adult Deku Shield
-    gSPBranchList(sCallDekuShield, gOOTDekuShield);
+    gSPBranchList(sCallDekuShieldDL, gOOTDekuShieldDL);
     guPosition(&sDekuShieldAdultResizer, 0.f, 0.f, 0.f, 1.35f, 0.f, 0.f, 0.f);
-    gOOTDekuShieldAdult = sDekuShieldAdult;
+    gOOTDekuShieldAdultDL = sDekuShieldAdult;
 
     guPosition(&gOOTHookshotHookAndChainChildMtx, 0.f, 0.f, 0.f, 1.f, 30.f, 150.f, 0.f);
 
@@ -399,11 +397,11 @@ void initAdultEquipment() {
         const uintptr_t MIRROR_SHIELD_IMAGE_START_DRAW_OFFSET = 0xB0;
         const uintptr_t MIRROR_SHIELD_BEAM_START_DRAW_OFFSET = 0xC50;
 
-        gOOTMirrorShieldRay = (Gfx *)(gMirRayOOT + MIRROR_SHIELD_IMAGE_START_DRAW_OFFSET);
-        gOOTMirrorShieldRayBeam = (Gfx *)(gMirRayOOT + MIRROR_SHIELD_BEAM_START_DRAW_OFFSET);
+        gOOTMirrorShieldRayDL = (Gfx *)(gMirRayOOT + MIRROR_SHIELD_IMAGE_START_DRAW_OFFSET);
+        gOOTMirrorShieldRayBeamDL = (Gfx *)(gMirRayOOT + MIRROR_SHIELD_BEAM_START_DRAW_OFFSET);
 
-        GlobalObjects_rebaseDL(gOOTMirrorShieldRay, mirRaySegs);
-        GlobalObjects_rebaseDL(gOOTMirrorShieldRayBeam, mirRaySegs);
+        GlobalObjects_rebaseDL(gOOTMirrorShieldRayDL, mirRaySegs);
+        GlobalObjects_rebaseDL(gOOTMirrorShieldRayBeamDL, mirRaySegs);
     }
 
     // Unglue fist from Hylian Shield
@@ -421,7 +419,7 @@ void initAdultEquipment() {
     // Master Sword Hilt
     const uintptr_t MASTER_SWORD_HILT_START = MASTER_SWORD_BLADE_END + sizeof(Gfx);
     const uintptr_t MASTER_SWORD_HILT_END = 0x22248;
-    gSPBranchList(&sMasterSwordHilt[ARRAY_COUNT(sMasterSwordHilt) - 1], gLinkAdultOOT + MASTER_SWORD_HILT_START);
+    gSPBranchList(&sMasterSwordHiltDL[ARRAY_COUNT(sMasterSwordHiltDL) - 1], gLinkAdultOOT + MASTER_SWORD_HILT_START);
     gSPEndDisplayList(gLinkAdultOOT + MASTER_SWORD_HILT_END);
 
     // Hookshot (3rd Person)
@@ -448,7 +446,7 @@ void initAdultEquipment() {
     // Biggoron Sword Blade
     const uintptr_t BIGGORON_SWORD_BLADE_START = BIGGORON_SWORD_HILT_END + sizeof(Gfx);
     const uintptr_t BIGGORON_SWORD_HAND_START = 0x23AE0;
-    gSPBranchList(&sBiggoronSwordBlade[ARRAY_COUNT(sBiggoronSwordBlade) - 1], gLinkAdultOOT + BIGGORON_SWORD_BLADE_START);
+    gSPBranchList(&sBiggoronSwordBladeDL[ARRAY_COUNT(sBiggoronSwordBladeDL) - 1], gLinkAdultOOT + BIGGORON_SWORD_BLADE_START);
     gSPEndDisplayList(gLinkAdultOOT + BIGGORON_SWORD_HAND_START);
 
     guPosition(&gOOTHookshotHookAndChainMtx, 0.f, 0.f, 0.f, 1.f, 50.f, 840.f, 0.f);
@@ -461,21 +459,21 @@ void initAdultEquipment() {
     #define REPOINT_SET_ADULT(ptrToSet, dl) { ptrToSet = (Gfx *)(dl); GlobalObjects_rebaseDL(ptrToSet, aLinkSegs); } (void)0
     // clang-format on
 
-    REPOINT_SET_ADULT(gOOTHylianShield, gLinkAdultOOT + OOT_LINK_ADULT_RIGHT_HAND_AND_HYLIAN_SHIELD);
-    REPOINT_SET_ADULT(gOOTMirrorShield, gLinkAdultOOT + OOT_LINK_ADULT_RIGHT_HAND_AND_MIRROR_SHIELD);
-    REPOINT_SET_ADULT(gOOTMasterSwordBlade, gLinkAdultOOT + OOT_LINK_ADULT_LEFT_HAND_AND_MASTER_SWORD);
-    REPOINT_SET_ADULT(gOOTMasterSwordHilt, sMasterSwordHilt);
-    REPOINT_SET_ADULT(gOOTMasterSwordSheath, gLinkAdultOOT + OOT_LINK_ADULT_SHEATH);
-    REPOINT_SET_ADULT(gOOTHookshotFirstPerson, gLinkAdultOOT + OOT_LINK_ADULT_FPS_RIGHT_HAND_HOLDING_HOOKSHOT);
-    REPOINT_SET_ADULT(gOOTHookshot, gLinkAdultOOT + OOT_LINK_ADULT_RIGHT_HAND_HOLDING_HOOKSHOT);
-    REPOINT_SET_ADULT(gOOTHookshotChain, gLinkAdultOOT + OOT_LINK_ADULT_HOOKSHOT_CHAIN);
-    REPOINT_SET_ADULT(gOOTHookshotHook, gLinkAdultOOT + OOT_LINK_ADULT_HOOKSHOT_HOOK);
-    REPOINT_SET_ADULT(gOOTBow, gLinkAdultOOT + OOT_LINK_ADULT_RIGHT_HAND_HOLDING_BOW);
-    REPOINT_SET_ADULT(gOOTBowFirstPerson, gLinkAdultOOT + OOT_LINK_ADULT_FPS_RIGHT_HAND_AND_BOW);
-    REPOINT_SET_ADULT(gOOTBowString, gLinkAdultOOT + OOT_LINK_ADULT_BOW_STRING);
-    REPOINT_SET_ADULT(gOOTBiggoronSwordHilt, gLinkAdultOOT + OOT_LINK_ADULT_LEFT_HAND_HOLDING_BGS);
-    REPOINT_SET_ADULT(gOOTBiggoronSwordBlade, sBiggoronSwordBlade);
-    REPOINT_SET_ADULT(gOOTBottleAdult, gLinkAdultOOT + OOT_LINK_ADULT_BOTTLE);
+    REPOINT_SET_ADULT(gOOTHylianShieldDL, gLinkAdultOOT + OOT_LINK_ADULT_RIGHT_HAND_AND_HYLIAN_SHIELD);
+    REPOINT_SET_ADULT(gOOTMirrorShieldDL, gLinkAdultOOT + OOT_LINK_ADULT_RIGHT_HAND_AND_MIRROR_SHIELD);
+    REPOINT_SET_ADULT(gOOTMasterSwordBladeDL, gLinkAdultOOT + OOT_LINK_ADULT_LEFT_HAND_AND_MASTER_SWORD);
+    REPOINT_SET_ADULT(gOOTMasterSwordHiltDL, sMasterSwordHiltDL);
+    REPOINT_SET_ADULT(gOOTMasterSwordSheathDL, gLinkAdultOOT + OOT_LINK_ADULT_SHEATH);
+    REPOINT_SET_ADULT(gOOTHookshotFirstPersonDL, gLinkAdultOOT + OOT_LINK_ADULT_FPS_RIGHT_HAND_HOLDING_HOOKSHOT);
+    REPOINT_SET_ADULT(gOOTHookshotDL, gLinkAdultOOT + OOT_LINK_ADULT_RIGHT_HAND_HOLDING_HOOKSHOT);
+    REPOINT_SET_ADULT(gOOTHookshotChainDL, gLinkAdultOOT + OOT_LINK_ADULT_HOOKSHOT_CHAIN);
+    REPOINT_SET_ADULT(gOOTHookshotHookDL, gLinkAdultOOT + OOT_LINK_ADULT_HOOKSHOT_HOOK);
+    REPOINT_SET_ADULT(gOOTBowDL, gLinkAdultOOT + OOT_LINK_ADULT_RIGHT_HAND_HOLDING_BOW);
+    REPOINT_SET_ADULT(gOOTBowFirstPersonDL, gLinkAdultOOT + OOT_LINK_ADULT_FPS_RIGHT_HAND_AND_BOW);
+    REPOINT_SET_ADULT(gOOTBowStringDL, gLinkAdultOOT + OOT_LINK_ADULT_BOW_STRING);
+    REPOINT_SET_ADULT(gOOTBiggoronSwordHiltDL, gLinkAdultOOT + OOT_LINK_ADULT_LEFT_HAND_HOLDING_BGS);
+    REPOINT_SET_ADULT(gOOTBiggoronSwordBladeDL, sBiggoronSwordBladeDL);
+    REPOINT_SET_ADULT(gOOTBottleAdultDL, gLinkAdultOOT + OOT_LINK_ADULT_BOTTLE);
 
     initCrossAgeEquipment();
 }
@@ -496,11 +494,11 @@ void initChildEquipment() {
     const uintptr_t KOKIRI_SWORD_HILT_START = 0x14048;
     const uintptr_t KOKIRI_SWORD_HILT_END = 0x14110;
     gSPEndDisplayList(gLinkChildOOT + KOKIRI_SWORD_HILT_END);
-    gSPBranchList(&sKokiriSwordHilt[ARRAY_COUNT(sKokiriSwordHilt) - 1], gLinkChildOOT + KOKIRI_SWORD_HILT_START);
+    gSPBranchList(&sKokiriSwordHiltDL[ARRAY_COUNT(sKokiriSwordHiltDL) - 1], gLinkChildOOT + KOKIRI_SWORD_HILT_START);
 
     // Kokiri Sword (Blade)
     const uintptr_t KOKIRI_SWORD_BLADE_START = KOKIRI_SWORD_HILT_END + sizeof(Gfx);
-    gSPBranchList(&sKokiriSwordBlade[ARRAY_COUNT(sKokiriSwordBlade) - 1], gLinkChildOOT + KOKIRI_SWORD_BLADE_START);
+    gSPBranchList(&sKokiriSwordBladeDL[ARRAY_COUNT(sKokiriSwordBladeDL) - 1], gLinkChildOOT + KOKIRI_SWORD_BLADE_START);
 
     // Deku Shield
     const uintptr_t DEKU_SHIELD_HAND_START = 0x14580;
@@ -518,13 +516,13 @@ void initChildEquipment() {
     #define REPOINT_SET_CHILD(ptrToSet, dl) { ptrToSet = (Gfx *)(dl); GlobalObjects_rebaseDL(ptrToSet, cLinkSegs); } (void)0
     // clang-format on
 
-    REPOINT_SET_CHILD(gOOTBottleChild, gLinkChildOOT + OOT_LINK_CHILD_BOTTLE_GLASS);
-    REPOINT_SET_CHILD(gOOTDekuStick, gLinkChildOOT + OOT_LINK_CHILD_DEKU_STICK);
-    REPOINT_SET_CHILD(gOOTKokiriSwordSheath, gLinkChildOOT + OOT_LINK_CHILD_SHEATH);
-    REPOINT_SET_CHILD(gOOTKokiriSwordBlade, sKokiriSwordBlade);
-    REPOINT_SET_CHILD(gOOTKokiriSwordHilt, sKokiriSwordHilt);
-    REPOINT_SET_CHILD(gOOTDekuShield, gLinkChildOOT + OOT_LINK_CHILD_RFIST_HOLDING_DEKU_SHIELD);
-    REPOINT_SET_CHILD(gOOTFairyOcarina, gLinkChildOOT + OOT_LINK_CHILD_RFIST_HOLDING_FAIRY_OCARINA);
+    REPOINT_SET_CHILD(gOOTBottleChildDL, gLinkChildOOT + OOT_LINK_CHILD_BOTTLE_GLASS);
+    REPOINT_SET_CHILD(gOOTDekuStickDL, gLinkChildOOT + OOT_LINK_CHILD_DEKU_STICK);
+    REPOINT_SET_CHILD(gOOTKokiriSwordSheathDL, gLinkChildOOT + OOT_LINK_CHILD_SHEATH);
+    REPOINT_SET_CHILD(gOOTKokiriSwordBladeDL, sKokiriSwordBladeDL);
+    REPOINT_SET_CHILD(gOOTKokiriSwordHiltDL, sKokiriSwordHiltDL);
+    REPOINT_SET_CHILD(gOOTDekuShieldDL, gLinkChildOOT + OOT_LINK_CHILD_RFIST_HOLDING_DEKU_SHIELD);
+    REPOINT_SET_CHILD(gOOTFairyOcarinaDL, gLinkChildOOT + OOT_LINK_CHILD_RFIST_HOLDING_FAIRY_OCARINA);
 
     initCrossAgeEquipment();
 }
@@ -557,9 +555,9 @@ void addEquipmentToModelManager() {
             PlayerModelManagerHandle h1 = handles[i];
 
             PlayerModelManager_setMatrix(h1, PMM_MTX_SHIELD_MIRROR_BACK, &gOOTAdultShieldMtx);
-            PlayerModelManager_setDisplayList(h1, PMM_DL_SHIELD_MIRROR, gOOTMirrorShield);
-            PlayerModelManager_setDisplayList(h1, PMM_DL_SHIELD_MIRROR_RAY, gOOTMirrorShieldRay);
-            PlayerModelManager_setDisplayList(h1, PMM_DL_SHIELD_MIRROR_RAY_BEAM, gOOTMirrorShieldRayBeamAdjusted);
+            PlayerModelManager_setDisplayList(h1, PMM_DL_SHIELD_MIRROR, gOOTMirrorShieldDL);
+            PlayerModelManager_setDisplayList(h1, PMM_DL_SHIELD_MIRROR_RAY, gOOTMirrorShieldRayDL);
+            PlayerModelManager_setDisplayList(h1, PMM_DL_SHIELD_MIRROR_RAY_BEAM, gOOTMirrorShieldRayBeamAdjustedDL);
         }
 
         PlayerModelManager_addHandleToPack(adultPack, h);
@@ -576,9 +574,9 @@ void addEquipmentToModelManager() {
             PlayerModelManagerHandle h1 = handles[i];
 
             PlayerModelManager_setMatrix(h1, PMM_MTX_SHIELD_MIRROR_BACK, SEGMENTED_TO_GLOBAL_PTR(GlobalObjects_getGlobalObject(OBJECT_LINK_CHILD), &gLinkHumanMirrorShieldMtx));
-            PlayerModelManager_setDisplayList(h1, PMM_DL_SHIELD_MIRROR, gOOTMirrorShieldChild);
-            PlayerModelManager_setDisplayList(h1, PMM_DL_SHIELD_MIRROR_RAY, gOOTMirrorShieldRayChild);
-            PlayerModelManager_setDisplayList(h1, PMM_DL_SHIELD_MIRROR_RAY_BEAM, gOOTMirrorShieldRayBeamChild);
+            PlayerModelManager_setDisplayList(h1, PMM_DL_SHIELD_MIRROR, gOOTMirrorShieldChildDL);
+            PlayerModelManager_setDisplayList(h1, PMM_DL_SHIELD_MIRROR_RAY, gOOTMirrorShieldRayChildDL);
+            PlayerModelManager_setDisplayList(h1, PMM_DL_SHIELD_MIRROR_RAY_BEAM, gOOTMirrorShieldRayBeamChildDL);
         }
 
         PlayerModelManager_addHandleToPack(childPack, h);
@@ -596,7 +594,7 @@ void addEquipmentToModelManager() {
             PlayerModelManagerHandle h1 = handles[i];
 
             PlayerModelManager_setMatrix(h1, PMM_MTX_SHIELD_HERO_BACK, &gOOTAdultShieldMtx);
-            PlayerModelManager_setDisplayList(h1, PMM_DL_SHIELD_HERO, gOOTHylianShield);
+            PlayerModelManager_setDisplayList(h1, PMM_DL_SHIELD_HERO, gOOTHylianShieldDL);
         }
 
         PlayerModelManager_addHandleToPack(adultPack, h);
@@ -613,7 +611,7 @@ void addEquipmentToModelManager() {
             PlayerModelManagerHandle h1 = handles[i];
 
             PlayerModelManager_setMatrix(h1, PMM_MTX_SHIELD_HERO_BACK, SEGMENTED_TO_GLOBAL_PTR(GlobalObjects_getGlobalObject(OBJECT_LINK_CHILD), &gLinkHumanHerosShieldMtx));
-            PlayerModelManager_setDisplayList(h1, PMM_DL_SHIELD_HERO, gOOTHylianShieldChild);
+            PlayerModelManager_setDisplayList(h1, PMM_DL_SHIELD_HERO, gOOTHylianShieldChildDL);
         }
 
         PlayerModelManager_addHandleToPack(childPack, h);
@@ -625,7 +623,7 @@ void addEquipmentToModelManager() {
         PlayerModelManager_setDisplayName(h, "Deku Shield (Adult)");
         PlayerModelManager_setAuthor(h, "Nintendo");
         PlayerModelManager_setMatrix(h, PMM_MTX_SHIELD_HERO_BACK, &gOOTAdultShieldMtx);
-        PlayerModelManager_setDisplayList(h, PMM_DL_SHIELD_HERO, gOOTDekuShieldAdult);
+        PlayerModelManager_setDisplayList(h, PMM_DL_SHIELD_HERO, gOOTDekuShieldAdultDL);
     }
 
     {
@@ -633,7 +631,7 @@ void addEquipmentToModelManager() {
         PlayerModelManager_setDisplayName(h, "Deku Shield");
         PlayerModelManager_setAuthor(h, "Nintendo");
         PlayerModelManager_setMatrix(h, PMM_MTX_SHIELD_HERO_BACK, &gOOTDekuShieldMtx);
-        PlayerModelManager_setDisplayList(h, PMM_DL_SHIELD_HERO, gOOTDekuShield);
+        PlayerModelManager_setDisplayList(h, PMM_DL_SHIELD_HERO, gOOTDekuShieldDL);
     }
 
     {
@@ -641,7 +639,7 @@ void addEquipmentToModelManager() {
         PlayerModelManager_setDisplayName(h, "Deku Shield (Adult)");
         PlayerModelManager_setAuthor(h, "Nintendo");
         PlayerModelManager_setMatrix(h, PMM_MTX_SHIELD_DEKU_BACK, &gOOTAdultShieldMtx);
-        PlayerModelManager_setDisplayList(h, PMM_DL_SHIELD_DEKU, gOOTDekuShieldAdult);
+        PlayerModelManager_setDisplayList(h, PMM_DL_SHIELD_DEKU, gOOTDekuShieldAdultDL);
     }
 
     {
@@ -649,7 +647,7 @@ void addEquipmentToModelManager() {
         PlayerModelManager_setDisplayName(h, "Deku Shield");
         PlayerModelManager_setAuthor(h, "Nintendo");
         PlayerModelManager_setMatrix(h, PMM_MTX_SHIELD_DEKU_BACK, &gOOTDekuShieldMtx);
-        PlayerModelManager_setDisplayList(h, PMM_DL_SHIELD_DEKU, gOOTDekuShield);
+        PlayerModelManager_setDisplayList(h, PMM_DL_SHIELD_DEKU, gOOTDekuShieldDL);
     }
 
     // Master Sword
@@ -664,9 +662,9 @@ void addEquipmentToModelManager() {
             PlayerModelManagerHandle h1 = handles[i];
 
             PlayerModelManager_setMatrix(h1, PMM_MTX_SWORD_KOKIRI_BACK, &gOOTMasterSwordHiltMtx);
-            PlayerModelManager_setDisplayList(h1, PMM_DL_SWORD_KOKIRI_BLADE, gOOTMasterSwordBlade);
-            PlayerModelManager_setDisplayList(h1, PMM_DL_SWORD_KOKIRI_HILT, gOOTMasterSwordHilt);
-            PlayerModelManager_setDisplayList(h1, PMM_DL_SWORD_KOKIRI_SHEATH, gOOTMasterSwordSheath);
+            PlayerModelManager_setDisplayList(h1, PMM_DL_SWORD_KOKIRI_BLADE, gOOTMasterSwordBladeDL);
+            PlayerModelManager_setDisplayList(h1, PMM_DL_SWORD_KOKIRI_HILT, gOOTMasterSwordHiltDL);
+            PlayerModelManager_setDisplayList(h1, PMM_DL_SWORD_KOKIRI_SHEATH, gOOTMasterSwordSheathDL);
         }
 
         PlayerModelManager_addHandleToPack(adultPack, h);
@@ -683,9 +681,9 @@ void addEquipmentToModelManager() {
             PlayerModelManagerHandle h1 = handles[i];
 
             PlayerModelManager_setMatrix(h1, PMM_MTX_SWORD_RAZOR_BACK, &gOOTMasterSwordHiltMtx);
-            PlayerModelManager_setDisplayList(h1, PMM_DL_SWORD_RAZOR_BLADE, gOOTMasterSwordBlade);
-            PlayerModelManager_setDisplayList(h1, PMM_DL_SWORD_RAZOR_HILT, gOOTMasterSwordHilt);
-            PlayerModelManager_setDisplayList(h1, PMM_DL_SWORD_RAZOR_SHEATH, gOOTMasterSwordSheath);
+            PlayerModelManager_setDisplayList(h1, PMM_DL_SWORD_RAZOR_BLADE, gOOTMasterSwordBladeDL);
+            PlayerModelManager_setDisplayList(h1, PMM_DL_SWORD_RAZOR_HILT, gOOTMasterSwordHiltDL);
+            PlayerModelManager_setDisplayList(h1, PMM_DL_SWORD_RAZOR_SHEATH, gOOTMasterSwordSheathDL);
         }
 
         PlayerModelManager_addHandleToPack(adultPack, h);
@@ -702,9 +700,9 @@ void addEquipmentToModelManager() {
             PlayerModelManagerHandle h1 = handles[i];
 
             PlayerModelManager_setMatrix(h1, PMM_MTX_SWORD_GILDED_BACK, &gOOTMasterSwordHiltMtx);
-            PlayerModelManager_setDisplayList(h1, PMM_DL_SWORD_GILDED_BLADE, gOOTMasterSwordBlade);
-            PlayerModelManager_setDisplayList(h1, PMM_DL_SWORD_GILDED_HILT, gOOTMasterSwordHilt);
-            PlayerModelManager_setDisplayList(h1, PMM_DL_SWORD_GILDED_SHEATH, gOOTMasterSwordSheath);
+            PlayerModelManager_setDisplayList(h1, PMM_DL_SWORD_GILDED_BLADE, gOOTMasterSwordBladeDL);
+            PlayerModelManager_setDisplayList(h1, PMM_DL_SWORD_GILDED_HILT, gOOTMasterSwordHiltDL);
+            PlayerModelManager_setDisplayList(h1, PMM_DL_SWORD_GILDED_SHEATH, gOOTMasterSwordSheathDL);
         }
 
         PlayerModelManager_addHandleToPack(adultPack, h);
@@ -721,9 +719,9 @@ void addEquipmentToModelManager() {
             PlayerModelManagerHandle h1 = handles[i];
 
             PlayerModelManager_setMatrix(h1, PMM_MTX_SWORD_GILDED_BACK, &gMasterSwordBackChildMtx);
-            PlayerModelManager_setDisplayList(h1, PMM_DL_SWORD_GILDED_BLADE, gOOTMasterSwordBladeChild);
-            PlayerModelManager_setDisplayList(h1, PMM_DL_SWORD_GILDED_HILT, gOOTMasterSwordHiltChild);
-            PlayerModelManager_setDisplayList(h1, PMM_DL_SWORD_GILDED_SHEATH, gOOTMasterSwordSheathChild);
+            PlayerModelManager_setDisplayList(h1, PMM_DL_SWORD_GILDED_BLADE, gOOTMasterSwordBladeChildDL);
+            PlayerModelManager_setDisplayList(h1, PMM_DL_SWORD_GILDED_HILT, gOOTMasterSwordHiltChildDL);
+            PlayerModelManager_setDisplayList(h1, PMM_DL_SWORD_GILDED_SHEATH, gOOTMasterSwordSheathChildDL);
         }
 
         PlayerModelManager_addHandleToPack(childPack, h);
@@ -741,9 +739,9 @@ void addEquipmentToModelManager() {
             PlayerModelManagerHandle h1 = handles[i];
 
             PlayerModelManager_setMatrix(h1, PMM_MTX_SWORD_KOKIRI_BACK, &gOOTKokiriSwordHiltMtx);
-            PlayerModelManager_setDisplayList(h1, PMM_DL_SWORD_KOKIRI_BLADE, gOOTKokiriSwordBlade);
-            PlayerModelManager_setDisplayList(h1, PMM_DL_SWORD_KOKIRI_HILT, gOOTKokiriSwordHilt);
-            PlayerModelManager_setDisplayList(h1, PMM_DL_SWORD_KOKIRI_SHEATH, gOOTKokiriSwordSheath);
+            PlayerModelManager_setDisplayList(h1, PMM_DL_SWORD_KOKIRI_BLADE, gOOTKokiriSwordBladeDL);
+            PlayerModelManager_setDisplayList(h1, PMM_DL_SWORD_KOKIRI_HILT, gOOTKokiriSwordHiltDL);
+            PlayerModelManager_setDisplayList(h1, PMM_DL_SWORD_KOKIRI_SHEATH, gOOTKokiriSwordSheathDL);
         }
 
         PlayerModelManager_addHandleToPack(childPack, h);
@@ -754,9 +752,9 @@ void addEquipmentToModelManager() {
         PlayerModelManager_setDisplayName(h, "Kokiri Sword (OoT) (Adult)");
         PlayerModelManager_setAuthor(h, "Nintendo");
         PlayerModelManager_setMatrix(h, PMM_MTX_SWORD_KOKIRI_BACK, &gKokiriSwordBackAdultMtx);
-        PlayerModelManager_setDisplayList(h, PMM_DL_SWORD_KOKIRI_BLADE, gOOTKokiriSwordBladeAdult);
-        PlayerModelManager_setDisplayList(h, PMM_DL_SWORD_KOKIRI_HILT, gOOTKokiriSwordHiltAdult);
-        PlayerModelManager_setDisplayList(h, PMM_DL_SWORD_KOKIRI_SHEATH, gOOTKokiriSwordSheathAdult);
+        PlayerModelManager_setDisplayList(h, PMM_DL_SWORD_KOKIRI_BLADE, gOOTKokiriSwordBladeAdultDL);
+        PlayerModelManager_setDisplayList(h, PMM_DL_SWORD_KOKIRI_HILT, gOOTKokiriSwordHiltAdultDL);
+        PlayerModelManager_setDisplayList(h, PMM_DL_SWORD_KOKIRI_SHEATH, gOOTKokiriSwordSheathAdultDL);
         PlayerModelManager_addHandleToPack(adultPack, h);
     }
 
@@ -772,9 +770,9 @@ void addEquipmentToModelManager() {
             PlayerModelManagerHandle h1 = handles[i];
 
             PlayerModelManager_setMatrix(h1, PMM_MTX_SWORD5_BACK, &gOOTMasterSwordHiltMtx);
-            PlayerModelManager_setDisplayList(h1, PMM_DL_SWORD_GREAT_FAIRY_BLADE, gOOTBiggoronSwordBlade);
-            PlayerModelManager_setDisplayList(h1, PMM_DL_SWORD_GREAT_FAIRY_HILT, gOOTBiggoronSwordHilt);
-            PlayerModelManager_setDisplayList(h1, PMM_DL_SWORD5_SHEATH, gOOTMasterSwordSheath);
+            PlayerModelManager_setDisplayList(h1, PMM_DL_SWORD_GREAT_FAIRY_BLADE, gOOTBiggoronSwordBladeDL);
+            PlayerModelManager_setDisplayList(h1, PMM_DL_SWORD_GREAT_FAIRY_HILT, gOOTBiggoronSwordHiltDL);
+            PlayerModelManager_setDisplayList(h1, PMM_DL_SWORD5_SHEATH, gOOTMasterSwordSheathDL);
         }
 
         PlayerModelManager_addHandleToPack(adultPack, h);
@@ -791,9 +789,9 @@ void addEquipmentToModelManager() {
             PlayerModelManagerHandle h1 = handles[i];
 
             PlayerModelManager_setMatrix(h1, PMM_MTX_SWORD5_BACK, &gMasterSwordBackChildMtx);
-            PlayerModelManager_setDisplayList(h1, PMM_DL_SWORD_GREAT_FAIRY_BLADE, gOOTBiggoronSwordBladeChild);
-            PlayerModelManager_setDisplayList(h1, PMM_DL_SWORD_GREAT_FAIRY_HILT, gOOTBiggoronSwordHiltChild);
-            PlayerModelManager_setDisplayList(h1, PMM_DL_SWORD5_SHEATH, gOOTMasterSwordSheathChild);
+            PlayerModelManager_setDisplayList(h1, PMM_DL_SWORD_GREAT_FAIRY_BLADE, gOOTBiggoronSwordBladeChildDL);
+            PlayerModelManager_setDisplayList(h1, PMM_DL_SWORD_GREAT_FAIRY_HILT, gOOTBiggoronSwordHiltChildDL);
+            PlayerModelManager_setDisplayList(h1, PMM_DL_SWORD5_SHEATH, gOOTMasterSwordSheathChildDL);
         }
 
         PlayerModelManager_addHandleToPack(childPack, h);
@@ -804,9 +802,9 @@ void addEquipmentToModelManager() {
         PlayerModelManager_setDisplayName(h, "Biggoron Sword");
         PlayerModelManager_setAuthor(h, "Nintendo");
         PlayerModelManager_setMatrix(h, PMM_MTX_SWORD4_BACK, &gOOTMasterSwordHiltMtx);
-        PlayerModelManager_setDisplayList(h, PMM_DL_SWORD_FIERCE_DEITY_BLADE, gOOTBiggoronSwordBlade);
-        PlayerModelManager_setDisplayList(h, PMM_DL_SWORD_FIERCE_DEITY_HILT, gOOTBiggoronSwordHilt);
-        PlayerModelManager_setDisplayList(h, PMM_DL_SWORD4_SHEATH, gOOTMasterSwordSheath);
+        PlayerModelManager_setDisplayList(h, PMM_DL_SWORD_FIERCE_DEITY_BLADE, gOOTBiggoronSwordBladeDL);
+        PlayerModelManager_setDisplayList(h, PMM_DL_SWORD_FIERCE_DEITY_HILT, gOOTBiggoronSwordHiltDL);
+        PlayerModelManager_setDisplayList(h, PMM_DL_SWORD4_SHEATH, gOOTMasterSwordSheathDL);
         PlayerModelManager_addHandleToPack(adultPack, h);
     }
 
@@ -822,10 +820,10 @@ void addEquipmentToModelManager() {
             PlayerModelManagerHandle h1 = handles[i];
 
             PlayerModelManager_setMatrix(h1, PMM_MTX_HOOKSHOT_CHAIN_AND_HOOK, &gOOTHookshotHookAndChainMtx);
-            PlayerModelManager_setDisplayList(h1, PMM_DL_HOOKSHOT, gOOTHookshot);
-            PlayerModelManager_setDisplayList(h1, PMM_DL_FPS_HOOKSHOT, gOOTHookshotFirstPerson);
-            PlayerModelManager_setDisplayList(h1, PMM_DL_HOOKSHOT_CHAIN, gOOTHookshotChain);
-            PlayerModelManager_setDisplayList(h1, PMM_DL_HOOKSHOT_HOOK, gOOTHookshotHook);
+            PlayerModelManager_setDisplayList(h1, PMM_DL_HOOKSHOT, gOOTHookshotDL);
+            PlayerModelManager_setDisplayList(h1, PMM_DL_FPS_HOOKSHOT, gOOTHookshotFirstPersonDL);
+            PlayerModelManager_setDisplayList(h1, PMM_DL_HOOKSHOT_CHAIN, gOOTHookshotChainDL);
+            PlayerModelManager_setDisplayList(h1, PMM_DL_HOOKSHOT_HOOK, gOOTHookshotHookDL);
         }
 
         PlayerModelManager_addHandleToPack(adultPack, h);
@@ -842,10 +840,10 @@ void addEquipmentToModelManager() {
             PlayerModelManagerHandle h1 = handles[i];
 
             PlayerModelManager_setMatrix(h1, PMM_MTX_HOOKSHOT_CHAIN_AND_HOOK, &gOOTHookshotHookAndChainChildMtx);
-            PlayerModelManager_setDisplayList(h1, PMM_DL_HOOKSHOT, gOOTHookshotChild);
-            PlayerModelManager_setDisplayList(h1, PMM_DL_FPS_HOOKSHOT, gOOTHookshotFirstPersonChild);
-            PlayerModelManager_setDisplayList(h1, PMM_DL_HOOKSHOT_CHAIN, gOOTHookshotChain);
-            PlayerModelManager_setDisplayList(h1, PMM_DL_HOOKSHOT_HOOK, gOOTHookshotHookChild);
+            PlayerModelManager_setDisplayList(h1, PMM_DL_HOOKSHOT, gOOTHookshotChildDL);
+            PlayerModelManager_setDisplayList(h1, PMM_DL_FPS_HOOKSHOT, gOOTHookshotFirstPersonChildDL);
+            PlayerModelManager_setDisplayList(h1, PMM_DL_HOOKSHOT_CHAIN, gOOTHookshotChainDL);
+            PlayerModelManager_setDisplayList(h1, PMM_DL_HOOKSHOT_HOOK, gOOTHookshotHookChildDL);
         }
 
         PlayerModelManager_addHandleToPack(childPack, h);
@@ -862,7 +860,7 @@ void addEquipmentToModelManager() {
         for (int i = 0; i < ARRAY_COUNT(handles); ++i) {
             PlayerModelManagerHandle h1 = handles[i];
 
-            PlayerModelManager_setDisplayList(h1, PMM_DL_BOTTLE_GLASS, gOOTBottleAdult);
+            PlayerModelManager_setDisplayList(h1, PMM_DL_BOTTLE_GLASS, gOOTBottleAdultDL);
             PlayerModelManager_setDisplayList(h1, PMM_DL_BOTTLE_CONTENTS, gEmptyDL);
         }
 
@@ -879,7 +877,7 @@ void addEquipmentToModelManager() {
         for (int i = 0; i < ARRAY_COUNT(handles); ++i) {
             PlayerModelManagerHandle h1 = handles[i];
 
-            PlayerModelManager_setDisplayList(h1, PMM_DL_BOTTLE_GLASS, gOOTBottleChild);
+            PlayerModelManager_setDisplayList(h1, PMM_DL_BOTTLE_GLASS, gOOTBottleChildDL);
             PlayerModelManager_setDisplayList(h1, PMM_DL_BOTTLE_CONTENTS, gEmptyDL);
         }
 
@@ -897,9 +895,9 @@ void addEquipmentToModelManager() {
         for (int i = 0; i < ARRAY_COUNT(handles); ++i) {
             PlayerModelManagerHandle h1 = handles[i];
 
-            PlayerModelManager_setDisplayList(h1, PMM_DL_BOW, gOOTBow);
-            PlayerModelManager_setDisplayList(h1, PMM_DL_FPS_BOW, gOOTBowFirstPerson);
-            PlayerModelManager_setDisplayList(h1, PMM_DL_BOW_STRING, gOOTBowString);
+            PlayerModelManager_setDisplayList(h1, PMM_DL_BOW, gOOTBowDL);
+            PlayerModelManager_setDisplayList(h1, PMM_DL_FPS_BOW, gOOTBowFirstPersonDL);
+            PlayerModelManager_setDisplayList(h1, PMM_DL_BOW_STRING, gOOTBowStringDL);
         }
 
         PlayerModelManager_addHandleToPack(adultPack, h);
@@ -909,9 +907,9 @@ void addEquipmentToModelManager() {
         // PlayerModelManagerHandle h = PLAYERMODELMANAGER_REGISTER_MODEL("oot_bow_c", PMM_MODEL_TYPE_BOW);
         // PlayerModelManager_setDisplayName(h, "Bow (OoT) (Child)");
         // PlayerModelManager_setAuthor(h, "Nintendo");
-        // PlayerModelManager_setDisplayList(h, PMM_DL_BOW, gOOTBowChild);
-        // PlayerModelManager_setDisplayList(h, PMM_DL_FPS_BOW, gOOTBowFirstPersonChild);
-        // PlayerModelManager_setDisplayList(h, PMM_DL_BOW_STRING, gOOTBowStringChild);
+        // PlayerModelManager_setDisplayList(h, PMM_DL_BOW, gOOTBowChildDL);
+        // PlayerModelManager_setDisplayList(h, PMM_DL_FPS_BOW, gOOTBowFirstPersonChildDL);
+        // PlayerModelManager_setDisplayList(h, PMM_DL_BOW_STRING, gOOTBowStringChildDL);
         // PlayerModelManager_addHandleToPack(childPack, h);
     }
 
@@ -920,14 +918,14 @@ void addEquipmentToModelManager() {
         PlayerModelManagerHandle h = PLAYERMODELMANAGER_REGISTER_MODEL("oot_ocarina1_fairy_c", PMM_MODEL_TYPE_OCARINA_FAIRY);
         PlayerModelManager_setDisplayName(h, "Fairy Ocarina");
         PlayerModelManager_setAuthor(h, "Nintendo");
-        PlayerModelManager_setDisplayList(h, PMM_DL_OCARINA_FAIRY, gOOTFairyOcarina);
+        PlayerModelManager_setDisplayList(h, PMM_DL_OCARINA_FAIRY, gOOTFairyOcarinaDL);
     }
 
     {
         PlayerModelManagerHandle h = PLAYERMODELMANAGER_REGISTER_MODEL("oot_ocarina2_fairy_c", PMM_MODEL_TYPE_OCARINA_TIME);
         PlayerModelManager_setDisplayName(h, "Fairy Ocarina");
         PlayerModelManager_setAuthor(h, "Nintendo");
-        PlayerModelManager_setDisplayList(h, PMM_DL_OCARINA_TIME, gOOTFairyOcarina);
+        PlayerModelManager_setDisplayList(h, PMM_DL_OCARINA_TIME, gOOTFairyOcarinaDL);
     }
 
     // Deku Stick (OOT)
@@ -941,7 +939,7 @@ void addEquipmentToModelManager() {
         for (int i = 0; i < ARRAY_COUNT(handles); ++i) {
             PlayerModelManagerHandle h1 = handles[i];
 
-            PlayerModelManager_setDisplayList(h1, PMM_DL_DEKU_STICK, gOOTDekuStick);
+            PlayerModelManager_setDisplayList(h1, PMM_DL_DEKU_STICK, gOOTDekuStickDL);
         }
 
         PlayerModelManager_addHandleToPack(childPack, h);
