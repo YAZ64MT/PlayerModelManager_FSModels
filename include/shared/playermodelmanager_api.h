@@ -18,7 +18,19 @@ typedef unsigned long PlayerModelManagerHandle;
 // (e.g. not specifying a DL for PMM_DL_OPT_RHAND_OCARINA will result in
 // the DL registered to PMM_DL_RHAND being used)
 
-typedef enum {
+// Swords:
+//      1: Kokiri Sword
+//      2: Razor Sword
+//      3: Master Sword / Gilded Sword
+//      4: Giant's Knife / Biggoron Sword / Fierce Deity's Sword
+//      5: Great Fairy Sword
+
+// Shields:
+//      1: Deku Shield
+//      2: Hylian Shield / Hero's Shield
+//      3: Mirror Shield
+
+typedef enum PlayerModelManagerDisplayListId {
 
     // Main skeleton DLs
     PMM_DL_WAIST = 0,
@@ -44,26 +56,33 @@ typedef enum {
     PMM_DL_LFIST,
     PMM_DL_LHAND_BOTTLE,
     PMM_DL_OPT_LHAND_GUITAR,
-    PMM_DL_OPT_LFIST_SWORD = 230,
+    PMM_DL_OPT_LFIST_ITEM = 235,
+    PMM_DL_OPT_LFIST_SWORD,
+    PMM_DL_OPT_LFIST_SWORD1,
+    PMM_DL_OPT_LFIST_SWORD2,
+    PMM_DL_OPT_LFIST_SWORD3,
     PMM_DL_OPT_LFIST_SWORD_TWO_HANDED,
+    PMM_DL_OPT_LFIST_SWORD4,
+    PMM_DL_OPT_LFIST_SWORD5,
     PMM_DL_OPT_LFIST_DEKU_STICK,
     PMM_DL_OPT_LFIST_HAMMER,
     PMM_DL_OPT_LFIST_BOOMERANG,
     PMM_DL_RFIST = 21,
-    PMM_DL_OPT_RHAND_OCARINA = 235,
+    PMM_DL_OPT_RHAND_OCARINA = 248,
+    PMM_DL_OPT_RFIST_ITEM,
     PMM_DL_OPT_RFIST_SHIELD,
+    PMM_DL_OPT_RFIST_SHIELD1,
+    PMM_DL_OPT_RFIST_SHIELD2,
+    PMM_DL_OPT_RFIST_SHIELD3,
     PMM_DL_OPT_RFIST_SWORD_TWO_HANDED,
+    PMM_DL_OPT_RFIST_SWORD4,
+    PMM_DL_OPT_RFIST_SWORD5,
     PMM_DL_OPT_RFIST_DEKU_STICK,
+    PMM_DL_OPT_RFIST_HAMMER,
+    PMM_DL_OPT_RFIST_HOOKSHOT,
+    PMM_DL_OPT_RFIST_LONGSHOT,
     PMM_DL_OPT_RFIST_BOW,
     PMM_DL_OPT_RFIST_SLINGSHOT,
-    PMM_DL_OPT_RFIST_HOOKSHOT,
-
-    // Swords:
-    //      1: Kokiri Sword
-    //      2: Razor Sword
-    //      3: Master Sword / Gilded Sword
-    //      4: Giant's Knife / Biggoron Sword / Fierce Deity's Sword
-    //      5: Great Fairy Sword
 
     PMM_DL_SWORD1_SHEATH = 22,
     PMM_DL_SWORD2_SHEATH,
@@ -83,10 +102,12 @@ typedef enum {
     PMM_DL_SWORD4_BLADE_FRAGMENT,
     PMM_DL_SWORD5_BLADE,
 
-    PMM_DL_SHIELD1,                // Deku Shield
-    PMM_DL_SHIELD2,                // Hylian Shield / Hero's Shield
-    PMM_DL_SHIELD3,                // Mirror Shield
-    PMM_DL_SHIELD3_RAY,            // Mirror Shield projection flat image
+    PMM_DL_SHIELD1,
+    PMM_DL_SHIELD2,
+    PMM_DL_SHIELD3,
+    // Mirror Shield projection flat image DL
+    // should be axis-aligned
+    PMM_DL_SHIELD3_RAY,
     PMM_DL_SHIELD3_RAY_BEAM = 229, // Mirror Shield Reflective Beam DL
 
     // Items
@@ -107,38 +128,49 @@ typedef enum {
     PMM_DL_HOOKSHOT_HOOK,
     PMM_DL_HOOKSHOT_RETICLE,
     PMM_DL_OPT_FPS_HOOKSHOT,
-    PMM_DL_BOOMERANG,        // Boomerang model while held in hand
+    PMM_DL_OPT_LONGSHOT = 230,
+    PMM_DL_OPT_LONGSHOT_CHAIN,
+    PMM_DL_OPT_LONGSHOT_HOOK,
+    PMM_DL_OPT_LONGSHOT_RETICLE,
+    PMM_DL_OPT_FPS_LONGSHOT,
+    PMM_DL_BOOMERANG = 58,   // Boomerang model while held in hand
     PMM_DL_BOOMERANG_FLYING, // Boomerang model after being thrown
     PMM_DL_HAMMER,
 
     // First Person
-    PMM_DL_OPT_FPS_LSHOULDER = 242,
+    PMM_DL_OPT_FPS_LSHOULDER = 263,
     PMM_DL_OPT_FPS_LSHOULDER_HOOKSHOT,
+    PMM_DL_OPT_FPS_LSHOULDER_LONGSHOT,
     PMM_DL_OPT_FPS_LSHOULDER_BOW,
     PMM_DL_OPT_FPS_LSHOULDER_SLINGSHOT,
 
     PMM_DL_FPS_LFOREARM = 61,
-    PMM_DL_OPT_FPS_LFOREARM_HOOKSHOT = 246,
+    PMM_DL_OPT_FPS_LFOREARM_HOOKSHOT = 268,
+    PMM_DL_OPT_FPS_LFOREARM_LONGSHOT,
     PMM_DL_OPT_FPS_LFOREARM_BOW,
     PMM_DL_OPT_FPS_LFOREARM_SLINGSHOT,
 
     PMM_DL_FPS_LHAND = 62,
-    PMM_DL_OPT_FPS_LHAND_HOOKSHOT = 249,
+    PMM_DL_OPT_FPS_LHAND_HOOKSHOT = 272,
+    PMM_DL_OPT_FPS_LHAND_LONGSHOT,
     PMM_DL_OPT_FPS_LHAND_BOW,
     PMM_DL_OPT_FPS_LHAND_SLINGSHOT,
 
     PMM_DL_OPT_FPS_RSHOULDER,
     PMM_DL_OPT_FPS_RSHOULDER_HOOKSHOT,
+    PMM_DL_OPT_FPS_RSHOULDER_LONGSHOT,
     PMM_DL_OPT_FPS_RSHOULDER_BOW,
     PMM_DL_OPT_FPS_RSHOULDER_SLINGSHOT,
 
     PMM_DL_FPS_RFOREARM = 63,
-    PMM_DL_OPT_FPS_RFOREARM_HOOKSHOT = 256,
+    PMM_DL_OPT_FPS_RFOREARM_HOOKSHOT = 281,
+    PMM_DL_OPT_FPS_RFOREARM_LONGSHOT,
     PMM_DL_OPT_FPS_RFOREARM_BOW,
     PMM_DL_OPT_FPS_RFOREARM_SLINGSHOT,
 
     PMM_DL_FPS_RHAND = 64,
-    PMM_DL_OPT_FPS_RHAND_HOOKSHOT = 259,
+    PMM_DL_OPT_FPS_RHAND_HOOKSHOT = 285,
+    PMM_DL_OPT_FPS_RHAND_LONGSHOT,
     PMM_DL_OPT_FPS_RHAND_BOW,
     PMM_DL_OPT_FPS_RHAND_SLINGSHOT,
 
@@ -344,19 +376,21 @@ typedef enum {
     // Right Fist + Items
     PMM_DL_SHIM_RFIST_SLINGSHOT,
     PMM_DL_SHIM_RFIST_HOOKSHOT,
-    PMM_DL_SHIM_RHAND_OCARINA_FAIRY,
+    PMM_DL_SHIM_RFIST_LONGSHOT = 289,
+    PMM_DL_SHIM_RHAND_OCARINA_FAIRY = 219,
     PMM_DL_SHIM_RHAND_OCARINA_TIME,
 
     // First Person Right Hand + Items
     PMM_DL_SHIM_FPS_RHAND_BOW,
     PMM_DL_SHIM_FPS_RHAND_SLINGSHOT,
     PMM_DL_SHIM_FPS_RHAND_HOOKSHOT,
+    PMM_DL_SHIM_FPS_RHAND_LONGSHOT = 290,
 
     // Deku Link flower propellers
-    PMM_DL_SHIM_CENTER_FLOWER_PROPELLER_OPEN,
+    PMM_DL_SHIM_CENTER_FLOWER_PROPELLER_OPEN = 224,
     PMM_DL_SHIM_CENTER_FLOWER_PROPELLER_CLOSED,
 
-    PMM_DL_MAX = 262
+    PMM_DL_MAX = 289
 } PlayerModelManagerDisplayListId;
 
 // Keep these defines for backwards compatibility
@@ -420,7 +454,7 @@ typedef enum {
 #define PMM_MTX_SHIELD_HYLIAN_BACK PMM_MTX_SHIELD2_BACK
 #define PMM_MTX_SHIELD_MIRROR_BACK PMM_MTX_SHIELD3_BACK
 
-typedef enum {
+typedef enum PlayerModelManagerModelType {
     PMM_MODEL_TYPE_NONE,
     PMM_MODEL_TYPE_CHILD,
     PMM_MODEL_TYPE_ADULT,
@@ -489,7 +523,7 @@ typedef enum {
 #define PMM_MODEL_TYPE_SHIELD_HERO PMM_MODEL_TYPE_SHIELD2
 #define PMM_MODEL_TYPE_SHIELD_MIRROR PMM_MODEL_TYPE_SHIELD3
 
-typedef enum {
+typedef enum PlayerModelManagerModelEvent {
     PMM_EVENT_MODEL_APPLIED,
     PMM_EVENT_MODEL_REMOVED,
 } PlayerModelManagerModelEvent;
@@ -514,7 +548,7 @@ RECOMP_IMPORT(YAZMT_PMM_MOD_NAME, PlayerModelManagerHandle PlayerModelManager_re
 
 // Sets the name that will appear in the menu for the passed in model handle.
 //
-// Limited to 32 characters.
+// Limited to 32 characters. Longer names will be truncated.
 //
 // This function can only be used during the PlayerModelManager_onRegisterModels event.
 //
@@ -523,7 +557,7 @@ RECOMP_IMPORT(YAZMT_PMM_MOD_NAME, bool PlayerModelManager_setDisplayName(PlayerM
 
 // Sets the name that will appear in the author field of the menu.
 //
-// Limited to 64 characters.
+// Limited to 64 characters. Longer names will be truncated.
 //
 // This function can only be used during the PlayerModelManager_onRegisterModels event.
 //
