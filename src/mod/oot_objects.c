@@ -143,6 +143,8 @@ void registerChildLink() {
         REPOINT_SET_CHILD(OOT_LINK_CHILD_RFIST, PMM_DL_RFIST);
         REPOINT_SET_CHILD(OOT_LINK_CHILD_BOTTLE_HAND, PMM_DL_LHAND_BOTTLE);
 #undef REPOINT_SET_CHILD
+        PlayerModelManager_setDisplayList(h, PMM_DL_FPS_RHAND, PlayerModelManager_getCustomDL(PMM_CUSTOM_DL_HUMAN_FPS_RHAND));
+        PlayerModelManager_setDisplayList(h, PMM_DL_FPS_RFOREARM, gEmptyDL);
 
         initChildEquipment();
     } else {
@@ -236,7 +238,7 @@ void registerAdultLink() {
         REPOINT_SET_ADULT(OOT_LINK_ADULT_BOTTLE_HAND, PMM_DL_LHAND_BOTTLE);
         PlayerModelManager_setDisplayList(h, PMM_DL_OPT_RHAND_OCARINA, rightHandOcarina);
         REPOINT_SET_ADULT(OOT_LINK_ADULT_FPS_LEFT_HAND, PMM_DL_FPS_LHAND);
-        PlayerModelManager_setDisplayList(h, PMM_DL_FPS_RHAND, sLinkAdultFirstPersonHand);
+        PlayerModelManager_setDisplayList(h, PMM_DL_OPT_FPS_RHAND, sLinkAdultFirstPersonHand);
         REPOINT_SET_ADULT(OOT_LINK_ADULT_FPS_RIGHT_FOREARM, PMM_DL_FPS_RFOREARM);
         REPOINT_SET_ADULT(OOT_LINK_ADULT_FPS_LEFT_FOREARM, PMM_DL_FPS_LFOREARM);
         REPOINT_SET_ADULT(OOT_LINK_ADULT_RIGHT_HAND_AND_OCARINA, PMM_DL_OCARINA_TIME);
