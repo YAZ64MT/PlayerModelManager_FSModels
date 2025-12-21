@@ -341,33 +341,33 @@ void initCrossAgeEquipment() {
 
     // Child Master Sword
     gSPBranchList(sCallMasterSwordHiltDL, gOOTMasterSwordHiltDL);
-    guPosition(&sMasterSwordHiltChildResizerMtx, 0.f, 0.f, 0.f, ADULT_SWORD_TO_CHILD_SCALE, ADULT_SWORD_TO_CHILD_X, ADULT_SWORD_TO_CHILD_Y, ADULT_SWORD_TO_CHILD_Z);
     gOOTMasterSwordHiltChildDL = sMasterSwordHiltChildDL;
 
     gSPBranchList(sCallMasterSwordBladeDL, gOOTMasterSwordBladeDL);
-    guPosition(&sMasterSwordBladeChildResizerMtx, 0.f, 0.f, 0.f, ADULT_SWORD_TO_CHILD_SCALE, ADULT_SWORD_TO_CHILD_X, ADULT_SWORD_TO_CHILD_Y, ADULT_SWORD_TO_CHILD_Z);
     gOOTMasterSwordBladeChildDL = sMasterSwordBladeChildDL;
 
     gSPBranchList(sCallMasterSwordSheathDL, gOOTMasterSwordSheathDL);
-    guPosition(&sMasterSwordSheathChildResizerMtx, 0.f, 0.f, 0.f, ADULT_SWORD_TO_CHILD_SCALE, 0.f, 0.f, 0.f);
     gOOTMasterSwordSheathChildDL = sMasterSwordSheathChildDL;
 
-    guPosition(&gMasterSwordBackChildMtx, 0.f, 0.f, 0.f, 1.f, -715.f * ADULT_SWORD_TO_CHILD_SCALE - ADULT_SWORD_TO_CHILD_X, -310.f * ADULT_SWORD_TO_CHILD_SCALE - ADULT_SWORD_TO_CHILD_Y, 78.f * ADULT_SWORD_TO_CHILD_SCALE - ADULT_SWORD_TO_CHILD_Z);
+    static Vec3f masterSwordChildTranslation = {ADULT_SWORD_TO_CHILD_X, ADULT_SWORD_TO_CHILD_Y, ADULT_SWORD_TO_CHILD_Z};
+    static Vec3f masterSwordChildBackBaseTranslation = {-715.f, -310.f, 78.f};
+    setupResizedSwordMatrixes(&sMasterSwordHiltChildResizerMtx, &sMasterSwordBladeChildResizerMtx, &sMasterSwordSheathChildResizerMtx,
+                              &gMasterSwordBackChildMtx, ADULT_SWORD_TO_CHILD_SCALE, &masterSwordChildTranslation, &masterSwordChildBackBaseTranslation);
 
     // Adult Kokiri Sword
     gSPBranchList(sCallKokiriSwordHiltDL, gOOTKokiriSwordHiltDL);
-    guPosition(&sKokiriSwordHiltAdultResizerMtx, 0.f, 0.f, 0.f, CHILD_SWORD_TO_ADULT_SCALE, 0.f, 0.f, 0.f);
     gOOTKokiriSwordHiltAdultDL = sKokiriSwordHiltAdultDL;
 
     gSPBranchList(sCallKokiriSwordBladeDL, gOOTKokiriSwordBladeDL);
-    guPosition(&sKokiriSwordBladeAdultResizerMtx, 0.f, 0.f, 0.f, CHILD_SWORD_TO_ADULT_SCALE, 0.f, 0.f, 0.f);
     gOOTKokiriSwordBladeAdultDL = sKokiriSwordBladeAdultDL;
 
     gSPBranchList(sCallKokiriSwordSheathDL, gOOTKokiriSwordSheathDL);
-    guPosition(&sKokiriSwordSheathAdultResizerMtx, 0.f, 0.f, 0.f, CHILD_SWORD_TO_ADULT_SCALE, 0.f, 0.f, 0.f);
     gOOTKokiriSwordSheathAdultDL = sKokiriSwordSheathAdultDL;
 
-    guPosition(&gKokiriSwordBackAdultMtx, 0.f, 0.f, 0.f, 1.f, -440.f * CHILD_SWORD_TO_ADULT_SCALE, -211.f * CHILD_SWORD_TO_ADULT_SCALE, 0.f);
+    static Vec3f kokiriSwordAdultTranslation = {100.f, 25.f, -90.f};
+    static Vec3f kokiriSwordAdultBackBaseTranslation = {-440.f, -211.f, 0.f};
+    setupResizedSwordMatrixes(&sKokiriSwordHiltAdultResizerMtx, &sKokiriSwordBladeAdultResizerMtx, &sKokiriSwordSheathAdultResizerMtx, 
+    &gKokiriSwordBackAdultMtx, CHILD_SWORD_TO_ADULT_SCALE, &kokiriSwordAdultTranslation, &kokiriSwordAdultBackBaseTranslation);
 
     // Child Biggoron Sword
     gSPBranchList(sCallBiggoronSwordHiltDL, gOOTBiggoronSwordHiltDL);
