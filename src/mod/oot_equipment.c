@@ -392,19 +392,25 @@ void initCrossAgeEquipment() {
     gOOTHookshotHookChildDL = sHookshotHookChildDL;
 
     // Child Bow
+    const f32 BOW_X_SCALE = 0.7f;
+    const f32 BOW_X_TRANS = -40.f;
+
+    const f32 BOW_Y_TRANS = -65.f;
+
     gSPBranchList(sCallBowDL, gOOTBowDL);
-    guScale(&sBowChildResizerMtx, 0.7f, 1.f, 1.f);
-    guPosition(&sBowChildTransRotMtx, 0.f, 0.f, 1.f, 1.f, -40.f, 0.f, 0.f);
+    guScale(&sBowChildResizerMtx, BOW_X_SCALE, 1.f, 1.f);
+    guPosition(&sBowChildTransRotMtx, 0.f, 0.f, 1.f, 1.f, BOW_X_TRANS, BOW_Y_TRANS, 0.f);
     gOOTBowChildDL = sBowChildTransRotDL;
 
     gSPBranchList(sCallBowFirstPersonDL, gOOTBowFirstPersonDL);
-    guScale(&sBowFirstPersonChildResizerMtx, 0.7f, 1.f, 1.f);
-    guPosition(&sBowChildFirstPersonTransRotMtx, 0.f, 0.f, 1.f, 1.f, -40.f, 0.f, 0.f);
+    guScale(&sBowFirstPersonChildResizerMtx, BOW_X_SCALE, 1.f, 1.f);
+    guPosition(&sBowChildFirstPersonTransRotMtx, 0.f, 0.f, 1.f, 1.f, BOW_X_TRANS, BOW_Y_TRANS, 0.f);
     gOOTBowFirstPersonChildDL = sBowFirstPersonChildTransRotDL;
 
-    gSPBranchList(sCallBowStringDL, gOOTBowStringDL);
-    guPosition(&sBowStringChildResizerMtx, 0.f, 0.f, 0.f, 0.7f, 0.f, 0.f, 0.f);
-    gOOTBowStringChildDL = sBowStringChildDL;
+    extern Gfx object_link_child_DL_017818[];
+    //gSPBranchList(sCallBowStringDL, gOOTBowStringDL);
+    //guScale(&sBowStringChildResizerMtx, 0.7f, 0.7f, 1.f);
+    gOOTBowStringChildDL = GlobalObjects_getGlobalGfxPtr(OBJECT_LINK_CHILD, object_link_child_DL_017818);
 
     // Adult Deku Shield
     gSPBranchList(sCallDekuShieldDL, gOOTDekuShieldDL);
