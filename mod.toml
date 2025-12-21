@@ -15,6 +15,8 @@ display_name = "PlayerModelManager FS Addon"
 
 # The description that will show up when this mod is displayed in the mod menu. This should be human readable.
 description = """
+(Alpha 3, based on commit 75b5371)
+
 File system support for PlayerModelManager.
 
 Allows non-Fast64 player models (".zobj") to be read from here:

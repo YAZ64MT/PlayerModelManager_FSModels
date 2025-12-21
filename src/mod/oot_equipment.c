@@ -850,6 +850,7 @@ void addEquipmentToModelManager() {
         }
 
         setChildModelTypeDL(h, PMM_DL_BOTTLE_GLASS, gOOTBottleChildDL);
+        PlayerModelManager_setDisplayList(childHandle, PMM_DL_BOTTLE_GLASS, gOOTBottleChildDL);
 
         PlayerModelManager_addHandleToPack(ootPack, h);
     }
