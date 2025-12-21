@@ -584,8 +584,6 @@ void initChildEquipment() {
 extern Mtx gLinkHumanMirrorShieldMtx;
 extern Mtx gLinkHumanHerosShieldMtx;
 
-
-
 void addEquipmentToModelManager() {
     PlayerModelManagerHandle ootPack = PlayerModelManager_registerModel(PMM_API_VERSION, "__oot_vanilla_equipment__", PMM_MODEL_TYPE_MODEL_PACK);
     PlayerModelManager_setAuthor(ootPack, "Nintendo");
@@ -898,7 +896,7 @@ void addEquipmentToModelManager() {
 
     // Deku Stick (OOT)
     {
-        PlayerModelManagerHandle h = PLAYERMODELMANAGER_REGISTER_MODEL("oot_deku_stick_c", PMM_MODEL_TYPE_DEKU_STICK);
+        PlayerModelManagerHandle h = PLAYERMODELMANAGER_REGISTER_MODEL("__oot_deku_stick__", PMM_MODEL_TYPE_DEKU_STICK);
         PlayerModelManager_setDisplayName(h, "Deku Stick (OoT)");
         PlayerModelManager_setAuthor(h, "Nintendo");
 
