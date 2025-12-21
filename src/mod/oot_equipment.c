@@ -50,6 +50,7 @@ Gfx *gOOTBottleAdultDL;
 Gfx *gOOTBottleChildDL;
 Gfx *gOOTDekuStickDL;
 Gfx *gOOTFairyOcarinaDL;
+Gfx *gOOTFairyOcarinaAdultDL;
 
 Mtx gOOTAdultShieldMtx;
 Mtx gOOTHookshotHookAndChainMtx;
@@ -238,11 +239,15 @@ static Gfx sCallBowDL[] = {
 
 DECLARE_STATIC_MATRIX_WRAPPED_DL(sBowChildDL, sBowChildResizerMtx, sCallBowDL);
 
+DECLARE_STATIC_MATRIX_WRAPPED_DL(sBowChildTransRotDL, sBowChildTransRotMtx, sBowChildDL);
+
 static Gfx sCallBowFirstPersonDL[] = {
     gsSPEndDisplayList(),
 };
 
 DECLARE_STATIC_MATRIX_WRAPPED_DL(sBowFirstPersonChildDL, sBowFirstPersonChildResizerMtx, sCallBowFirstPersonDL);
+
+DECLARE_STATIC_MATRIX_WRAPPED_DL(sBowFirstPersonChildTransRotDL, sBowChildFirstPersonTransRotMtx, sBowFirstPersonChildDL);
 
 static Gfx sCallBowStringDL[] = {
     gsSPEndDisplayList(),
@@ -254,7 +259,43 @@ static Gfx sCallDekuShieldDL[] = {
     gsSPEndDisplayList(),
 };
 
-DECLARE_STATIC_MATRIX_WRAPPED_DL(sDekuShieldAdult, sDekuShieldAdultResizer, sCallDekuShieldDL);
+DECLARE_STATIC_MATRIX_WRAPPED_DL(sDekuShieldAdult, sDekuShieldAdultResizerMtx, sCallDekuShieldDL);
+
+static Gfx sCallFairyOcarinaDL[] = {
+    gsSPEndDisplayList(),
+};
+
+DECLARE_STATIC_MATRIX_WRAPPED_DL(sFairyOcarinaAdultDL, sFairyOcarinaResizerMtx, sCallFairyOcarinaDL);
+
+static void setupResizedSwordMatrixes(Mtx *hiltResizeMtx, Mtx *bladeResizeMtx, Mtx *sheathResizeMtx, Mtx *hiltBackMtx, f32 scale, Vec3f *translation, Vec3f *hiltBackBaseTranslation) {
+    guPosition(hiltResizeMtx, 0.f, 0.f, 0.f, scale, translation->x, translation->y, translation->z);
+    guPosition(bladeResizeMtx, 0.f, 0.f, 0.f, scale, translation->x, translation->y, translation->z);
+    guPosition(sheathResizeMtx, 0.f, 0.f, 0.f, scale, 0.f, 0.f, 0.f);
+    guPosition(hiltBackMtx, 0.f, 0.f, 0.f, 1.f,
+               hiltBackBaseTranslation->x * scale - translation->x,
+               hiltBackBaseTranslation->y * scale - translation->y,
+               hiltBackBaseTranslation->z * scale - translation->z);
+}
+
+static PlayerModelManagerModelType sModelTypesAdult[] = {PMM_MODEL_TYPE_ADULT, PMM_MODEL_TYPE_ZORA, PMM_MODEL_TYPE_GORON, PMM_MODEL_TYPE_FIERCE_DEITY};
+
+static void setAdultModelTypeDL(PlayerModelManagerHandle h, PlayerModelManagerDisplayListId id, Gfx *dl) {
+    PlayerModelManager_setDisplayListForModelTypeArray(h, sModelTypesAdult, ARRAY_COUNT(sModelTypesAdult), id, dl);
+}
+
+static void setAdultModelTypeMtx(PlayerModelManagerHandle h, PlayerModelManagerMatrixId id, Mtx *mtx) {
+    PlayerModelManager_setMatrixForModelTypeArray(h, sModelTypesAdult, ARRAY_COUNT(sModelTypesAdult), id, mtx);
+}
+
+static PlayerModelManagerModelType sModelTypesChild[] = {PMM_MODEL_TYPE_CHILD, PMM_MODEL_TYPE_DEKU};
+
+static void setChildModelTypeDL(PlayerModelManagerHandle h, PlayerModelManagerDisplayListId id, Gfx *dl) {
+    PlayerModelManager_setDisplayListForModelTypeArray(h, sModelTypesChild, ARRAY_COUNT(sModelTypesChild), id, dl);
+}
+
+static void setChildModelTypeMtx(PlayerModelManagerHandle h, PlayerModelManagerMatrixId id, Mtx *mtx) {
+    PlayerModelManager_setMatrixForModelTypeArray(h, sModelTypesChild, ARRAY_COUNT(sModelTypesChild), id, mtx);
+}
 
 #define ADULT_SWORD_TO_CHILD_SCALE 0.9f
 #define ADULT_SWORD_TO_CHILD_X 30.f
@@ -352,12 +393,14 @@ void initCrossAgeEquipment() {
 
     // Child Bow
     gSPBranchList(sCallBowDL, gOOTBowDL);
-    guPosition(&sBowChildResizerMtx, 0.f, 0.f, 0.f, 0.7f, 0.f, 0.f, 0.f);
-    gOOTBowChildDL = sBowChildDL;
+    guScale(&sBowChildResizerMtx, 0.7f, 1.f, 1.f);
+    guPosition(&sBowChildTransRotMtx, 0.f, 0.f, 1.f, 1.f, -40.f, 0.f, 0.f);
+    gOOTBowChildDL = sBowChildTransRotDL;
 
     gSPBranchList(sCallBowFirstPersonDL, gOOTBowFirstPersonDL);
-    guPosition(&sBowFirstPersonChildResizerMtx, 0.f, 0.f, 0.f, 0.7f, 0.f, 0.f, 0.f);
-    gOOTBowFirstPersonChildDL = sBowFirstPersonChildDL;
+    guScale(&sBowFirstPersonChildResizerMtx, 0.7f, 1.f, 1.f);
+    guPosition(&sBowChildFirstPersonTransRotMtx, 0.f, 0.f, 1.f, 1.f, -40.f, 0.f, 0.f);
+    gOOTBowFirstPersonChildDL = sBowFirstPersonChildTransRotDL;
 
     gSPBranchList(sCallBowStringDL, gOOTBowStringDL);
     guPosition(&sBowStringChildResizerMtx, 0.f, 0.f, 0.f, 0.7f, 0.f, 0.f, 0.f);
@@ -365,10 +408,15 @@ void initCrossAgeEquipment() {
 
     // Adult Deku Shield
     gSPBranchList(sCallDekuShieldDL, gOOTDekuShieldDL);
-    guPosition(&sDekuShieldAdultResizer, 0.f, 0.f, 0.f, 1.35f, 0.f, 0.f, 0.f);
+    guPosition(&sDekuShieldAdultResizerMtx, 0.f, 0.f, 0.f, 1.35f, 0.f, 0.f, 0.f);
     gOOTDekuShieldAdultDL = sDekuShieldAdult;
 
     guPosition(&gOOTHookshotHookAndChainChildMtx, 0.f, 0.f, 0.f, 1.f, 30.f, 150.f, 0.f);
+
+    // Adult Fairy Ocarina
+    gSPBranchList(sCallFairyOcarinaDL, gOOTFairyOcarinaDL);
+    guPosition(&sFairyOcarinaResizerMtx, 7.f, -8.f, -4.f, 1.f, 72.f, 238.f, -3.f);
+    gOOTFairyOcarinaAdultDL = sCallFairyOcarinaDL;
 
     addEquipmentToModelManager();
 }
@@ -530,14 +578,12 @@ void initChildEquipment() {
 extern Mtx gLinkHumanMirrorShieldMtx;
 extern Mtx gLinkHumanHerosShieldMtx;
 
-void addEquipmentToModelManager() {
-    PlayerModelManagerHandle childPack = PlayerModelManager_registerModel(PMM_API_VERSION, "oot_vanilla_equipment_c", PMM_MODEL_TYPE_MODEL_PACK);
-    PlayerModelManager_setAuthor(childPack, "Nintendo");
-    PlayerModelManager_setDisplayName(childPack, "OoT Equipment (Child)");
 
-    PlayerModelManagerHandle adultPack = PlayerModelManager_registerModel(PMM_API_VERSION, "oot_vanilla_equipment_a", PMM_MODEL_TYPE_MODEL_PACK);
-    PlayerModelManager_setAuthor(adultPack, "Nintendo");
-    PlayerModelManager_setDisplayName(adultPack, "OoT Equipment (Adult)");
+
+void addEquipmentToModelManager() {
+    PlayerModelManagerHandle ootPack = PlayerModelManager_registerModel(PMM_API_VERSION, "__oot_vanilla_equipment__", PMM_MODEL_TYPE_MODEL_PACK);
+    PlayerModelManager_setAuthor(ootPack, "Nintendo");
+    PlayerModelManager_setDisplayName(ootPack, "OoT Equipment");
 
     PlayerModelManagerHandle adultHandle = getAdultLinkHumanHandle();
     PlayerModelManagerHandle fdHandle = getAdultLinkFierceDeityHandle();
@@ -545,7 +591,7 @@ void addEquipmentToModelManager() {
 
     // Mirror Shield (OOT)
     {
-        PlayerModelManagerHandle h = PLAYERMODELMANAGER_REGISTER_MODEL("oot_mirror_shield3_a", PMM_MODEL_TYPE_SHIELD_MIRROR);
+        PlayerModelManagerHandle h = PLAYERMODELMANAGER_REGISTER_MODEL("__oot_mirror_shield3__", PMM_MODEL_TYPE_SHIELD_MIRROR);
         PlayerModelManager_setDisplayName(h, "Mirror Shield (OoT)");
         PlayerModelManager_setAuthor(h, "Nintendo");
 
@@ -560,31 +606,17 @@ void addEquipmentToModelManager() {
             PlayerModelManager_setDisplayList(h1, PMM_DL_SHIELD_MIRROR_RAY_BEAM, gOOTMirrorShieldRayBeamAdjustedDL);
         }
 
-        PlayerModelManager_addHandleToPack(adultPack, h);
-    }
+        setChildModelTypeMtx(h, PMM_MTX_SHIELD_MIRROR_BACK, SEGMENTED_TO_GLOBAL_PTR(GlobalObjects_getGlobalObject(OBJECT_LINK_CHILD), &gLinkHumanMirrorShieldMtx));
+        setChildModelTypeDL(h, PMM_DL_SHIELD_MIRROR, gOOTMirrorShieldChildDL);
+        setChildModelTypeDL(h, PMM_DL_SHIELD_MIRROR_RAY, gOOTMirrorShieldRayChildDL);
+        setChildModelTypeDL(h, PMM_DL_SHIELD_MIRROR_RAY_BEAM, gOOTMirrorShieldRayBeamChildDL);
 
-    {
-        PlayerModelManagerHandle h = PLAYERMODELMANAGER_REGISTER_MODEL("oot_mirror_shield3_c", PMM_MODEL_TYPE_SHIELD_MIRROR);
-        PlayerModelManager_setDisplayName(h, "Mirror Shield (OoT) (Child)");
-        PlayerModelManager_setAuthor(h, "Nintendo");
-
-        PlayerModelManagerHandle handles[] = {h, childHandle};
-
-        for (int i = 0; i < ARRAY_COUNT(handles); ++i) {
-            PlayerModelManagerHandle h1 = handles[i];
-
-            PlayerModelManager_setMatrix(h1, PMM_MTX_SHIELD_MIRROR_BACK, SEGMENTED_TO_GLOBAL_PTR(GlobalObjects_getGlobalObject(OBJECT_LINK_CHILD), &gLinkHumanMirrorShieldMtx));
-            PlayerModelManager_setDisplayList(h1, PMM_DL_SHIELD_MIRROR, gOOTMirrorShieldChildDL);
-            PlayerModelManager_setDisplayList(h1, PMM_DL_SHIELD_MIRROR_RAY, gOOTMirrorShieldRayChildDL);
-            PlayerModelManager_setDisplayList(h1, PMM_DL_SHIELD_MIRROR_RAY_BEAM, gOOTMirrorShieldRayBeamChildDL);
-        }
-
-        PlayerModelManager_addHandleToPack(childPack, h);
+        PlayerModelManager_addHandleToPack(ootPack, h);
     }
 
     // Hylian Shield
     {
-        PlayerModelManagerHandle h = PLAYERMODELMANAGER_REGISTER_MODEL("oot_hylian_shield2_a", PMM_MODEL_TYPE_SHIELD_HERO);
+        PlayerModelManagerHandle h = PLAYERMODELMANAGER_REGISTER_MODEL("__oot_hylian_shield2__", PMM_MODEL_TYPE_SHIELD_HERO);
         PlayerModelManager_setDisplayName(h, "Hylian Shield (OoT)");
         PlayerModelManager_setAuthor(h, "Nintendo");
 
@@ -597,62 +629,36 @@ void addEquipmentToModelManager() {
             PlayerModelManager_setDisplayList(h1, PMM_DL_SHIELD_HERO, gOOTHylianShieldDL);
         }
 
-        PlayerModelManager_addHandleToPack(adultPack, h);
-    }
+        setChildModelTypeMtx(h, PMM_MTX_SHIELD_HERO_BACK, SEGMENTED_TO_GLOBAL_PTR(GlobalObjects_getGlobalObject(OBJECT_LINK_CHILD), &gLinkHumanHerosShieldMtx));
+        setChildModelTypeDL(h, PMM_DL_SHIELD_HERO, gOOTHylianShieldChildDL);
 
-    {
-        PlayerModelManagerHandle h = PLAYERMODELMANAGER_REGISTER_MODEL("oot_hylian_shield2_c", PMM_MODEL_TYPE_SHIELD_HERO);
-        PlayerModelManager_setDisplayName(h, "Hylian Shield (OoT) (Child)");
-        PlayerModelManager_setAuthor(h, "Nintendo");
-
-        PlayerModelManagerHandle handles[] = {h, childHandle};
-
-        for (int i = 0; i < ARRAY_COUNT(handles); ++i) {
-            PlayerModelManagerHandle h1 = handles[i];
-
-            PlayerModelManager_setMatrix(h1, PMM_MTX_SHIELD_HERO_BACK, SEGMENTED_TO_GLOBAL_PTR(GlobalObjects_getGlobalObject(OBJECT_LINK_CHILD), &gLinkHumanHerosShieldMtx));
-            PlayerModelManager_setDisplayList(h1, PMM_DL_SHIELD_HERO, gOOTHylianShieldChildDL);
-        }
-
-        PlayerModelManager_addHandleToPack(childPack, h);
+        PlayerModelManager_addHandleToPack(ootPack, h);
     }
 
     // Deku Shield
     {
-        PlayerModelManagerHandle h = PLAYERMODELMANAGER_REGISTER_MODEL("oot_deku_shield2_a", PMM_MODEL_TYPE_SHIELD_HERO);
-        PlayerModelManager_setDisplayName(h, "Deku Shield (Adult)");
-        PlayerModelManager_setAuthor(h, "Nintendo");
-        PlayerModelManager_setMatrix(h, PMM_MTX_SHIELD_HERO_BACK, &gOOTAdultShieldMtx);
-        PlayerModelManager_setDisplayList(h, PMM_DL_SHIELD_HERO, gOOTDekuShieldAdultDL);
-    }
-
-    {
-        PlayerModelManagerHandle h = PLAYERMODELMANAGER_REGISTER_MODEL("oot_deku_shield2_c", PMM_MODEL_TYPE_SHIELD_HERO);
-        PlayerModelManager_setDisplayName(h, "Deku Shield");
-        PlayerModelManager_setAuthor(h, "Nintendo");
-        PlayerModelManager_setMatrix(h, PMM_MTX_SHIELD_HERO_BACK, &gOOTDekuShieldMtx);
-        PlayerModelManager_setDisplayList(h, PMM_DL_SHIELD_HERO, gOOTDekuShieldDL);
-    }
-
-    {
-        PlayerModelManagerHandle h = PLAYERMODELMANAGER_REGISTER_MODEL("oot_deku_shield1_a", PMM_MODEL_TYPE_SHIELD_DEKU);
-        PlayerModelManager_setDisplayName(h, "Deku Shield (Adult)");
-        PlayerModelManager_setAuthor(h, "Nintendo");
-        PlayerModelManager_setMatrix(h, PMM_MTX_SHIELD_DEKU_BACK, &gOOTAdultShieldMtx);
-        PlayerModelManager_setDisplayList(h, PMM_DL_SHIELD_DEKU, gOOTDekuShieldAdultDL);
-    }
-
-    {
-        PlayerModelManagerHandle h = PLAYERMODELMANAGER_REGISTER_MODEL("oot_deku_shield1_c", PMM_MODEL_TYPE_SHIELD_DEKU);
+        PlayerModelManagerHandle h = PLAYERMODELMANAGER_REGISTER_MODEL("__oot_deku_shield1__", PMM_MODEL_TYPE_SHIELD_DEKU);
         PlayerModelManager_setDisplayName(h, "Deku Shield");
         PlayerModelManager_setAuthor(h, "Nintendo");
         PlayerModelManager_setMatrix(h, PMM_MTX_SHIELD_DEKU_BACK, &gOOTDekuShieldMtx);
         PlayerModelManager_setDisplayList(h, PMM_DL_SHIELD_DEKU, gOOTDekuShieldDL);
+        setAdultModelTypeMtx(h, PMM_MTX_SHIELD_DEKU_BACK, &gOOTAdultShieldMtx);
+        setAdultModelTypeDL(h, PMM_DL_SHIELD_DEKU, gOOTDekuShieldAdultDL);
+    }
+
+    {
+        PlayerModelManagerHandle h = PLAYERMODELMANAGER_REGISTER_MODEL("__oot_deku_shield2__", PMM_MODEL_TYPE_SHIELD_HERO);
+        PlayerModelManager_setDisplayName(h, "Deku Shield");
+        PlayerModelManager_setAuthor(h, "Nintendo");
+        PlayerModelManager_setMatrix(h, PMM_MTX_SHIELD_HERO_BACK, &gOOTDekuShieldMtx);
+        PlayerModelManager_setDisplayList(h, PMM_DL_SHIELD_HERO, gOOTDekuShieldDL);
+        setAdultModelTypeMtx(h, PMM_MTX_SHIELD_HERO_BACK, &gOOTAdultShieldMtx);
+        setAdultModelTypeDL(h, PMM_DL_SHIELD_HERO, gOOTDekuShieldAdultDL);
     }
 
     // Master Sword
     {
-        PlayerModelManagerHandle h = PLAYERMODELMANAGER_REGISTER_MODEL("oot_master_sword1_a", PMM_MODEL_TYPE_SWORD_KOKIRI);
+        PlayerModelManagerHandle h = PLAYERMODELMANAGER_REGISTER_MODEL("__oot_master_sword1__", PMM_MODEL_TYPE_SWORD_KOKIRI);
         PlayerModelManager_setDisplayName(h, "Master Sword");
         PlayerModelManager_setAuthor(h, "Nintendo");
 
@@ -667,11 +673,16 @@ void addEquipmentToModelManager() {
             PlayerModelManager_setDisplayList(h1, PMM_DL_SWORD_KOKIRI_SHEATH, gOOTMasterSwordSheathDL);
         }
 
-        PlayerModelManager_addHandleToPack(adultPack, h);
+        setChildModelTypeMtx(h, PMM_MTX_SWORD_KOKIRI_BACK, &gMasterSwordBackChildMtx);
+        setChildModelTypeDL(h, PMM_DL_SWORD_KOKIRI_BLADE, gOOTMasterSwordBladeChildDL);
+        setChildModelTypeDL(h, PMM_DL_SWORD_KOKIRI_HILT, gOOTMasterSwordHiltChildDL);
+        setChildModelTypeDL(h, PMM_DL_SWORD_KOKIRI_SHEATH, gOOTMasterSwordSheathChildDL);
+
+        PlayerModelManager_addHandleToPack(ootPack, h);
     }
 
     {
-        PlayerModelManagerHandle h = PLAYERMODELMANAGER_REGISTER_MODEL("oot_master_sword2_a", PMM_MODEL_TYPE_SWORD_RAZOR);
+        PlayerModelManagerHandle h = PLAYERMODELMANAGER_REGISTER_MODEL("__oot_master_sword2__", PMM_MODEL_TYPE_SWORD_RAZOR);
         PlayerModelManager_setDisplayName(h, "Master Sword");
         PlayerModelManager_setAuthor(h, "Nintendo");
 
@@ -686,11 +697,16 @@ void addEquipmentToModelManager() {
             PlayerModelManager_setDisplayList(h1, PMM_DL_SWORD_RAZOR_SHEATH, gOOTMasterSwordSheathDL);
         }
 
-        PlayerModelManager_addHandleToPack(adultPack, h);
+        setChildModelTypeMtx(h, PMM_MTX_SWORD_RAZOR_BACK, &gMasterSwordBackChildMtx);
+        setChildModelTypeDL(h, PMM_DL_SWORD_RAZOR_BLADE, gOOTMasterSwordBladeChildDL);
+        setChildModelTypeDL(h, PMM_DL_SWORD_RAZOR_HILT, gOOTMasterSwordHiltChildDL);
+        setChildModelTypeDL(h, PMM_DL_SWORD_RAZOR_SHEATH, gOOTMasterSwordSheathChildDL);
+
+        PlayerModelManager_addHandleToPack(ootPack, h);
     }
 
     {
-        PlayerModelManagerHandle h = PLAYERMODELMANAGER_REGISTER_MODEL("oot_master_sword3_a", PMM_MODEL_TYPE_SWORD_GILDED);
+        PlayerModelManagerHandle h = PLAYERMODELMANAGER_REGISTER_MODEL("__oot_master_sword3__", PMM_MODEL_TYPE_SWORD_GILDED);
         PlayerModelManager_setDisplayName(h, "Master Sword");
         PlayerModelManager_setAuthor(h, "Nintendo");
 
@@ -705,31 +721,17 @@ void addEquipmentToModelManager() {
             PlayerModelManager_setDisplayList(h1, PMM_DL_SWORD_GILDED_SHEATH, gOOTMasterSwordSheathDL);
         }
 
-        PlayerModelManager_addHandleToPack(adultPack, h);
-    }
+        setChildModelTypeMtx(h, PMM_MTX_SWORD_GILDED_BACK, &gMasterSwordBackChildMtx);
+        setChildModelTypeDL(h, PMM_DL_SWORD_GILDED_BLADE, gOOTMasterSwordBladeChildDL);
+        setChildModelTypeDL(h, PMM_DL_SWORD_GILDED_HILT, gOOTMasterSwordHiltChildDL);
+        setChildModelTypeDL(h, PMM_DL_SWORD_GILDED_SHEATH, gOOTMasterSwordSheathChildDL);
 
-    {
-        PlayerModelManagerHandle h = PLAYERMODELMANAGER_REGISTER_MODEL("oot_master_sword3_c", PMM_MODEL_TYPE_SWORD_GILDED);
-        PlayerModelManager_setDisplayName(h, "Master Sword (Child)");
-        PlayerModelManager_setAuthor(h, "Nintendo");
-
-        PlayerModelManagerHandle handles[] = {h, childHandle};
-
-        for (int i = 0; i < ARRAY_COUNT(handles); ++i) {
-            PlayerModelManagerHandle h1 = handles[i];
-
-            PlayerModelManager_setMatrix(h1, PMM_MTX_SWORD_GILDED_BACK, &gMasterSwordBackChildMtx);
-            PlayerModelManager_setDisplayList(h1, PMM_DL_SWORD_GILDED_BLADE, gOOTMasterSwordBladeChildDL);
-            PlayerModelManager_setDisplayList(h1, PMM_DL_SWORD_GILDED_HILT, gOOTMasterSwordHiltChildDL);
-            PlayerModelManager_setDisplayList(h1, PMM_DL_SWORD_GILDED_SHEATH, gOOTMasterSwordSheathChildDL);
-        }
-
-        PlayerModelManager_addHandleToPack(childPack, h);
+        PlayerModelManager_addHandleToPack(ootPack, h);
     }
 
     // Kokiri Sword (OOT)
     {
-        PlayerModelManagerHandle h = PLAYERMODELMANAGER_REGISTER_MODEL("oot_kokiri_sword1_c", PMM_MODEL_TYPE_SWORD_KOKIRI);
+        PlayerModelManagerHandle h = PLAYERMODELMANAGER_REGISTER_MODEL("__oot_kokiri_sword1__", PMM_MODEL_TYPE_SWORD_KOKIRI);
         PlayerModelManager_setDisplayName(h, "Kokiri Sword (OoT)");
         PlayerModelManager_setAuthor(h, "Nintendo");
 
@@ -744,23 +746,17 @@ void addEquipmentToModelManager() {
             PlayerModelManager_setDisplayList(h1, PMM_DL_SWORD_KOKIRI_SHEATH, gOOTKokiriSwordSheathDL);
         }
 
-        PlayerModelManager_addHandleToPack(childPack, h);
-    }
+        setAdultModelTypeMtx(h, PMM_MTX_SWORD_KOKIRI_BACK, &gKokiriSwordBackAdultMtx);
+        setAdultModelTypeDL(h, PMM_DL_SWORD_KOKIRI_BLADE, gOOTKokiriSwordBladeAdultDL);
+        setAdultModelTypeDL(h, PMM_DL_SWORD_KOKIRI_HILT, gOOTKokiriSwordHiltAdultDL);
+        setAdultModelTypeDL(h, PMM_DL_SWORD_KOKIRI_SHEATH, gOOTKokiriSwordSheathAdultDL);
 
-    {
-        PlayerModelManagerHandle h = PLAYERMODELMANAGER_REGISTER_MODEL("oot_kokiri_sword1_a", PMM_MODEL_TYPE_SWORD_KOKIRI);
-        PlayerModelManager_setDisplayName(h, "Kokiri Sword (OoT) (Adult)");
-        PlayerModelManager_setAuthor(h, "Nintendo");
-        PlayerModelManager_setMatrix(h, PMM_MTX_SWORD_KOKIRI_BACK, &gKokiriSwordBackAdultMtx);
-        PlayerModelManager_setDisplayList(h, PMM_DL_SWORD_KOKIRI_BLADE, gOOTKokiriSwordBladeAdultDL);
-        PlayerModelManager_setDisplayList(h, PMM_DL_SWORD_KOKIRI_HILT, gOOTKokiriSwordHiltAdultDL);
-        PlayerModelManager_setDisplayList(h, PMM_DL_SWORD_KOKIRI_SHEATH, gOOTKokiriSwordSheathAdultDL);
-        PlayerModelManager_addHandleToPack(adultPack, h);
+        PlayerModelManager_addHandleToPack(ootPack, h);
     }
 
     // Biggoron Sword
     {
-        PlayerModelManagerHandle h = PLAYERMODELMANAGER_REGISTER_MODEL("oot_biggoron_sword5_a", PMM_MODEL_TYPE_SWORD_GREAT_FAIRY);
+        PlayerModelManagerHandle h = PLAYERMODELMANAGER_REGISTER_MODEL("__oot_biggoron_sword5__", PMM_MODEL_TYPE_SWORD_GREAT_FAIRY);
         PlayerModelManager_setDisplayName(h, "Biggoron Sword");
         PlayerModelManager_setAuthor(h, "Nintendo");
 
@@ -775,42 +771,42 @@ void addEquipmentToModelManager() {
             PlayerModelManager_setDisplayList(h1, PMM_DL_SWORD5_SHEATH, gOOTMasterSwordSheathDL);
         }
 
-        PlayerModelManager_addHandleToPack(adultPack, h);
+        setChildModelTypeMtx(h, PMM_MTX_SWORD5_BACK, &gMasterSwordBackChildMtx);
+        setChildModelTypeDL(h, PMM_DL_SWORD_GREAT_FAIRY_BLADE, gOOTBiggoronSwordBladeChildDL);
+        setChildModelTypeDL(h, PMM_DL_SWORD_GREAT_FAIRY_HILT, gOOTBiggoronSwordHiltChildDL);
+        setChildModelTypeDL(h, PMM_DL_SWORD5_SHEATH, gOOTMasterSwordSheathChildDL);
+
+        PlayerModelManager_addHandleToPack(ootPack, h);
     }
 
     {
-        PlayerModelManagerHandle h = PLAYERMODELMANAGER_REGISTER_MODEL("oot_biggoron_sword5_c", PMM_MODEL_TYPE_SWORD_GREAT_FAIRY);
-        PlayerModelManager_setDisplayName(h, "Biggoron Sword (Child)");
+        PlayerModelManagerHandle h = PLAYERMODELMANAGER_REGISTER_MODEL("__oot_biggoron_sword4__", PMM_MODEL_TYPE_SWORD_FIERCE_DIETY);
+        PlayerModelManager_setDisplayName(h, "Biggoron Sword");
         PlayerModelManager_setAuthor(h, "Nintendo");
+        PlayerModelManager_setMatrix(h, PMM_MTX_SWORD4_BACK, &gOOTMasterSwordHiltMtx);
 
-        PlayerModelManagerHandle handles[] = {h, childHandle};
+        PlayerModelManagerHandle handles[] = {h, adultHandle, fdHandle};
 
         for (int i = 0; i < ARRAY_COUNT(handles); ++i) {
             PlayerModelManagerHandle h1 = handles[i];
 
-            PlayerModelManager_setMatrix(h1, PMM_MTX_SWORD5_BACK, &gMasterSwordBackChildMtx);
-            PlayerModelManager_setDisplayList(h1, PMM_DL_SWORD_GREAT_FAIRY_BLADE, gOOTBiggoronSwordBladeChildDL);
-            PlayerModelManager_setDisplayList(h1, PMM_DL_SWORD_GREAT_FAIRY_HILT, gOOTBiggoronSwordHiltChildDL);
-            PlayerModelManager_setDisplayList(h1, PMM_DL_SWORD5_SHEATH, gOOTMasterSwordSheathChildDL);
+            PlayerModelManager_setMatrix(h1, PMM_MTX_SWORD4_BACK, &gOOTMasterSwordHiltMtx);
+            PlayerModelManager_setDisplayList(h1, PMM_DL_SWORD_FIERCE_DEITY_BLADE, gOOTBiggoronSwordBladeDL);
+            PlayerModelManager_setDisplayList(h1, PMM_DL_SWORD_FIERCE_DEITY_HILT, gOOTBiggoronSwordHiltDL);
+            PlayerModelManager_setDisplayList(h1, PMM_DL_SWORD4_SHEATH, gOOTMasterSwordSheathDL);
         }
 
-        PlayerModelManager_addHandleToPack(childPack, h);
-    }
+        setChildModelTypeMtx(h, PMM_MTX_SWORD4_BACK, &gMasterSwordBackChildMtx);
+        setChildModelTypeDL(h, PMM_DL_SWORD_FIERCE_DEITY_BLADE, gOOTBiggoronSwordBladeChildDL);
+        setChildModelTypeDL(h, PMM_DL_SWORD_FIERCE_DEITY_HILT, gOOTBiggoronSwordHiltChildDL);
+        setChildModelTypeDL(h, PMM_DL_SWORD4_SHEATH, gOOTMasterSwordSheathChildDL);
 
-    {
-        PlayerModelManagerHandle h = PLAYERMODELMANAGER_REGISTER_MODEL("oot_biggoron_sword4_a", PMM_MODEL_TYPE_SWORD_FIERCE_DIETY);
-        PlayerModelManager_setDisplayName(h, "Biggoron Sword");
-        PlayerModelManager_setAuthor(h, "Nintendo");
-        PlayerModelManager_setMatrix(h, PMM_MTX_SWORD4_BACK, &gOOTMasterSwordHiltMtx);
-        PlayerModelManager_setDisplayList(h, PMM_DL_SWORD_FIERCE_DEITY_BLADE, gOOTBiggoronSwordBladeDL);
-        PlayerModelManager_setDisplayList(h, PMM_DL_SWORD_FIERCE_DEITY_HILT, gOOTBiggoronSwordHiltDL);
-        PlayerModelManager_setDisplayList(h, PMM_DL_SWORD4_SHEATH, gOOTMasterSwordSheathDL);
-        PlayerModelManager_addHandleToPack(adultPack, h);
+        PlayerModelManager_addHandleToPack(ootPack, h);
     }
 
     // Hookshot (OOT)
     {
-        PlayerModelManagerHandle h = PLAYERMODELMANAGER_REGISTER_MODEL("oot_hookshot_a", PMM_MODEL_TYPE_HOOKSHOT);
+        PlayerModelManagerHandle h = PLAYERMODELMANAGER_REGISTER_MODEL("__oot_hookshot__", PMM_MODEL_TYPE_HOOKSHOT);
         PlayerModelManager_setDisplayName(h, "Hookshot (OoT)");
         PlayerModelManager_setAuthor(h, "Nintendo");
 
@@ -826,32 +822,17 @@ void addEquipmentToModelManager() {
             PlayerModelManager_setDisplayList(h1, PMM_DL_HOOKSHOT_HOOK, gOOTHookshotHookDL);
         }
 
-        PlayerModelManager_addHandleToPack(adultPack, h);
-    }
+        setChildModelTypeMtx(h, PMM_MTX_HOOKSHOT_CHAIN_AND_HOOK, &gOOTHookshotHookAndChainChildMtx);
+        setChildModelTypeDL(h, PMM_DL_HOOKSHOT, gOOTHookshotChildDL);
+        setChildModelTypeDL(h, PMM_DL_FPS_HOOKSHOT, gOOTHookshotFirstPersonChildDL);
+        setChildModelTypeDL(h, PMM_DL_HOOKSHOT_HOOK, gOOTHookshotHookChildDL);
 
-    {
-        PlayerModelManagerHandle h = PLAYERMODELMANAGER_REGISTER_MODEL("oot_hookshot_c", PMM_MODEL_TYPE_HOOKSHOT);
-        PlayerModelManager_setDisplayName(h, "Hookshot (OoT) (Child)");
-        PlayerModelManager_setAuthor(h, "Nintendo");
-
-        PlayerModelManagerHandle handles[] = {h, childHandle};
-
-        for (int i = 0; i < ARRAY_COUNT(handles); ++i) {
-            PlayerModelManagerHandle h1 = handles[i];
-
-            PlayerModelManager_setMatrix(h1, PMM_MTX_HOOKSHOT_CHAIN_AND_HOOK, &gOOTHookshotHookAndChainChildMtx);
-            PlayerModelManager_setDisplayList(h1, PMM_DL_HOOKSHOT, gOOTHookshotChildDL);
-            PlayerModelManager_setDisplayList(h1, PMM_DL_FPS_HOOKSHOT, gOOTHookshotFirstPersonChildDL);
-            PlayerModelManager_setDisplayList(h1, PMM_DL_HOOKSHOT_CHAIN, gOOTHookshotChainDL);
-            PlayerModelManager_setDisplayList(h1, PMM_DL_HOOKSHOT_HOOK, gOOTHookshotHookChildDL);
-        }
-
-        PlayerModelManager_addHandleToPack(childPack, h);
+        PlayerModelManager_addHandleToPack(ootPack, h);
     }
 
     // Bottle (OOT)
     {
-        PlayerModelManagerHandle h = PLAYERMODELMANAGER_REGISTER_MODEL("oot_bottle_a", PMM_MODEL_TYPE_BOTTLE);
+        PlayerModelManagerHandle h = PLAYERMODELMANAGER_REGISTER_MODEL("__oot_bottle__", PMM_MODEL_TYPE_BOTTLE);
         PlayerModelManager_setDisplayName(h, "Bottle (OoT) (Adult)");
         PlayerModelManager_setAuthor(h, "Nintendo");
 
@@ -864,29 +845,14 @@ void addEquipmentToModelManager() {
             PlayerModelManager_setDisplayList(h1, PMM_DL_BOTTLE_CONTENTS, gEmptyDL);
         }
 
-        PlayerModelManager_addHandleToPack(adultPack, h);
-    }
+        setChildModelTypeDL(h, PMM_DL_BOTTLE_GLASS, gOOTBottleChildDL);
 
-    {
-        PlayerModelManagerHandle h = PLAYERMODELMANAGER_REGISTER_MODEL("oot_bottle_c", PMM_MODEL_TYPE_BOTTLE);
-        PlayerModelManager_setDisplayName(h, "Bottle (OoT) (Child)");
-        PlayerModelManager_setAuthor(h, "Nintendo");
-
-        PlayerModelManagerHandle handles[] = {h, childHandle};
-
-        for (int i = 0; i < ARRAY_COUNT(handles); ++i) {
-            PlayerModelManagerHandle h1 = handles[i];
-
-            PlayerModelManager_setDisplayList(h1, PMM_DL_BOTTLE_GLASS, gOOTBottleChildDL);
-            PlayerModelManager_setDisplayList(h1, PMM_DL_BOTTLE_CONTENTS, gEmptyDL);
-        }
-
-        PlayerModelManager_addHandleToPack(childPack, h);
+        PlayerModelManager_addHandleToPack(ootPack, h);
     }
 
     // Bow (OOT)
     {
-        PlayerModelManagerHandle h = PLAYERMODELMANAGER_REGISTER_MODEL("oot_bow_a", PMM_MODEL_TYPE_BOW);
+        PlayerModelManagerHandle h = PLAYERMODELMANAGER_REGISTER_MODEL("__oot_bow__", PMM_MODEL_TYPE_BOW);
         PlayerModelManager_setDisplayName(h, "Bow (OoT)");
         PlayerModelManager_setAuthor(h, "Nintendo");
 
@@ -900,32 +866,28 @@ void addEquipmentToModelManager() {
             PlayerModelManager_setDisplayList(h1, PMM_DL_BOW_STRING, gOOTBowStringDL);
         }
 
-        PlayerModelManager_addHandleToPack(adultPack, h);
-    }
+        setChildModelTypeDL(h, PMM_DL_BOW, gOOTBowChildDL);
+        setChildModelTypeDL(h, PMM_DL_FPS_BOW, gOOTBowFirstPersonChildDL);
+        setChildModelTypeDL(h, PMM_DL_BOW_STRING, gOOTBowStringChildDL);
 
-    {
-        // PlayerModelManagerHandle h = PLAYERMODELMANAGER_REGISTER_MODEL("oot_bow_c", PMM_MODEL_TYPE_BOW);
-        // PlayerModelManager_setDisplayName(h, "Bow (OoT) (Child)");
-        // PlayerModelManager_setAuthor(h, "Nintendo");
-        // PlayerModelManager_setDisplayList(h, PMM_DL_BOW, gOOTBowChildDL);
-        // PlayerModelManager_setDisplayList(h, PMM_DL_FPS_BOW, gOOTBowFirstPersonChildDL);
-        // PlayerModelManager_setDisplayList(h, PMM_DL_BOW_STRING, gOOTBowStringChildDL);
-        // PlayerModelManager_addHandleToPack(childPack, h);
+        PlayerModelManager_addHandleToPack(ootPack, h);
     }
 
     // Fairy Ocarina
     {
-        PlayerModelManagerHandle h = PLAYERMODELMANAGER_REGISTER_MODEL("oot_ocarina1_fairy_c", PMM_MODEL_TYPE_OCARINA_FAIRY);
+        PlayerModelManagerHandle h = PLAYERMODELMANAGER_REGISTER_MODEL("__oot_ocarina1_fairy__", PMM_MODEL_TYPE_OCARINA_FAIRY);
         PlayerModelManager_setDisplayName(h, "Fairy Ocarina");
         PlayerModelManager_setAuthor(h, "Nintendo");
         PlayerModelManager_setDisplayList(h, PMM_DL_OCARINA_FAIRY, gOOTFairyOcarinaDL);
+        setAdultModelTypeDL(h, PMM_DL_OCARINA_FAIRY, gOOTFairyOcarinaAdultDL);
     }
 
     {
-        PlayerModelManagerHandle h = PLAYERMODELMANAGER_REGISTER_MODEL("oot_ocarina2_fairy_c", PMM_MODEL_TYPE_OCARINA_TIME);
+        PlayerModelManagerHandle h = PLAYERMODELMANAGER_REGISTER_MODEL("__oot_ocarina2_fairy__", PMM_MODEL_TYPE_OCARINA_TIME);
         PlayerModelManager_setDisplayName(h, "Fairy Ocarina");
         PlayerModelManager_setAuthor(h, "Nintendo");
         PlayerModelManager_setDisplayList(h, PMM_DL_OCARINA_TIME, gOOTFairyOcarinaDL);
+        setAdultModelTypeDL(h, PMM_DL_OCARINA_TIME, gOOTFairyOcarinaAdultDL);
     }
 
     // Deku Stick (OOT)
@@ -942,7 +904,6 @@ void addEquipmentToModelManager() {
             PlayerModelManager_setDisplayList(h1, PMM_DL_DEKU_STICK, gOOTDekuStickDL);
         }
 
-        PlayerModelManager_addHandleToPack(childPack, h);
-        PlayerModelManager_addHandleToPack(adultPack, h);
+        PlayerModelManager_addHandleToPack(ootPack, h);
     }
 }
