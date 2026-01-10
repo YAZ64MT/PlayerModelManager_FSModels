@@ -53,8 +53,8 @@ typedef enum PlayerModelManagerDisplayListId {
     PMM_DL_TORSO,
 
     // Other hand DLs
-    PMM_DL_LFIST,
-    PMM_DL_LHAND_BOTTLE,
+    PMM_DL_OPT_LFIST,
+    PMM_DL_OPT_LHAND_BOTTLE,
     PMM_DL_OPT_LHAND_GUITAR,
     PMM_DL_OPT_LFIST_ITEM = 235,
     PMM_DL_OPT_LFIST_SWORD,
@@ -67,7 +67,7 @@ typedef enum PlayerModelManagerDisplayListId {
     PMM_DL_OPT_LFIST_DEKU_STICK,
     PMM_DL_OPT_LFIST_HAMMER,
     PMM_DL_OPT_LFIST_BOOMERANG,
-    PMM_DL_RFIST = 21,
+    PMM_DL_OPT_RFIST = 21,
     PMM_DL_OPT_RHAND_OCARINA = 246,
     PMM_DL_OPT_RHAND_OCARINA_FAIRY,
     PMM_DL_OPT_RHAND_OCARINA_TIME,
@@ -232,8 +232,10 @@ typedef enum PlayerModelManagerDisplayListId {
     PMM_DL_BOOT_LHOVER,
     PMM_DL_BOOT_RHOVER,
 
-    // Deku Instrument / Pipes
+    // Deku Link shield
     PMM_DL_DEKU_GUARD,
+
+    // Deku Instrument / Pipes
     PMM_DL_PIPE_MOUTH,
     PMM_DL_PIPE_RIGHT,
     PMM_DL_PIPE_UP,
@@ -396,6 +398,9 @@ typedef enum PlayerModelManagerDisplayListId {
 } PlayerModelManagerDisplayListId;
 
 // Keep these defines for backwards compatibility
+#define PMM_DL_RFIST PMM_DL_OPT_RFIST
+#define PMM_DL_LFIST PMM_DL_OPT_LFIST
+#define PMM_DL_LHAND_BOTTLE PMM_DL_OPT_LHAND_BOTTLE
 #define PMM_DL_LHAND_GUITAR PMM_DL_OPT_LHAND_GUITAR
 #define PMM_DL_FPS_HOOKSHOT PMM_DL_OPT_FPS_HOOKSHOT
 #define PMM_DL_FPS_BOW PMM_DL_OPT_FPS_BOW
@@ -538,14 +543,6 @@ typedef enum PlayerModelManagerModelEvent {
 
 typedef void PlayerModelManagerEventHandler(PlayerModelManagerHandle handle, PlayerModelManagerModelEvent event, void *userdata);
 
-typedef enum PlayerModelManagerCustomDL {
-    PMM_CUSTOM_DL_HUMAN_OCARINA_TIME,
-    PMM_CUSTOM_DL_HUMAN_RHAND_OCARINA,
-    PMM_CUSTOM_DL_HUMAN_FPS_RHAND,
-    PMM_CUSTOM_DL_HUMAN_FPS_HOOKSHOT,
-    PMM_CUSTOM_DL_HUMAN_FPS_BOW,
-} PlayerModelManagerCustomDL;
-
 #ifndef YAZMT_PMM_NO_API_IMPORTS
 
 #include "global.h"
@@ -559,8 +556,8 @@ typedef enum PlayerModelManagerCustomDL {
 // There is a maximum length of 64 characters.
 //
 // This function can only be used during the PlayerModelManager_onRegisterModels event. Otherwise, an invalid handle will be returned.
-#define PLAYERMODELMANAGER_REGISTER_MODEL(internalName, modelType) PlayerModelManager_registerModel(PMM_API_VERSION, internalName, modelType)
 RECOMP_IMPORT(YAZMT_PMM_MOD_NAME, PlayerModelManagerHandle PlayerModelManager_registerModel(unsigned long apiVersion, const char *internalName, PlayerModelManagerModelType modelType));
+#define PLAYERMODELMANAGER_REGISTER_MODEL(internalName, modelType) PlayerModelManager_registerModel(PMM_API_VERSION, internalName, modelType)
 
 // Sets the name that will appear in the menu for the passed in model handle.
 //
@@ -699,10 +696,6 @@ RECOMP_IMPORT(YAZMT_PMM_MOD_NAME, bool PlayerModelManager_overrideVanillaMatrix(
 
 // Returns true if there is a custom player model applied to the passed in form, false otherwise.
 RECOMP_IMPORT(YAZMT_PMM_MOD_NAME, bool PlayerModelManager_isCustomModelApplied(PlayerTransformation form));
-
-// PlayerModelManager defines some custom display lists internally, usually to "unglue" certain DLs.
-// If you would like to manually specify these for some of your models, you can access them via the following function.
-RECOMP_IMPORT(YAZMT_PMM_MOD_NAME, Gfx *PlayerModelManager_getCustomDL(PlayerModelManagerCustomDL customDLId));
 
 // Helper define for register models event.
 #define PLAYERMODELMANAGER_CALLBACK_REGISTER_MODELS RECOMP_CALLBACK(YAZMT_PMM_MOD_NAME, onRegisterModels)
