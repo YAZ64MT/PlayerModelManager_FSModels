@@ -97,6 +97,30 @@ static bool sWasChildRegisterAttempted = false;
 
 #define OOT_LINK_CHILD_RFIST_HOLDING_FAIRY_OCARINA 0x15BA8
 
+// weaponless first person arm DL
+Gfx gLinkHumanFirstPersonArmDL[] = {
+    gsSPTexture(0xFFFF, 0xFFFF, 0, G_TX_RENDERTILE, G_ON),
+    gsDPPipeSync(),
+    gsDPSetCombineLERP(TEXEL0, 0, SHADE, 0, 0, 0, 0, TEXEL0, PRIMITIVE, 0, COMBINED, 0, 0, 0, 0, COMBINED),
+    gsDPSetRenderMode(G_RM_FOG_SHADE_A, G_RM_AA_ZB_OPA_SURF2),
+    gsDPPipeSync(),
+    gsDPSetTextureLUT(G_TT_RGBA16),
+    gsDPSetPrimColor(0, 0x80, 255, 255, 255, 255),
+    gsSPLoadGeometryMode(G_ZBUFFER | G_SHADE | G_CULL_BACK | G_FOG | G_LIGHTING | G_SHADING_SMOOTH),
+    gsDPPipeSync(),
+    gsSPEndDisplayList(), // branch to first person arm here
+};
+
+static void setupMMFirstPersonRightHand() {
+    extern Gfx object_link_child_DL_017B40[];
+
+    Gfx *humanRightHandHoldingHookshotFirstPersonDL = GlobalObjects_getGlobalGfxPtr(OBJECT_LINK_CHILD, object_link_child_DL_017B40);
+
+    const size_t FPS_RIGHT_HAND_START_DRAW_INDEX = 113;
+
+    gSPBranchList(&gLinkHumanFirstPersonArmDL[ARRAY_COUNT(gLinkHumanFirstPersonArmDL) - 1], &humanRightHandHoldingHookshotFirstPersonDL[FPS_RIGHT_HAND_START_DRAW_INDEX]);
+}
+
 void registerChildLink() {
     if (sWasChildRegisterAttempted) {
         return;
@@ -143,7 +167,9 @@ void registerChildLink() {
         REPOINT_SET_CHILD(OOT_LINK_CHILD_RFIST, PMM_DL_RFIST);
         REPOINT_SET_CHILD(OOT_LINK_CHILD_BOTTLE_HAND, PMM_DL_LHAND_BOTTLE);
 #undef REPOINT_SET_CHILD
-        PlayerModelManager_setDisplayList(h, PMM_DL_FPS_RHAND, PlayerModelManager_getCustomDL(PMM_CUSTOM_DL_HUMAN_FPS_RHAND));
+
+        setupMMFirstPersonRightHand();
+        PlayerModelManager_setDisplayList(h, PMM_DL_FPS_RHAND, gLinkHumanFirstPersonArmDL);
         PlayerModelManager_setDisplayList(h, PMM_DL_FPS_RFOREARM, gEmptyDL);
 
         initChildEquipment();
