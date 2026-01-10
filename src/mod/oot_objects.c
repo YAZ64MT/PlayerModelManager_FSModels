@@ -119,7 +119,7 @@ void registerChildLink() {
 
         repointSkeletonAndDisableLOD(skel, cLinkSegs);
 
-        PlayerModelManagerHandle h = PLAYERMODELMANAGER_REGISTER_MODEL("oot_object_link_child", PMM_MODEL_TYPE_CHILD);
+        PlayerModelManagerHandle h = PLAYERMODELMANAGER_REGISTER_MODEL("__oot_object_link_child__", PMM_MODEL_TYPE_CHILD);
         sOoTChildHumanHandle = h;
         PlayerModelManager_setDisplayName(h, "Young Link (OoT)");
         PlayerModelManager_setAuthor(h, "Nintendo");
@@ -206,7 +206,7 @@ void registerAdultLink() {
         repointSkeletonAndDisableLOD(skel, aLinkSegs);
 
         // Human
-        PlayerModelManagerHandle h = PLAYERMODELMANAGER_REGISTER_MODEL("oot_object_link_boy_adult", PMM_MODEL_TYPE_ADULT);
+        PlayerModelManagerHandle h = PLAYERMODELMANAGER_REGISTER_MODEL("__oot_object_link_boy_adult__", PMM_MODEL_TYPE_ADULT);
         sOoTAdultHumanHandle = h;
         PlayerModelManager_setDisplayName(h, "Adult Link (OoT)");
         PlayerModelManager_setAuthor(h, "Nintendo");
@@ -244,7 +244,7 @@ void registerAdultLink() {
         REPOINT_SET_ADULT(OOT_LINK_ADULT_RIGHT_HAND_AND_OCARINA, PMM_DL_OCARINA_TIME);
 
         // Fierce Deity
-        h = PLAYERMODELMANAGER_REGISTER_MODEL("oot_object_link_boy_fd", PMM_MODEL_TYPE_FIERCE_DEITY);
+        h = PLAYERMODELMANAGER_REGISTER_MODEL("__oot_object_link_boy_fd__", PMM_MODEL_TYPE_FIERCE_DEITY);
         sOoTAdultFierceDeityHandle = h;
         PlayerModelManager_setDisplayName(h, "Adult Link (OoT)");
         PlayerModelManager_setAuthor(h, "Nintendo");
