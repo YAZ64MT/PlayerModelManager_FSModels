@@ -589,9 +589,6 @@ void addEquipmentToModelManager() {
     PlayerModelManager_setAuthor(ootPack, "Nintendo");
     PlayerModelManager_setDisplayName(ootPack, "OoT Equipment");
 
-    PlayerModelManagerHandle adultHandle = getAdultLinkHumanHandle();
-    PlayerModelManagerHandle fdHandle = getAdultLinkFierceDeityHandle();
-    PlayerModelManagerHandle childHandle = getChildLinkHumanHandle();
 
     // Mirror Shield (OOT)
     {
@@ -599,7 +596,7 @@ void addEquipmentToModelManager() {
         PlayerModelManager_setDisplayName(h, "Mirror Shield (OoT)");
         PlayerModelManager_setAuthor(h, "Nintendo");
 
-        PlayerModelManagerHandle handles[] = {h, adultHandle, fdHandle};
+        PlayerModelManagerHandle handles[] = {h};
 
         for (int i = 0; i < ARRAY_COUNT(handles); ++i) {
             PlayerModelManagerHandle h1 = handles[i];
@@ -624,7 +621,7 @@ void addEquipmentToModelManager() {
         PlayerModelManager_setDisplayName(h, "Hylian Shield (OoT)");
         PlayerModelManager_setAuthor(h, "Nintendo");
 
-        PlayerModelManagerHandle handles[] = {h, adultHandle, fdHandle};
+        PlayerModelManagerHandle handles[] = {h};
 
         for (int i = 0; i < ARRAY_COUNT(handles); ++i) {
             PlayerModelManagerHandle h1 = handles[i];
@@ -666,7 +663,7 @@ void addEquipmentToModelManager() {
         PlayerModelManager_setDisplayName(h, "Master Sword");
         PlayerModelManager_setAuthor(h, "Nintendo");
 
-        PlayerModelManagerHandle handles[] = {h, adultHandle, fdHandle};
+        PlayerModelManagerHandle handles[] = {h};
 
         for (int i = 0; i < ARRAY_COUNT(handles); ++i) {
             PlayerModelManagerHandle h1 = handles[i];
@@ -690,7 +687,7 @@ void addEquipmentToModelManager() {
         PlayerModelManager_setDisplayName(h, "Master Sword");
         PlayerModelManager_setAuthor(h, "Nintendo");
 
-        PlayerModelManagerHandle handles[] = {h, adultHandle, fdHandle};
+        PlayerModelManagerHandle handles[] = {h};
 
         for (int i = 0; i < ARRAY_COUNT(handles); ++i) {
             PlayerModelManagerHandle h1 = handles[i];
@@ -714,7 +711,7 @@ void addEquipmentToModelManager() {
         PlayerModelManager_setDisplayName(h, "Master Sword");
         PlayerModelManager_setAuthor(h, "Nintendo");
 
-        PlayerModelManagerHandle handles[] = {h, adultHandle, fdHandle};
+        PlayerModelManagerHandle handles[] = {h};
 
         for (int i = 0; i < ARRAY_COUNT(handles); ++i) {
             PlayerModelManagerHandle h1 = handles[i];
@@ -739,7 +736,7 @@ void addEquipmentToModelManager() {
         PlayerModelManager_setDisplayName(h, "Kokiri Sword (OoT)");
         PlayerModelManager_setAuthor(h, "Nintendo");
 
-        PlayerModelManagerHandle handles[] = {h, childHandle};
+        PlayerModelManagerHandle handles[] = {h};
 
         for (int i = 0; i < ARRAY_COUNT(handles); ++i) {
             PlayerModelManagerHandle h1 = handles[i];
@@ -764,7 +761,7 @@ void addEquipmentToModelManager() {
         PlayerModelManager_setDisplayName(h, "Biggoron Sword");
         PlayerModelManager_setAuthor(h, "Nintendo");
 
-        PlayerModelManagerHandle handles[] = {h, adultHandle, fdHandle};
+        PlayerModelManagerHandle handles[] = {h};
 
         for (int i = 0; i < ARRAY_COUNT(handles); ++i) {
             PlayerModelManagerHandle h1 = handles[i];
@@ -789,7 +786,7 @@ void addEquipmentToModelManager() {
         PlayerModelManager_setAuthor(h, "Nintendo");
         PlayerModelManager_setMatrix(h, PMM_MTX_SWORD4_BACK, &gOOTMasterSwordHiltMtx);
 
-        PlayerModelManagerHandle handles[] = {h, adultHandle, fdHandle};
+        PlayerModelManagerHandle handles[] = {h};
 
         for (int i = 0; i < ARRAY_COUNT(handles); ++i) {
             PlayerModelManagerHandle h1 = handles[i];
@@ -814,7 +811,7 @@ void addEquipmentToModelManager() {
         PlayerModelManager_setDisplayName(h, "Hookshot (OoT)");
         PlayerModelManager_setAuthor(h, "Nintendo");
 
-        PlayerModelManagerHandle handles[] = {h, adultHandle, fdHandle};
+        PlayerModelManagerHandle handles[] = {h};
 
         for (int i = 0; i < ARRAY_COUNT(handles); ++i) {
             PlayerModelManagerHandle h1 = handles[i];
@@ -840,7 +837,7 @@ void addEquipmentToModelManager() {
         PlayerModelManager_setDisplayName(h, "Bottle (OoT) (Adult)");
         PlayerModelManager_setAuthor(h, "Nintendo");
 
-        PlayerModelManagerHandle handles[] = {h, adultHandle, fdHandle};
+        PlayerModelManagerHandle handles[] = {h};
 
         for (int i = 0; i < ARRAY_COUNT(handles); ++i) {
             PlayerModelManagerHandle h1 = handles[i];
@@ -850,7 +847,6 @@ void addEquipmentToModelManager() {
         }
 
         setChildModelTypeDL(h, PMM_DL_BOTTLE_GLASS, gOOTBottleChildDL);
-        PlayerModelManager_setDisplayList(childHandle, PMM_DL_BOTTLE_GLASS, gOOTBottleChildDL);
 
         PlayerModelManager_addHandleToPack(ootPack, h);
     }
@@ -861,7 +857,7 @@ void addEquipmentToModelManager() {
         PlayerModelManager_setDisplayName(h, "Bow (OoT)");
         PlayerModelManager_setAuthor(h, "Nintendo");
 
-        PlayerModelManagerHandle handles[] = {h, adultHandle, fdHandle};
+        PlayerModelManagerHandle handles[] = {h};
 
         for (int i = 0; i < ARRAY_COUNT(handles); ++i) {
             PlayerModelManagerHandle h1 = handles[i];
@@ -901,7 +897,7 @@ void addEquipmentToModelManager() {
         PlayerModelManager_setDisplayName(h, "Deku Stick (OoT)");
         PlayerModelManager_setAuthor(h, "Nintendo");
 
-        PlayerModelManagerHandle handles[] = {h, adultHandle, fdHandle, childHandle};
+        PlayerModelManagerHandle handles[] = {h};
 
         for (int i = 0; i < ARRAY_COUNT(handles); ++i) {
             PlayerModelManagerHandle h1 = handles[i];
