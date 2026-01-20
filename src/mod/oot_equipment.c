@@ -277,24 +277,36 @@ static void setupResizedSwordMatrixes(Mtx *hiltResizeMtx, Mtx *bladeResizeMtx, M
                hiltBackBaseTranslation->z * scale - translation->z);
 }
 
+static void setDLForModelTypes(PlayerModelManagerHandle h, PlayerModelManagerDisplayListId id, Gfx *dl, PlayerModelManagerModelType types[], size_t n) {
+    for (size_t i = 0; i < n; ++i) {
+        PlayerModelManager_setDisplayListForModelType(h, types[i], id, dl);
+    }
+}
+
+static void setMtxForModelTypes(PlayerModelManagerHandle h, PlayerModelManagerMatrixId id, Mtx *mtx, PlayerModelManagerModelType types[], size_t n) {
+    for (size_t i = 0; i < n; ++i) {
+        PlayerModelManager_setMatrixForModelType(h, types[i], id, mtx);
+    }
+}
+
 static PlayerModelManagerModelType sModelTypesAdult[] = {PMM_MODEL_TYPE_ADULT, PMM_MODEL_TYPE_ZORA, PMM_MODEL_TYPE_GORON, PMM_MODEL_TYPE_FIERCE_DEITY};
 
 static void setAdultModelTypeDL(PlayerModelManagerHandle h, PlayerModelManagerDisplayListId id, Gfx *dl) {
-    PlayerModelManager_setDisplayListForModelTypeArray(h, sModelTypesAdult, ARRAY_COUNT(sModelTypesAdult), id, dl);
+    setDLForModelTypes(h, id, dl, sModelTypesAdult, ARRAY_COUNT(sModelTypesAdult));
 }
 
 static void setAdultModelTypeMtx(PlayerModelManagerHandle h, PlayerModelManagerMatrixId id, Mtx *mtx) {
-    PlayerModelManager_setMatrixForModelTypeArray(h, sModelTypesAdult, ARRAY_COUNT(sModelTypesAdult), id, mtx);
+    setMtxForModelTypes(h, id, mtx, sModelTypesAdult, ARRAY_COUNT(sModelTypesAdult));
 }
 
 static PlayerModelManagerModelType sModelTypesChild[] = {PMM_MODEL_TYPE_CHILD, PMM_MODEL_TYPE_DEKU};
 
 static void setChildModelTypeDL(PlayerModelManagerHandle h, PlayerModelManagerDisplayListId id, Gfx *dl) {
-    PlayerModelManager_setDisplayListForModelTypeArray(h, sModelTypesChild, ARRAY_COUNT(sModelTypesChild), id, dl);
+    setDLForModelTypes(h, id, dl, sModelTypesChild, ARRAY_COUNT(sModelTypesChild));
 }
 
 static void setChildModelTypeMtx(PlayerModelManagerHandle h, PlayerModelManagerMatrixId id, Mtx *mtx) {
-    PlayerModelManager_setMatrixForModelTypeArray(h, sModelTypesChild, ARRAY_COUNT(sModelTypesChild), id, mtx);
+    setMtxForModelTypes(h, id, mtx, sModelTypesChild, ARRAY_COUNT(sModelTypesChild));
 }
 
 #define ADULT_SWORD_TO_CHILD_SCALE 0.9f

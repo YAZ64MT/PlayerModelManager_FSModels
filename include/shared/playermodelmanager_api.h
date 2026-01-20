@@ -21,13 +21,13 @@ typedef unsigned long PlayerModelManagerHandle;
 // Swords:
 //      1: Kokiri Sword
 //      2: Razor Sword
-//      3: Master Sword / Gilded Sword
-//      4: Giant's Knife / Biggoron Sword / Fierce Deity's Sword
+//      3: Gilded Sword
+//      4: Fierce Deity's Sword
 //      5: Great Fairy Sword
 
 // Shields:
 //      1: Deku Shield
-//      2: Hylian Shield / Hero's Shield
+//      2: Hero's Shield
 //      3: Mirror Shield
 
 typedef enum PlayerModelManagerDisplayListId {
@@ -138,6 +138,10 @@ typedef enum PlayerModelManagerDisplayListId {
     PMM_DL_BOOMERANG = 58,   // Boomerang model while held in hand
     PMM_DL_BOOMERANG_FLYING, // Boomerang model after being thrown
     PMM_DL_HAMMER,
+    PMM_DL_BOMB_BODY_2D = 291,
+    PMM_DL_BOMB_BODY_3D,
+    PMM_DL_BOMB_CAP,
+    PMM_DL_BOMBCHU = 297,
 
     // First Person
     PMM_DL_OPT_FPS_LSHOULDER = 263,
@@ -252,7 +256,7 @@ typedef enum PlayerModelManagerDisplayListId {
     PMM_DL_FLOWER_PROPELLER_OPEN,
     PMM_DL_FLOWER_CENTER_OPEN,
 
-    // Deku Pad DLs
+    // Burrowed into a Deku Flower models
     PMM_DL_PAD_WOOD,
     PMM_DL_PAD_GRASS,
     PMM_DL_PAD_OPENING,
@@ -607,11 +611,6 @@ RECOMP_IMPORT(YAZMT_PMM_MOD_NAME, bool PlayerModelManager_setDisplayList(PlayerM
 // Returns true if display list was successfully set, false otherwise.
 RECOMP_IMPORT(YAZMT_PMM_MOD_NAME, bool PlayerModelManager_setDisplayListForModelType(PlayerModelManagerHandle h, PlayerModelManagerModelType type, PlayerModelManagerDisplayListId dlId, Gfx *dl));
 
-// Array version of PlayerModelManager_setDisplayListForModelType that takes an array with n elements.
-//
-// Returns true if display list was set for the passed in model types, false otherwise.
-RECOMP_IMPORT(YAZMT_PMM_MOD_NAME, bool PlayerModelManager_setDisplayListForModelTypeArray(PlayerModelManagerHandle h, PlayerModelManagerModelType types[], size_t n, PlayerModelManagerDisplayListId dlId, Gfx *dl));
-
 // Sets a matrix on the custom model.
 //
 // Returns true if matrix was successfully set, false otherwise.
@@ -625,11 +624,6 @@ RECOMP_IMPORT(YAZMT_PMM_MOD_NAME, bool PlayerModelManager_setMatrix(PlayerModelM
 //
 // Returns true if matrix was successfully set, false otherwise.
 RECOMP_IMPORT(YAZMT_PMM_MOD_NAME, bool PlayerModelManager_setMatrixForModelType(PlayerModelManagerHandle h, PlayerModelManagerModelType type, PlayerModelManagerMatrixId mtxId, Mtx *matrix));
-
-// Array version of PlayerModelManager_setMatrixForModelType that takes an array with n elements.
-//
-// Returns true if matrix was set for the passed in model types, false otherwise.
-RECOMP_IMPORT(YAZMT_PMM_MOD_NAME, bool PlayerModelManager_setMatrixForModelTypeArray(PlayerModelManagerHandle h, PlayerModelManagerModelType types[], size_t n, PlayerModelManagerMatrixId mtxId, Mtx *matrix));
 
 // Adds a handle to a model pack. Models will be applied in the order that their handles are added in.
 //
