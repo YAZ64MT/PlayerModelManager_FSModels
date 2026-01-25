@@ -1,3 +1,10 @@
+### 0.3.0
+* Bumped PlayerModelManager dependency to 0.5.0
+* OoT equipment is now registered to the model manager
+  * Includes child-sized versions of adult equipment and vice-versa
+* Models loaded by this mod are now sorted alphabetically
+* OoTO Adult models now use OoT Mirror Shield's beam texture if available
+
 ### 0.2.1
 * Restore creation of mod_data folders
 
