@@ -161,9 +161,9 @@ RECOMP_DLL_FUNC(PMMZobj_scanForDiskEntries) {
     size_t runningTotalSize = 0;
 
     // TODO: This entire section needs a rewrite to support more model types
-    for (const auto &dirEntry : fs::directory_iterator(folderEntry.path())) {
-        if (runningTotalSize < MAX_TOTAL_SIZE && dirEntry.file_size() < MAX_MODEL_SIZE) {
-            if (dirEntry.is_regular_file() || (dirEntry.is_symlink() && fs::is_regular_file(fs::weakly_canonical(dirEntry.path())))) {
+    for (const auto &dirEntry : fs::recursive_directory_iterator(folderEntry.path())) {
+        if (dirEntry.is_regular_file() || (dirEntry.is_symlink() && fs::is_regular_file(fs::weakly_canonical(dirEntry.path())))) {
+            if (runningTotalSize < MAX_TOTAL_SIZE && dirEntry.file_size() < MAX_MODEL_SIZE) {
                 std::ifstream file(dirEntry.path(), std::ios::binary);
 
                 if (isValidStandaloneZobj(file)) {
