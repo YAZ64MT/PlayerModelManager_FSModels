@@ -136,6 +136,16 @@ void extractEmbeddedInfo(const std::vector<char> &v, ModelDiskEntry &entry) {
     }
 }
 
+std::string rsubstr(const std::string& s, size_t size) {
+    if (size >= s.size()) {
+        return s;
+    }
+
+    size_t numToTrim = s.size() - size;
+
+    return s.substr(numToTrim, size);
+}
+
 RECOMP_DLL_FUNC(PMMZobj_scanForDiskEntries) {
     if (!fs::is_directory(sPMMDir)) {
         RECOMP_RETURN(int, -1);
@@ -178,10 +188,10 @@ RECOMP_DLL_FUNC(PMMZobj_scanForDiskEntries) {
                     fs::path dirEntryPath = dirEntry.path();
 
                     if (mde.internalName == "") {
-                        mde.internalName = dirEntryPath.filename().string();
+                        mde.internalName = fs::relative(dirEntryPath, sPMMDir).string();
 
                         if (mde.internalName.size() > PMM_MAX_INTERNAL_NAME_LENGTH) {
-                            mde.internalName = mde.internalName.substr(0, PMM_MAX_AUTHOR_NAME_LENGTH);
+                            mde.internalName = rsubstr(mde.internalName, PMM_MAX_INTERNAL_NAME_LENGTH);
                         }
                     }
 
@@ -192,7 +202,7 @@ RECOMP_DLL_FUNC(PMMZobj_scanForDiskEntries) {
                     if (mde.displayName == "") {
                         mde.displayName = dirEntryPath.stem().string();
 
-                        if (mde.displayName.size() > PMM_MAX_INTERNAL_NAME_LENGTH) {
+                        if (mde.displayName.size() > PMM_MAX_DISPLAY_NAME_LENGTH) {
                             mde.displayName = mde.displayName.substr(0, PMM_MAX_DISPLAY_NAME_LENGTH);
                         }
                     }
