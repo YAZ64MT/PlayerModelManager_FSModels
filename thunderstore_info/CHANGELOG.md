@@ -5,6 +5,7 @@
 * Models from the models directory are now sorted alphabetically by display name
 * OoTO Adult models now use OoT Mirror Shield's beam texture if available
 * Subfolders within the models directory will no longer crash
+* Fixed some incorrect internal name truncation behavior
 
 ### 0.2.1
 * Restore creation of mod_data folders
