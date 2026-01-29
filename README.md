@@ -8,7 +8,7 @@ It has the following dependencies:
 * [YAZMT PlayerModelManager](https://github.com/YAZ64MT/PlayerModelManager)
 
 ## Usage
-This mod can currently only load models that were compiled with OoTO/MMO zzplayas/z64playas manifests. The largest repository of such models can be found [here](https://github.com/hylian-modding/Z64-CustomPlayerModels/tree/master/manifests). Do NOT report model issues to the HylianModding repository UNLESS you can verify the issue also appears in ModLoader64—compatibility is not perfect between PMM and the models from that repository.
+This mod can currently only load models that were compiled with OoTO/MMO zzplayas/z64playas manifests. A large repository of such models can be found [here](https://github.com/YAZ64MT/ML64PlayerModels). Do NOT report model issues to the HylianModding repository UNLESS you can verify the issue also appears in ModLoader64—compatibility is not perfect between PMM and the models from that repository.
 
 Models are commonly found with the file extension `.zobj`, but not all `.zobj` files are valid models. Most models with the ASCII `MODLOADER64` at offset 0x5000 are compatible though.
 
