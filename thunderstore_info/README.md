@@ -12,5 +12,5 @@ To resolve these issues, place a US or JP 1.0, 1.1, or 1.2 OoT ROM named oot.z64
 
 If the extraction is successful, the corrupted textures will display correctly, and two new models, "Adult Link (OoT)" and "Young Link (OoT)", will appear in PlayerModelManager.
 
-A large repository of models compiled for ModLoader64 can be found here:
+A large repository of models this addon supports can be found here:
 https://github.com/YAZ64MT/ML64PlayerModels
