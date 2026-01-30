@@ -381,7 +381,7 @@ def package_url_from_git() -> str:
 # Here we define the main Thunderstore package we want to produce.
 # The ThunderstorePackageJob collects all the mod_output_files and stores them in a zip archive, along with
 # the required metadata for a Thunderstore package.
-thunderstore_package_name = main_toml.data["manifest"]["id"]
+thunderstore_package_name = root_dir.joinpath("thunderstore_info/package_name.txt").read_text().strip()
 main_package = ThunderstorePackageJob(
     # The GitHub Actions CI Workflows assume the uploaded package will have the following naming scheme:
     #  name_in_package_manifest.thunderstore.zip

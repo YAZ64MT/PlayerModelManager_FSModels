@@ -1,3 +1,6 @@
+### 0.3.1
+* Fix name on Thunderstore
+
 ### 0.3.0
 * Bumped PlayerModelManager dependency to 0.5.0
 * OoT equipment is now registered to the model manager
