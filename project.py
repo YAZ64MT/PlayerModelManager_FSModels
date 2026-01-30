@@ -391,7 +391,7 @@ main_package = ThunderstorePackageJob(
         "version_number": main_toml.data["manifest"]["version"], # We'll read the version number from the mod toml.
         "website_url": package_url_from_git(),
         "description": main_toml.data["manifest"]["short_description"],
-        "dependencies": []
+        "dependencies": root_dir.joinpath("thunderstore_info/dependencies.txt").read_text().splitlines()
     },
     root_dir.joinpath("thunderstore_info/README.md").read_text(),
     root_dir.joinpath("thunderstore_info/CHANGELOG.md").read_text(),
