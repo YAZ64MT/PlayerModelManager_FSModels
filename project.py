@@ -395,7 +395,7 @@ main_package = ThunderstorePackageJob(
     },
     root_dir.joinpath("thunderstore_info/README.md").read_text(),
     root_dir.joinpath("thunderstore_info/CHANGELOG.md").read_text(),
-    root_dir.joinpath("thumb.png")
+    root_dir.joinpath("thunderstore_info/icon.png")
 )
 
 # To include mod_output_files from other jobs in the build output, add those jobs as dependencies.
