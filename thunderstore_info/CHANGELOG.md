@@ -1,9 +1,11 @@
 ### 0.3.2
 * Fix nrm version string
 * Minor thunderstore README updates
+* No underlying code changes
 
 ### 0.3.1
 * Fix name on Thunderstore
+* No underlying code changes
 
 ### 0.3.0
 * Bumped PlayerModelManager dependency to 0.5.0
