@@ -1,3 +1,6 @@
+### 0.3.2
+* Fix nrm version string
+
 ### 0.3.1
 * Fix name on Thunderstore
 
