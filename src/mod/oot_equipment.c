@@ -434,7 +434,7 @@ void initCrossAgeEquipment() {
     // Adult Fairy Ocarina
     gSPBranchList(sCallFairyOcarinaDL, gOOTFairyOcarinaDL);
     guPosition(&sFairyOcarinaResizerMtx, 7.f, -8.f, -4.f, 1.f, 72.f, 238.f, -3.f);
-    gOOTFairyOcarinaAdultDL = sCallFairyOcarinaDL;
+    gOOTFairyOcarinaAdultDL = sFairyOcarinaAdultDL;
 
     addEquipmentToModelManager();
 }
