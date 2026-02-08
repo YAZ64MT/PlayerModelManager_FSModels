@@ -1,5 +1,5 @@
 ### 0.3.3
-* Fix adult models using wrong Fairy Ocarina DL
+* Fix adult models using wrong Fairy Ocarina model
 
 ### 0.3.2
 * Fix nrm version string
