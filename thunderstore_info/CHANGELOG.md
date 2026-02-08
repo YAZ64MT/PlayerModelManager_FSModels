@@ -1,3 +1,6 @@
+### 0.3.3
+* Fix adult models using wrong Fairy Ocarina DL
+
 ### 0.3.2
 * Fix nrm version string
 * Minor thunderstore README updates
